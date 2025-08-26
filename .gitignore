@@ -10,7 +10,6 @@
 
 # IDEs y editores
 /.idea
-.editorconfig
 /.vscode
 *.suo
 *.ntvs*
