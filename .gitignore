@@ -1,0 +1,32 @@
+# Compilados y distribuciones
+/dist
+/out-tsc
+/build
+
+# Dependencias
+/node_modules
+
+# IDEs y editores
+/.idea
+/.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Entornos
+.env
+.env.* 
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+
+# Coverage de tests
+/coverage
+
+# Archivos temporales
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
