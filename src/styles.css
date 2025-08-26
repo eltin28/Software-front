@@ -1,0 +1,4 @@
+body {
+  margin: 0;  /* ← Elimina los 8px por defecto */
+  padding: 0; /* ← Elimina padding adicional */
+}

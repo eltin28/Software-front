@@ -1,0 +1,75 @@
+<div class="container" id="container">
+    <div class="form-container sign-up-container" style=" background-color: white">
+        <div style="margin: 0 auto; width: 80%;">
+            <h1 style="font-weight: bold; margin-bottom: 20px; margin-top: 12px; font-size: 45px;">Crea tu cuenta</h1>
+        </div>
+        <form class="formRegistro" [formGroup]="registroForm" (ngSubmit)="registrar()" novalidate="">
+            <div class="input-container">
+                <i class="fa-solid fa-user"></i>
+                <input class="Input-registro" type="text" placeholder="Cedula" formControlName="cedula"/>
+            </div>
+            <div class="input-container">
+                <i class="fa-solid fa-user"></i>
+                <input class="Input-registro" type="text" placeholder="Nombre Completo" formControlName="nombre"/>
+            </div>
+            <div class="input-container">
+                <i class="fa-solid fa-user"></i>
+                <input class="Input-registro" type="number" placeholder="Telefono" formControlName="telefono"/>
+            </div>
+            <div class="input-container">
+                <i class="fa-solid fa-envelope"></i>
+                <input class="Input-registro" type="email" name="Email" placeholder="Email" formControlName="email"/>
+            </div>
+            <div class="input-container">
+                <i class="fa-solid fa-lock"></i>
+                <input class="Input-registro" [type]="showPassword? 'text' : 'password'" placeholder="Contraseña" formControlName="password"/>
+                <i class="fa-solid {{activeIcon}}" (click)="togglePasswordVisibility()"></i>
+            </div>
+            <div class="input-container">
+                <i class="fa-solid fa-lock"></i>
+                <input class="Input-registro" [type]="showPassword? 'text' : 'password'" placeholder="Repetir contraseña" formControlName="confirmaPassword"/>
+                <i class="fa-solid {{activeIcon}}" (click)="togglePasswordVisibility()"></i>
+            </div>
+            @if (registroForm.hasError('passwordsMismatch')) {
+                <p>Las contraseñas no coinciden</p>
+            }
+            <button class="buttonRegistro" type="submit" [disabled]="registroForm.invalid">Ingresar</button>
+        </form>
+    </div>
+    <div class="form-container sign-in-container">
+        <form class="formRegistro" [formGroup]="loginForm" (ngSubmit)="login()" novalidate="">
+            <div style="margin: 0 auto; width: 80%;">
+                <h1 style="font-weight: bold; margin-bottom: 20px; margin-top: 12px">Ingresa</h1>
+            </div>
+            <div class="input-container">
+                <i class="fa-solid fa-user"></i>
+                <input class="Input-registro" type="email" placeholder="Email" formControlName="email" />
+            </div>
+            <div class="input-container">
+                <i class="fa-solid fa-lock"></i>
+                <input class="Input-registro" [type]="showPassword? 'text' : 'password'" placeholder="Contraseña" formControlName="password" />
+                <i class="fa-solid {{activeIcon}}" (click)="togglePasswordVisibility()"></i>
+            </div>
+            <a routerLink="/cambio-contrasena"style="color: #333; font-size: 14px; text-decoration: none; margin: 15px 0;">Olvidaste tu contraseña?</a>
+            <button class="buttonRegistro" type="submit" [disabled]="loginForm.invalid">Ingresa</button>
+        </form>
+    </div>
+    <div class="overlay-container">
+        <div class="overlay">
+            <div class="overlay-panel overlay-left">
+                <h1 style="font-weight: bold; margin: 0;">¿Ya tienes una cuenta?</h1>
+                <p style="font-size: 14px; font-weight: 100; line-height: 20px; letter-spacing: 0.5px; margin: 20px 0 30px;">
+                    Para mantenerte conectado con nosotros, inicia sesión con tu información personal
+                </p>
+                <button class="buttonRegistro ghost" id="signIn">Inicia sesion</button>
+            </div>
+            <div class="overlay-panel overlay-right">
+                <h1 style="font-weight: bold; margin: 0;">¿Eres nuevo?</h1>
+                <p style="font-size: 14px; font-weight: 100; line-height: 20px; letter-spacing: 0.5px; margin: 20px 0 30px;">
+                    Da click en el botón "REGISTRATE" y comienza tu viaje con nosotros.
+                </p>
+                <button class="buttonRegistro ghost" id="signUp" >Registrate</button>
+            </div>
+        </div>
+    </div>
+</div>

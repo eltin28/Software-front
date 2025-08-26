@@ -1,0 +1,272 @@
+<!-- navbar.component.html -->
+<nav class="navbar" role="navigation" aria-label="Navegación principal">
+  <div class="navbar-container">
+    
+    <!-- Brand Section -->
+    <div class="navbar-brand-section">
+      <a 
+        routerLink="/" 
+        class="navbar-brand-link"
+        aria-label="Ir a página principal"
+        (click)="closeAllMenus()"
+      >
+        <span class="navbar-title">{{ title }}</span>
+      </a>
+    </div>
+
+    <!-- Search Section - Desktop -->
+    <div class="navbar-search-desktop">
+      <div class="search-container">
+        <input 
+          type="search" 
+          class="search-input"
+          placeholder="Buscar productos..."
+          aria-label="Buscar productos"
+        />
+        <button 
+          type="button" 
+          class="search-button"
+          aria-label="Buscar"
+        >
+          <i class="fa-solid fa-search" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Actions Section -->
+    <div class="navbar-actions">
+      
+      <!-- Search Button - Mobile -->
+      <button 
+        type="button" 
+        class="action-button search-mobile"
+        aria-label="Buscar"
+      >
+        <i class="fa-solid fa-search" aria-hidden="true"></i>
+      </button>
+
+      <!-- User Section -->
+      @if (isLoggedIn()) {
+        <!-- Authenticated User -->
+        <!-- Cart Button -->
+        <button 
+          type="button" 
+          class="action-button cart-button"
+          (click)="navigateToCart()"
+          aria-label="Carrito de compras"
+          [attr.aria-describedby]="cartItemCount() > 0 ? 'cart-count' : null"
+        >
+        <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+          @if (cartItemCount() > 0) {
+            <span 
+              class="cart-badge"
+              id="cart-count"
+              [attr.aria-label]="cartItemCount() + ' productos en el carrito'"
+            >
+              {{ cartItemCount() }}
+            </span>
+          }
+        </button>
+
+        <div class="user-menu-container">
+          <button 
+            type="button"
+            class="login-button"
+            (click)="toggleUserMenu()"
+            [attr.aria-expanded]="showUserMenu()"
+            aria-haspopup="true"
+            aria-label="Menú de usuario"
+          >
+            <span class="user-greeting">Hola, Juan</span>
+          </button>
+          
+          <!-- User Dropdown Menu -->
+          <div 
+            class="user-dropdown"
+            [class.show]="showUserMenu()"
+            role="menu"
+            aria-labelledby="user-menu-trigger"
+          >
+            <button 
+              type="button"
+              class="dropdown-item"
+              (click)="navigateToProfile()"
+              role="menuitem"
+            >
+              <i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+              Mi Perfil
+            </button>
+            <button 
+              type="button"
+              class="dropdown-item"
+              role="menuitem"
+            >
+              <i class="fa-solid fa-heart" aria-hidden="true"></i>
+              Favoritos
+            </button>
+            <button 
+              type="button"
+              class="dropdown-item"
+              role="menuitem"
+            >
+              <i class="fa-solid fa-box" aria-hidden="true"></i>
+              Mis Pedidos
+            </button>
+            <hr class="dropdown-divider">
+            <button 
+              type="button"
+              class="dropdown-item logout-item"
+              (click)="logout()"
+              role="menuitem"
+            >
+              <i class="fa-solid fa-sign-out-alt" aria-hidden="true"></i>
+              Cerrar Sesión
+            </button>
+          </div>
+        </div>
+      } @else {
+        <!-- Non-authenticated User -->
+        <button 
+          type="button"
+          class="login-button"
+          (click)="navigateToLogin()"
+          aria-label="Iniciar sesión"
+        >
+          <span class="login-text">Ingresar</span>
+        </button>
+      }
+
+      <!-- Mobile Menu Toggle -->
+      <button 
+        type="button"
+        class="mobile-menu-toggle"
+        (click)="toggleMobileMenu()"
+        [attr.aria-expanded]="showMobileMenu()"
+        aria-label="Menú de navegación móvil"
+      >
+        <span class="hamburger-line" [class.active]="showMobileMenu()"></span>
+        <span class="hamburger-line" [class.active]="showMobileMenu()"></span>
+        <span class="hamburger-line" [class.active]="showMobileMenu()"></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Navigation Menu -->
+  <div 
+    class="mobile-nav"
+    [class.show]="showMobileMenu()"
+    role="navigation"
+    aria-label="Navegación móvil"
+  >
+    <div class="mobile-search">
+      <div class="search-container">
+        <input 
+          type="search" 
+          class="search-input"
+          placeholder="Buscar productos..."
+          aria-label="Buscar productos"
+        />
+        <button 
+          type="button" 
+          class="search-button"
+          aria-label="Buscar"
+        >
+          <i class="fa-solid fa-search" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+
+    <ul class="mobile-nav-list" role="menubar">
+      <li role="none">
+        <a 
+          routerLink="/" 
+          class="mobile-nav-link"
+          role="menuitem"
+          (click)="closeAllMenus()"
+        >
+          <i class="fa-solid fa-home" aria-hidden="true"></i>
+          Inicio
+        </a>
+      </li>
+      <li role="none">
+        <a 
+          routerLink="/productos" 
+          class="mobile-nav-link"
+          role="menuitem"
+          (click)="closeAllMenus()"
+        >
+          <i class="fa-solid fa-box" aria-hidden="true"></i>
+          Productos
+        </a>
+      </li>
+      <li role="none">
+        <a 
+          routerLink="/categorias" 
+          class="mobile-nav-link"
+          role="menuitem"
+          (click)="closeAllMenus()"
+        >
+          <i class="fa-solid fa-tags" aria-hidden="true"></i>
+          Categorías
+        </a>
+      </li>
+      <li role="none">
+        <a 
+          routerLink="/ofertas" 
+          class="mobile-nav-link"
+          role="menuitem"
+          (click)="closeAllMenus()"
+        >
+          <i class="fa-solid fa-percent" aria-hidden="true"></i>
+          Ofertas
+        </a>
+      </li>
+      
+      @if (isLoggedIn()) {
+        <li role="none">
+          <a 
+            routerLink="/profile" 
+            class="mobile-nav-link"
+            role="menuitem"
+            (click)="closeAllMenus()"
+          >
+            <i class="fa-solid fa-user" aria-hidden="true"></i>
+            Mi Perfil
+          </a>
+        </li>
+        <li role="none">
+          <button 
+            type="button"
+            class="mobile-nav-link logout-mobile"
+            (click)="logout()"
+            role="menuitem"
+          >
+            <i class="fa-solid fa-sign-out-alt" aria-hidden="true"></i>
+            Cerrar Sesión
+          </button>
+        </li>
+      } @else {
+        <li role="none">
+          <a 
+            routerLink="login" 
+            class="mobile-nav-link"
+            role="menuitem"
+            (click)="closeAllMenus()"
+          >
+            <i class="fa-solid fa-sign-in-alt" aria-hidden="true"></i>
+            Iniciar Sesión
+          </a>
+        </li>
+      }
+    </ul>
+  </div>
+
+  <!-- Overlay para cerrar menús al hacer click fuera -->
+  @if (showUserMenu() || showMobileMenu()) {
+    <div 
+      class="menu-overlay"
+      (click)="closeAllMenus()"
+      aria-hidden="true"
+    ></div>
+  }
+</nav>

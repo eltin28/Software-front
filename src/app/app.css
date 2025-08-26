@@ -1,0 +1,19 @@
+/* --- sticky footer, sin overflow horizontal --- */
+html, body { height: 100%; }
+body { overflow-x: hidden; margin: 0; }
+
+app-root {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.page-main {
+  flex: 1 0 auto;
+  display: grid;
+  place-content: start center;
+  padding: 16px;
+}
+
+/* evita que cualquier componente ancho genere scroll X */
+.page-main > * { max-width: 1200px; width: 100%; }
