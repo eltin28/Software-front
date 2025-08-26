@@ -2,12 +2,15 @@
 /dist
 /out-tsc
 /build
+.angular/cache/
+
 
 # Dependencias
 /node_modules
 
 # IDEs y editores
 /.idea
+.editorconfig
 /.vscode
 *.suo
 *.ntvs*
