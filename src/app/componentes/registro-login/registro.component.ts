@@ -1,104 +1,118 @@
 // registro.component.ts — Angular 20, standalone
-import { Component, OnInit, inject } from '@angular/core';
-import { DOCUMENT, CommonModule } from '@angular/common';
+import { Component, OnInit, Inject } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControlOptions } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { AuthService } from '../../servicios/auth.service';
+import { TokenService } from '../../servicios/token.service';
+import { CrearCuentaDTO } from '../../dto/cuenta/crear-cuenta-dto';
+import { LoginDTO } from '../../dto/cuenta/login-dto';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import Swal from 'sweetalert2';
 
-// Interfaces mínimas para tipar
-interface CrearCuentaDTO {
-  cedula: string;
-  nombre: string;
-  email: string;
-  telefono: string;
-  password: string;
-  confirmaPassword: string;
-}
-
-interface LoginDTO {
-  email: string;
-  password: string;
-}
 
 @Component({
   selector: 'app-inicio',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [ ReactiveFormsModule , FontAwesomeModule, RouterModule ],
   templateUrl: './registro.component.html',
   styleUrls: ['./registro.component.css']
 })
 export class RegistroLoginComponent implements OnInit {
 
-  private readonly document = inject(DOCUMENT);
-  private readonly fb = inject(FormBuilder);
-  private readonly router = inject(Router);
-
   container: HTMLElement | null = null;
   showPassword = false;
   activeIcon = 'fa-eye';
-
   registroForm!: FormGroup;
   loginForm!: FormGroup;
 
-  constructor() {
-    this.crearFormularios();
+
+  constructor(@Inject(DOCUMENT ) private document: Document, private formBuilder: FormBuilder,
+    private authService: AuthService, private tokenService: TokenService, private router: Router
+  ) {
+
+    this.crearFormulario();
   }
 
-  /** Inicializa los formularios */
-  private crearFormularios(): void {
-    this.registroForm = this.fb.group(
+  private crearFormulario() {
+
+    this.registroForm = this.formBuilder.group(
       {
-        cedula: ['', [Validators.required]],
-        nombre: ['', [Validators.required, Validators.minLength(3)]],
-        email: ['', [Validators.required, Validators.email]],
-        telefono: ['', [Validators.required, Validators.maxLength(10), Validators.pattern(/^\d{7,10}$/)]],
-        password: ['', [Validators.required, Validators.minLength(7)]],
-        confirmaPassword: ['', [Validators.required]]
+      cedula: ['', [Validators.required]],
+      nombre: ['', [Validators.required]],
+      email: ['', [Validators.required, Validators.email]],
+      telefono: ['', [Validators.required, Validators.maxLength(10)]],
+      password: ['', [Validators.required, Validators.minLength(7)]],
+      confirmaPassword: ['', [Validators.required]]
       },
-      { validators: [this.passwordsMatchValidator] } as AbstractControlOptions
+      { 
+        validators: [this.passwordsMatchValidator]
+      } as AbstractControlOptions
     );
 
-    this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required]]
+    this.loginForm = this.formBuilder.group(
+      {
+        email: ['', [Validators.required, Validators.email]],
+        password: ['', [Validators.required]]
+      }
+    );
+
+   }
+
+  public registrar() {
+    const crearCuenta = this.registroForm.value as CrearCuentaDTO;
+    this.authService.crearCuenta(crearCuenta).subscribe({
+      next: (data) => {
+        const email = this.registroForm.get('email')?.value;
+        console.log("Cohio el email" + email);
+        this.authService.setEmailTemp(email);
+        Swal.fire({
+          title: 'Cuenta creada',
+          text: 'La cuenta se ha creado correctamente',
+          icon: 'success',
+          confirmButtonText: 'Aceptar',
+        }).then((result) => {
+          /* Read more about isConfirmed, isDenied below */
+          if (result.isConfirmed) {
+           this.router.navigate(["/codigo-validacion"]);
+          }
+        })
+      },
+      error: (error) => {
+        Swal.fire({
+          title: 'Error',
+          text: error.error.respuesta,
+          icon: 'error',
+          confirmButtonText: 'Aceptar'
+        })
+      }
+    });   
+  }
+
+  public login() {
+    const loginDTO = this.loginForm.value as LoginDTO;
+
+    this.authService.iniciarSesion(loginDTO).subscribe({
+      next: (data) => {
+        this.tokenService.login(data.respuesta.token);
+      },
+      error: (error) => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: error.error.respuesta
+        });
+      },
     });
   }
 
-  /** Registro de usuario */
-  registrar(): void {
-    if (this.registroForm.invalid) {
-      this.registroForm.markAllAsTouched();
-      return;
-    }
-
-    const crearCuenta = this.registroForm.value as CrearCuentaDTO;
-
-    // TODO: Reemplazar por llamada real a AuthService
-    console.log('Datos de registro:', crearCuenta);
-    alert('Cuenta registrada (modo prueba). Redirigiendo...');
-    this.router.navigate(['/codigo-validacion']).catch(console.error);
-  }
-
-  /** Inicio de sesión */
-  login(): void {
-    if (this.loginForm.invalid) {
-      this.loginForm.markAllAsTouched();
-      return;
-    }
-
-    const dto = this.loginForm.value as LoginDTO;
-
-    // TODO: Reemplazar por llamada real a AuthService
-    console.log('Datos de login:', dto);
-    alert('Inicio de sesión exitoso (modo prueba)');
-    this.router.navigate(['/']).catch(console.error);
-  }
-
-  /** Validador personalizado para comparar contraseñas */
-  private passwordsMatchValidator(formGroup: FormGroup) {
+  passwordsMatchValidator(formGroup: FormGroup) {
     const password = formGroup.get('password')?.value ?? '';
     const confirmaPassword = formGroup.get('confirmaPassword')?.value ?? '';
-    return password === confirmaPassword ? null : { passwordsMismatch: true };
-  }
+   
+    // Si las contraseñas no coinciden, devuelve un error, de lo contrario, null
+    return password == confirmaPassword ? null : { passwordsMismatch: true };
+  }   
 
   /** Configuración de eventos para el cambio de panel */
   ngOnInit(): void {
