@@ -4,11 +4,11 @@ import { TokenService } from '../servicios/token.service';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { MensajeDTO } from '../dto/autenticacion/mensaje-dto';
-import { LoginDTO } from '../dto/cuenta/login-dto';
-import { CrearCuentaDTO } from '../dto/cuenta/crear-cuenta-dto';
-import { ValidarCodigoDTO } from '../dto/cuenta/validar-codigo-dto';
-import { CambiarPasswordDTO } from '../dto/cuenta/cambiar-password-dto';
-import { CodigoContraseniaDTO } from '../dto/cuenta/codigo-contrasenia-dto';
+import { LoginDTO } from '../dto/usuario/login-dto';
+import { CrearCuentaDTO } from '../dto/usuario/crear-usuario-dto';
+import { ValidarCodigoDTO } from '../dto/usuario/validar-codigo-dto';
+import { CambiarPasswordDTO } from '../dto/usuario/cambiar-password-dto';
+import { CodigoContraseniaDTO } from '../dto/usuario/codigo-contrasenia-dto';
 import { TokenDTO } from '../dto/autenticacion/token-dto';
 
 @Injectable({
@@ -49,11 +49,11 @@ export class AuthService {
   }
 
   public validarCodigo(validarCodigoDTO: ValidarCodigoDTO): Observable<MensajeDTO<string>> {
-    return this.http.post<MensajeDTO<string>>(`${this.authURL}/validar-codigo-registro`, validarCodigoDTO);
+    return this.http.post<MensajeDTO<string>>(`${this.authURL}/validar-codigo`, validarCodigoDTO);
   }
 
   public enviarCodigoRecuperacion(codigoContraseniaDTO: CodigoContraseniaDTO): Observable<MensajeDTO<string>> {
-    return this.http.post<MensajeDTO<string>>(`${this.authURL}/enviar-codigo-recuperacion-contasenia`, codigoContraseniaDTO);
+    return this.http.post<MensajeDTO<string>>(`${this.authURL}/codigo-recuperacion-contasenia`, codigoContraseniaDTO);
   }
 
   public cambiarPassword(cambiarPasswordDTO: CambiarPasswordDTO): Observable<MensajeDTO<string>> {

@@ -1,0 +1,21 @@
+<div class="forgot-password-container">
+  <div class="container">
+    <h3>Verificar Código</h3>
+    <form [formGroup]="validatorForm" (ngSubmit)="validacionCodigo()">
+      <div class="inp" formArrayName="code">
+        @for (control of codeArray.controls; track $index){
+          <input
+            type="text"
+            id="inp-verifi"
+            maxlength="1"
+            [formControlName]="$index"
+            (input)="moverAlSiguiente($event, $index)"
+          />        
+        }
+      </div>
+      <div class="containerBoton">
+        <button class="buttonRegistro">Verificar</button>
+      </div>
+    </form>
+  </div>
+</div>

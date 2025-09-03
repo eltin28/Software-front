@@ -1,12 +1,11 @@
-// registro.component.ts — Angular 20, standalone
 import { Component, OnInit, Inject } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControlOptions } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../servicios/auth.service';
 import { TokenService } from '../../servicios/token.service';
-import { CrearCuentaDTO } from '../../dto/cuenta/crear-cuenta-dto';
-import { LoginDTO } from '../../dto/cuenta/login-dto';
+import { CrearCuentaDTO } from '../../dto/usuario/crear-usuario-dto';
+import { LoginDTO } from '../../dto/usuario/login-dto';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import Swal from 'sweetalert2';
 
@@ -40,10 +39,10 @@ export class RegistroLoginComponent implements OnInit {
       {
       cedula: ['', [Validators.required]],
       nombre: ['', [Validators.required]],
-      email: ['', [Validators.required, Validators.email]],
+      correoElectronico: ['', [Validators.required, Validators.email]],
       telefono: ['', [Validators.required, Validators.maxLength(10)]],
-      password: ['', [Validators.required, Validators.minLength(7)]],
-      confirmaPassword: ['', [Validators.required]]
+      contrasenia: ['', [Validators.required, Validators.minLength(7)]],
+      confirmaContrasenia: ['', [Validators.required]]
       },
       { 
         validators: [this.passwordsMatchValidator]
@@ -52,7 +51,7 @@ export class RegistroLoginComponent implements OnInit {
 
     this.loginForm = this.formBuilder.group(
       {
-        email: ['', [Validators.required, Validators.email]],
+        correoElectronico: ['', [Validators.required, Validators.email]],
         password: ['', [Validators.required]]
       }
     );
@@ -63,9 +62,8 @@ export class RegistroLoginComponent implements OnInit {
     const crearCuenta = this.registroForm.value as CrearCuentaDTO;
     this.authService.crearCuenta(crearCuenta).subscribe({
       next: (data) => {
-        const email = this.registroForm.get('email')?.value;
-        console.log("Cohio el email" + email);
-        this.authService.setEmailTemp(email);
+        const correoElectronico = this.registroForm.get('correoElectronico')?.value;
+        this.authService.setEmailTemp(correoElectronico);
         Swal.fire({
           title: 'Cuenta creada',
           text: 'La cuenta se ha creado correctamente',
@@ -107,11 +105,11 @@ export class RegistroLoginComponent implements OnInit {
   }
 
   passwordsMatchValidator(formGroup: FormGroup) {
-    const password = formGroup.get('password')?.value ?? '';
-    const confirmaPassword = formGroup.get('confirmaPassword')?.value ?? '';
+    const contrasenia = formGroup.get('contrasenia')?.value ?? '';
+    const confirmaContrasenia = formGroup.get('confirmaContrasenia')?.value ?? '';
    
     // Si las contraseñas no coinciden, devuelve un error, de lo contrario, null
-    return password == confirmaPassword ? null : { passwordsMismatch: true };
+    return contrasenia == confirmaContrasenia ? null : { passwordsMismatch: true };
   }   
 
   /** Configuración de eventos para el cambio de panel */

@@ -18,16 +18,16 @@
             </div>
             <div class="input-container">
                 <i class="fa-solid fa-envelope"></i>
-                <input class="Input-registro" type="email" name="Email" placeholder="Email" formControlName="email"/>
+                <input class="Input-registro" type="email" name="correoElectronico" placeholder="Email" formControlName="correoElectronico"/>
             </div>
             <div class="input-container">
                 <i class="fa-solid fa-lock"></i>
-                <input class="Input-registro" [type]="showPassword? 'text' : 'password'" placeholder="Contraseña" formControlName="password"/>
+                <input class="Input-registro" [type]="showPassword? 'text' : 'password'" placeholder="Contraseña" formControlName="contrasenia"/>
                 <i class="fa-solid {{activeIcon}}" (click)="togglePasswordVisibility()"></i>
             </div>
             <div class="input-container">
                 <i class="fa-solid fa-lock"></i>
-                <input class="Input-registro" [type]="showPassword? 'text' : 'password'" placeholder="Repetir contraseña" formControlName="confirmaPassword"/>
+                <input class="Input-registro" [type]="showPassword? 'text' : 'password'" placeholder="Repetir contraseña" formControlName="confirmaContrasenia"/>
                 <i class="fa-solid {{activeIcon}}" (click)="togglePasswordVisibility()"></i>
             </div>
             @if (registroForm.hasError('passwordsMismatch')) {
@@ -43,7 +43,7 @@
             </div>
             <div class="input-container">
                 <i class="fa-solid fa-user"></i>
-                <input class="Input-registro" type="email" placeholder="Email" formControlName="email" />
+                <input class="Input-registro" type="email" placeholder="Email" formControlName="correoElectronico" />
             </div>
             <div class="input-container">
                 <i class="fa-solid fa-lock"></i>

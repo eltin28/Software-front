@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { InformacionCuentaDTO } from '../dto/cuenta/informacion-cuenta-dto';
+import { InformacionCuentaDTO } from '../dto/usuario/informacion-usuario-dto';
 
 const TOKEN_KEY = "AuthToken";
 
@@ -76,9 +76,9 @@ export class TokenService {
         cedula: decodedValues.cedula,
         nombre: decodedValues.nombre,
         telefono: decodedValues.telefono,
-        email: decodedValues.email
+        correoElectronico: decodedValues.email
       };
     }
-    return { id: '', cedula: '', nombre: '', telefono: '', email: '' };
+    return { id: '', cedula: '', nombre: '', telefono: '', correoElectronico: '' };
   }
 }

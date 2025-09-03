@@ -1,3 +1,3 @@
 export interface CodigoContraseniaDTO {
-    email: string;
+    correoElectronico: string;
 }

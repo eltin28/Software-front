@@ -3,5 +3,5 @@ export interface InformacionCuentaDTO {
     cedula: string,
     nombre: string,
     telefono: string,
-    email: string
+    correoElectronico: string
 }
