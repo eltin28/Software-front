@@ -46,8 +46,8 @@
       </button>
 
       <!-- User Section -->
-      @if (isLoggedIn()) {
-        <!-- Authenticated User -->
+      @if (isLoggedIn) {
+      <!-- Authenticated User -->
         <!-- Cart Button -->
         <button 
           type="button" 
@@ -56,16 +56,18 @@
           aria-label="Carrito de compras"
           [attr.aria-describedby]="cartItemCount() > 0 ? 'cart-count' : null"
         >
-        <i class="fa fa-shopping-cart" aria-hidden="true"></i>
-          @if (cartItemCount() > 0) {
-            <span 
-              class="cart-badge"
-              id="cart-count"
-              [attr.aria-label]="cartItemCount() + ' productos en el carrito'"
-            >
-              {{ cartItemCount() }}
-            </span>
-          }
+          <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+          <!-- Aqui es para el uso de numeros que cuenten la cantidad de productos agregados al carrito -->
+            <!-- @if (cartItemCount() > 0) {
+              <span 
+                class="cart-badge"
+                id="cart-count"
+                [attr.aria-label]="cartItemCount() + ' productos en el carrito'"
+              >
+                {{ cartItemCount() }}
+              </span>
+            } -->
+        
         </button>
 
         <div class="user-menu-container">
@@ -222,7 +224,7 @@
         </a>
       </li>
       
-      @if (isLoggedIn()) {
+      @if (isLoggedIn) {
         <li role="none">
           <a 
             routerLink="/profile" 

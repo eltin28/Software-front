@@ -1,84 +1,59 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { InformacionCuentaDTO } from '../dto/usuario/informacion-usuario-dto';
-
-const TOKEN_KEY = "AuthToken";
-
+import { TokenData } from '../dto/autenticacion/TokenData';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TokenService {
 
+  private readonly TOKEN_KEY = "AuthToken";
+
   constructor(private router: Router) { }
 
   public setToken(token: string) {
-    window.sessionStorage.removeItem(TOKEN_KEY);
-    window.sessionStorage.setItem(TOKEN_KEY, token);
+    sessionStorage.setItem(this.TOKEN_KEY, token);
   }
 
   public getToken(): string | null {
-    return sessionStorage.getItem(TOKEN_KEY);
+    return sessionStorage.getItem(this.TOKEN_KEY);
   }
 
-  
-
   public isLogged(): boolean {
-    if (this.getToken()) {
-      return true;
-    }
-    return false;
+    return !!this.getToken();
   }
 
   public login(token: string) {
     this.setToken(token);
     const rol = this.getRol();
-    let destino = rol == "ADMINISTRADOR" ? "/home-admin" : "/home-cliente";
-    this.router.navigate([destino]).then(() => {
-      window.location.reload();
-    });
-   }
-   
+    const destino = rol === "ADMINISTRADOR" ? "/home-admin" : "/home-cliente";
+    this.router.navigate([destino]).then(() => window.location.reload());
+  }
 
- public logout() {
-  window.sessionStorage.clear();
-  this.router.navigate(["/login"]).then(() => {
-    window.location.reload();
-  });
+  public logout() {
+    sessionStorage.clear();
+    this.router.navigate(["/login"]);
   }
 
   private decodePayload(token: string): any {
-    const payload = token!.split(".")[1];
-    const payloadDecoded = atob(payload); // alternativa más ligera en navegadores
-    const values = JSON.parse(payloadDecoded);
-    return values;
+    const payload = token.split(".")[1];
+    return JSON.parse(atob(payload));
   }
-  
 
-// Leer datos del usuario
- 
- public getRol(): string {
-  const token = this.getToken();
-  if (token) {
-    const values = this.decodePayload(token);
-    return values.rol;
-  }
-  return "";
- }
- 
-   //Con la funcion getAllTokenData simplifico la creacion de funciones para obtener datos separados
-   public getAllTokenData(): InformacionCuentaDTO {
-    const token = this.getToken(); // Asume que getToken devuelve el token JWT
+  public getAllTokenData(): TokenData {
+    const token = this.getToken();
     if (token) {
-      const decodedValues = this.decodePayload(token); // Usa decodePayload para obtener el payload decodificado
+      const values = this.decodePayload(token);
       return {
-        id: decodedValues.id,
-        cedula: decodedValues.cedula,
-        nombre: decodedValues.nombre,
-        telefono: decodedValues.telefono,
-        correoElectronico: decodedValues.email
+        id: values.id,
+        nombre: values.nombre,
+        rol: values.rol
       };
     }
-    return { id: '', cedula: '', nombre: '', telefono: '', correoElectronico: '' };
+    return { id: '', nombre: '', rol: '' };
+  }
+
+  public getRol(): string {
+    return this.getAllTokenData().rol;
   }
 }
