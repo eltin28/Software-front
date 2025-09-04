@@ -1,0 +1,101 @@
+/* Contenedor principal con grid */
+.productos-container {
+  display: grid;
+  gap: 1.5rem;
+  padding: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+/* Tarjeta de producto */
+.producto-card {
+  position: relative;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+
+.producto-card:hover {
+  transform: translateY(-8px);
+}
+
+/* Imagen */
+.producto-img img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  display: block;
+}
+
+/* Información */
+.producto-info {
+  padding: 1rem;
+  text-align: center;
+}
+
+.producto-info h3 {
+  font-size: 1.1rem;
+  margin: 0.5rem 0;
+  color: #333;
+}
+
+.precio {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #e63946;
+}
+
+/* Overlay con el botón */
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: opacity 0.3s ease;
+}
+
+.producto-card:hover .overlay {
+  opacity: 1;
+}
+
+.btn-agregar {
+  background: #1d3557;
+  color: #fff;
+  border: none;
+  padding: 0.8rem 1.2rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.btn-agregar:hover {
+  background: #457b9d;
+}
+
+/* Responsividad */
+@media (min-width: 992px) {
+  /* Pantallas grandes → 4 columnas */
+  .productos-container {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  /* Pantallas medianas → 3 columnas */
+  .productos-container {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 767px) {
+  /* Pantallas pequeñas → 2 columnas */
+  .productos-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

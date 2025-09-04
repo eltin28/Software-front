@@ -1,3 +1,18 @@
-<div>
-    <a>HOAAAAAAAAAAA</a>
+<div class="productos-container">
+    @for (producto of listaProductos; track $index) {
+        <div class="producto-card">
+            <div class="producto-img">
+            <img [src]="producto.imagenProducto" [alt]="producto.nombreProducto" />
+            </div>
+            <div class="producto-info">
+            <h3>{{ producto.nombreProducto }}</h3>
+            <p class="precio">${{ producto.valor | number:'1.0-0' }}</p>
+            </div>
+            <div class="overlay">
+            <button class="btn-agregar" (click)="agregarAlCarrito(producto)">
+                Agregar al carrito
+            </button>
+            </div>
+        </div>
+    }
 </div>
