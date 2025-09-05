@@ -2,6 +2,9 @@ import { Component, ChangeDetectionStrategy, signal, inject } from '@angular/cor
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { TokenService } from '../../servicios/token.service';
+import { UsuarioService } from '../../servicios/usuario';
+import { MensajeDTO } from '../../dto/autenticacion/mensaje-dto';
+import { CarritoResponseDTO } from '../../dto/carrito/carrito-response-dto';
 
 @Component({
   selector: 'app-navbar',
@@ -21,8 +24,28 @@ export class NavbarComponent {
 
   private readonly router = inject(Router);
 
-  constructor(private tokenService: TokenService) {
-    this.cartItemCount.set(3); // <Aun esta quemado
+  constructor(private tokenService: TokenService,
+              private usuarioService: UsuarioService
+  ) {}
+
+    ngOnInit(): void {
+    if (this.isLoggedIn) {
+      this.cargarCantidadCarrito();
+    }
+  }
+
+  private cargarCantidadCarrito(): void {
+    const idUsuario = this.tokenService.getAllTokenData().id;
+
+    this.usuarioService.obtenerCarritoCompleto(idUsuario).subscribe({
+      next: (respuesta: MensajeDTO<CarritoResponseDTO>) => {
+        this.cartItemCount.set(respuesta.respuesta.totalProductos ?? 0);
+      },
+      error: (err) => {
+        console.error('Error cargando cantidad del carrito:', err);
+        this.cartItemCount.set(0);
+      }
+    });
   }
 
   get isLoggedIn(): boolean {

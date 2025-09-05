@@ -1,0 +1,28 @@
+<div class="carrito-container">
+  <h2 class="titulo">Tu Carrito</h2>
+
+  <ul class="carrito-lista">
+    <!-- Iteración de productos en el carrito -->
+    @for (item of listaCarrito; track item.detalleCarritoDTO.idProducto) {
+    <li class="carrito-item">
+      <img [src]="item.imagenProducto" alt="{{ item.nombre }}" class="producto-img" />
+
+      <div class="producto-info">
+        <h3 class="producto-nombre">{{ item.nombre }}</h3>
+        <p class="producto-precio">{{ item.valorUnitario| currency:'USD':'symbol':'1.0-0' }}</p>
+
+        <div class="cantidad-control">
+            <button class="btn-cantidad" (click)="disminuirCantidad(item)" aria-label="Disminuir cantidad">−</button>
+          <span class="cantidad">{{ item.detalleCarritoDTO.cantidad }}</span>
+            <button class="btn-cantidad" (click)="aumentarCantidad(item)" aria-label="Aumentar cantidad">+</button>
+        </div>
+      </div>
+    </li>
+    }
+  </ul>
+
+  <div class="carrito-footer">
+    <p class="total">Total: <span>{{ carrito?.total | currency:'USD':'symbol':'1.0-0' }}</span></p>
+    <button class="btn-pagar" type="button">Ir a pagar</button>
+  </div>
+</div>

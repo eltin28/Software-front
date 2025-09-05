@@ -57,8 +57,7 @@
           [attr.aria-describedby]="cartItemCount() > 0 ? 'cart-count' : null"
         >
           <i class="fa fa-shopping-cart" aria-hidden="true"></i>
-          <!-- Aqui es para el uso de numeros que cuenten la cantidad de productos agregados al carrito -->
-            <!-- @if (cartItemCount() > 0) {
+            @if (cartItemCount() > 0) {
               <span 
                 class="cart-badge"
                 id="cart-count"
@@ -66,8 +65,7 @@
               >
                 {{ cartItemCount() }}
               </span>
-            } -->
-        
+            }
         </button>
 
         <div class="user-menu-container">
