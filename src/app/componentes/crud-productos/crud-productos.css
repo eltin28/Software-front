@@ -1,0 +1,95 @@
+/* Contenedor principal */
+.form-container {
+  max-width: 500px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Título */
+.form-container h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #1d3557;
+  font-size: 1.6rem;
+}
+
+/* Grupos de formulario */
+.form-group {
+  margin-bottom: 1.2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Etiquetas */
+label {
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+  color: #333333;
+  font-size: 0.95rem;
+}
+
+/* Inputs y selects */
+input,
+select {
+  padding: 0.75rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Efecto focus */
+input:focus,
+select:focus {
+  border-color: #457b9d;
+  box-shadow: 0 0 4px rgba(69, 123, 157, 0.4);
+  outline: none;
+}
+
+/* Botón */
+.btn-submit {
+  width: 100%;
+  background: #1d3557;
+  color: #fff;
+  padding: 0.9rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.btn-submit:hover {
+  background: #457b9d;
+  transform: translateY(-2px);
+}
+
+.btn-submit:active {
+  transform: translateY(0);
+}
+
+/* Responsividad */
+@media (max-width: 600px) {
+  .form-container {
+    padding: 1.5rem;
+  }
+
+  .form-container h2 {
+    font-size: 1.4rem;
+  }
+
+  input,
+  select {
+    font-size: 0.9rem;
+  }
+
+  .btn-submit {
+    font-size: 0.9rem;
+    padding: 0.75rem;
+  }
+}
