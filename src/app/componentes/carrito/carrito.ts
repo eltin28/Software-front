@@ -1,12 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
+import { CurrencyPipe } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { InformacionProductoCarritoDTO } from '../../dto/carrito/informacion-producto-carrito-dto';
 import { CarritoResponseDTO } from '../../dto/carrito/carrito-response-dto';
 import { DetalleCarritoDTO } from '../../dto/carrito/detalle-carrito-dto';
 import { MensajeDTO } from '../../dto/autenticacion/mensaje-dto';
+import { finalize } from 'rxjs';
 import { UsuarioService } from '../../servicios/usuario';
-import { TokenService } from '../../servicios/token.service';
-import { CurrencyPipe } from '@angular/common';
-import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-carrito',
@@ -16,16 +16,15 @@ import { RouterModule } from '@angular/router';
 })
 export class Carrito implements OnInit {
 
-  listaCarrito: InformacionProductoCarritoDTO[] = [];
-  carrito: CarritoResponseDTO | null = null;
-  private idUsuario: string = '';
+  // Signals para un estado reactivo y seguro
+  readonly listaCarrito = signal<InformacionProductoCarritoDTO[]>([]);
+  readonly carrito = signal<CarritoResponseDTO | null>(null);
+  readonly cargando = signal<boolean>(false);
+  readonly error = signal<string | null>(null);
 
-  constructor(private usuarioService: UsuarioService, 
-              private tokenService: TokenService
-  ) {}
+  constructor(private usuarioService: UsuarioService) {}
 
   ngOnInit(): void {
-    this.idUsuario = this.tokenService.getAllTokenData().id;
     this.cargarCarritoCompleto();
   }
 
@@ -33,15 +32,15 @@ export class Carrito implements OnInit {
    * Carga el carrito completo desde el backend (items y total).
    */
   private cargarCarritoCompleto(): void {
-    this.usuarioService.obtenerCarritoCompleto(this.idUsuario).subscribe({
-      next: (respuesta: MensajeDTO<CarritoResponseDTO>) => {
-        this.carrito = respuesta.respuesta;
-        this.listaCarrito = this.carrito.items;
-      },
-      error: (err) => {
-        console.error('Error cargando carrito:', err);
-      }
-    });
+
+    this.usuarioService.obtenerCarritoCompleto()
+      .subscribe({
+        next: (respuesta: MensajeDTO<CarritoResponseDTO>) => {
+          this.carrito.set(respuesta.respuesta);
+          this.listaCarrito.set(respuesta.respuesta.items);
+        },
+        error: () => this.error.set('No se pudo cargar el carrito. Intenta nuevamente.')
+      });
   }
 
   /**
@@ -53,27 +52,22 @@ export class Carrito implements OnInit {
       cantidad: 1
     };
 
-    this.usuarioService.agregarItemsAlCarrito(this.idUsuario, [detalle]).subscribe({
-      next: () => this.cargarCarritoCompleto(),
-      error: (err) => console.error('Error al aumentar cantidad:', err)
-    });
+    this.usuarioService.agregarItemsAlCarrito([detalle])
+      .subscribe({ next: () => this.cargarCarritoCompleto() });
   }
 
   /**
    * Disminuye la cantidad de un producto en el carrito.
-   * Si la cantidad llega a 1 y se disminuye, se elimina el ítem.
    */
   disminuirCantidad(item: InformacionProductoCarritoDTO): void {
     if (item.detalleCarritoDTO.cantidad > 1) {
       const detalle: DetalleCarritoDTO = {
         idProducto: item.detalleCarritoDTO.idProducto,
-        cantidad: -1 
+        cantidad: -1
       };
 
-      this.usuarioService.agregarItemsAlCarrito(this.idUsuario, [detalle]).subscribe({
-        next: () => this.cargarCarritoCompleto(),
-        error: (err) => console.error('Error al disminuir cantidad:', err)
-      });
+      this.usuarioService.agregarItemsAlCarrito([detalle])
+        .subscribe({ next: () => this.cargarCarritoCompleto() });
     } else {
       this.eliminarItem(item.detalleCarritoDTO.idProducto);
     }
@@ -83,19 +77,15 @@ export class Carrito implements OnInit {
    * Elimina un ítem del carrito completamente.
    */
   eliminarItem(idProducto: string): void {
-    this.usuarioService.eliminarItemDelCarrito(this.idUsuario, idProducto).subscribe({
-      next: () => this.cargarCarritoCompleto(),
-      error: (err) => console.error('Error al eliminar ítem:', err)
-    });
+    this.usuarioService.eliminarItemDelCarrito(idProducto)
+      .subscribe({ next: () => this.cargarCarritoCompleto() });
   }
 
   /**
    * Vacía todo el carrito.
    */
   vaciarCarrito(): void {
-    this.usuarioService.vaciarCarrito(this.idUsuario).subscribe({
-      next: () => this.cargarCarritoCompleto(),
-      error: (err) => console.error('Error al vaciar carrito:', err)
-    });
+    this.usuarioService.vaciarCarrito()
+      .subscribe({ next: () => this.cargarCarritoCompleto() });
   }
 }

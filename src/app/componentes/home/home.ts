@@ -60,7 +60,7 @@ export class Home {
       cantidad: 1
     };
 
-    this.usuarioService.agregarItemsAlCarrito(idUsuario, [item]).subscribe({
+    this.usuarioService.agregarItemsAlCarrito([item]).subscribe({
       next: (resp: MensajeDTO<CarritoDTO>) => {
         if (!resp.error) {
           console.log('Producto agregado correctamente:', resp.respuesta);

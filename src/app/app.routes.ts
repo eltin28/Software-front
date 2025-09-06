@@ -3,18 +3,21 @@ import { RegistroLoginComponent } from './componentes/registro-login/registro.co
 import { Home } from './componentes/home/home';
 import { CodigoValidacion } from './componentes/codigo-validacion/codigo-validacion';
 import { CambioContrasena } from './componentes/cambio-contrasena/cambio-contrasena';
-import { LoginGuard } from './servicios/auth.service';
+import { AuthGuard, PublicGuard } from './interceptor/AuthGuard';
 import { Carrito } from './componentes/carrito/carrito';
 
 export const routes: Routes = [
 
     // PUBLIC ROUTES
     { path: '', component: Home },
-    { path: 'login', component: RegistroLoginComponent, canActivate: [LoginGuard] },
-    { path: 'codigo-validacion', component: CodigoValidacion },
-    { path: 'cambio-contrasena', component: CambioContrasena  },
-    { path: '**', pathMatch: 'full', redirectTo: ''},
+    { path: 'login', component: RegistroLoginComponent, canActivate: [PublicGuard] },
+    { path: 'codigo-validacion', component: CodigoValidacion, canActivate: [PublicGuard] },
+    { path: 'cambio-contrasena', component: CambioContrasena, canActivate: [PublicGuard]  },
 
     //USUARIO ROUTES
-    { path: 'carrito', component: Carrito, canActivate: [LoginGuard] }
+    { path: 'carrito', component: Carrito, canActivate: [AuthGuard] },
+
+
+    { path: '**', pathMatch: 'full', redirectTo: ''}
+
 ];

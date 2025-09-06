@@ -54,16 +54,16 @@
           class="action-button cart-button"
           (click)="navigateToCart()"
           aria-label="Carrito de compras"
-          [attr.aria-describedby]="cartItemCount() > 0 ? 'cart-count' : null"
+          [attr.aria-describedby]="usuarioService.cartItemCount() > 0 ? 'cart-count' : null"
         >
           <i class="fa fa-shopping-cart" aria-hidden="true"></i>
-            @if (cartItemCount() > 0) {
+            @if (usuarioService.cartItemCount() > 0) {
               <span 
                 class="cart-badge"
                 id="cart-count"
-                [attr.aria-label]="cartItemCount() + ' productos en el carrito'"
+                [attr.aria-label]="usuarioService.cartItemCount() + ' productos en el carrito'"
               >
-                {{ cartItemCount() }}
+                {{ usuarioService.cartItemCount() }}
               </span>
             }
         </button>
