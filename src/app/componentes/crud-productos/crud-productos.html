@@ -1,0 +1,70 @@
+<div class="form-container">
+  <h2>Crear Producto</h2>
+
+  <form>
+    <!-- Nombre -->
+    <div class="form-group">
+      <label for="nombreProducto">Nombre del Producto</label>
+      <input
+        id="nombreProducto"
+        type="text"
+        name="nombreProducto"
+        placeholder="Ej: Crema hidratante"
+        required
+      />
+    </div>
+
+    <!-- Imagen -->
+    <div class="form-group">
+      <label for="imagenProducto">URL Imagen</label>
+      <input
+        id="imagenProducto"
+        type="text"
+        name="imagenProducto"
+        placeholder="https://..."
+        required
+      />
+    </div>
+
+    <!-- Cantidad -->
+    <div class="form-group">
+      <label for="cantidad">Cantidad</label>
+      <input
+        id="cantidad"
+        type="number"
+        name="cantidad"
+        placeholder="Ej: 10"
+        required
+      />
+    </div>
+
+    <!-- Valor -->
+    <div class="form-group">
+      <label for="valor">Precio</label>
+      <input
+        id="valor"
+        type="number"
+        name="valor"
+        placeholder="Ej: 25000"
+        required
+      />
+    </div>
+
+    <!-- Tipo -->
+    <div class="form-group">
+      <label for="tipo">Tipo de Producto</label>
+      <select id="tipo" name="tipo" required>
+        <option value="">Seleccione...</option>
+        <option value="MAQUILLAJE">Maquillaje</option>
+        <option value="CUIDADO_PIEL">Cuidado de la piel</option>
+        <option value="CABELLO">Cabello</option>
+        <option value="FRAGANCIAS">Fragancias</option>
+        <option value="TRATAMIENTOS">Tratamientos</option>
+        <option value="ACCESORIOS">Accesorios</option>
+      </select>
+    </div>
+
+    <!-- Botón -->
+    <button type="submit" class="btn-submit">Crear Producto</button>
+  </form>
+</div>
