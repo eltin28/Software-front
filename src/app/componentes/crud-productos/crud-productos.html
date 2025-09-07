@@ -1,14 +1,14 @@
 <div class="form-container">
   <h2>Crear Producto</h2>
 
-  <form>
+  <form [formGroup]="productoForm" (ngSubmit)="crearProducto()">
     <!-- Nombre -->
     <div class="form-group">
-      <label for="nombreProducto">Nombre del Producto</label>
+      <label for="nombre">Nombre del Producto</label>
       <input
-        id="nombreProducto"
+        id="nombre"
         type="text"
-        name="nombreProducto"
+        formControlName="nombre"
         placeholder="Ej: Crema hidratante"
         required
       />
@@ -20,7 +20,7 @@
       <input
         id="imagenProducto"
         type="text"
-        name="imagenProducto"
+        formControlName="imagenProducto"
         placeholder="https://..."
         required
       />
@@ -32,7 +32,7 @@
       <input
         id="cantidad"
         type="number"
-        name="cantidad"
+        formControlName="cantidad"
         placeholder="Ej: 10"
         required
       />
@@ -44,7 +44,7 @@
       <input
         id="valor"
         type="number"
-        name="valor"
+        formControlName="valor"
         placeholder="Ej: 25000"
         required
       />
@@ -53,18 +53,17 @@
     <!-- Tipo -->
     <div class="form-group">
       <label for="tipo">Tipo de Producto</label>
-      <select id="tipo" name="tipo" required>
+      <select id="tipo" formControlName="tipo" required>
         <option value="">Seleccione...</option>
-        <option value="MAQUILLAJE">Maquillaje</option>
-        <option value="CUIDADO_PIEL">Cuidado de la piel</option>
-        <option value="CABELLO">Cabello</option>
-        <option value="FRAGANCIAS">Fragancias</option>
-        <option value="TRATAMIENTOS">Tratamientos</option>
-        <option value="ACCESORIOS">Accesorios</option>
+        <option *ngFor="let tipo of tiposProducto" [value]="tipo">
+          {{ tipo }}
+        </option>
       </select>
     </div>
 
     <!-- Botón -->
-    <button type="submit" class="btn-submit">Crear Producto</button>
+    <button type="submit" class="btn-submit" [disabled]="productoForm.invalid">
+      Crear Producto
+    </button>
   </form>
 </div>
