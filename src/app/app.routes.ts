@@ -5,7 +5,8 @@ import { CodigoValidacion } from './componentes/codigo-validacion/codigo-validac
 import { CambioContrasena } from './componentes/cambio-contrasena/cambio-contrasena';
 import { AuthGuard, PublicGuard } from './interceptor/AuthGuard';
 import { Carrito } from './componentes/carrito/carrito';
-import {CrudProductos} from './componentes/crud-productos/crud-productos';
+import { CrudProducto} from './componentes/crud-productos/crud-productos';
+import { RolesGuard } from './servicios/roles.service';
 
 export const routes: Routes = [
 
@@ -14,7 +15,9 @@ export const routes: Routes = [
     { path: 'login', component: RegistroLoginComponent, canActivate: [PublicGuard] },
     { path: 'codigo-validacion', component: CodigoValidacion, canActivate: [PublicGuard] },
     { path: 'cambio-contrasena', component: CambioContrasena, canActivate: [PublicGuard]  },
-    { path: 'modificar-productos', component: CrudProductos  },
+
+    //ADMIN ROUTES
+    { path: 'modificar-productos', component: CrudProducto, canActivate: [RolesGuard], data: { expectedRole: ["ADMINISTRADOR"] } },
 
     //USUARIO ROUTES
     { path: 'carrito', component: Carrito, canActivate: [AuthGuard] },
