@@ -1,11 +1,11 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CurrencyPipe } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { InformacionProductoCarritoDTO } from '../../dto/carrito/informacion-producto-carrito-dto';
 import { CarritoResponseDTO } from '../../dto/carrito/carrito-response-dto';
 import { DetalleCarritoDTO } from '../../dto/carrito/detalle-carrito-dto';
 import { MensajeDTO } from '../../dto/autenticacion/mensaje-dto';
-import { finalize } from 'rxjs';
+import { MostrarPedidoDTO } from '../../dto/pedido/mostrar-pedido-dto';
 import { UsuarioService } from '../../servicios/usuario';
 
 @Component({
@@ -22,25 +22,39 @@ export class Carrito implements OnInit {
   readonly cargando = signal<boolean>(false);
   readonly error = signal<string | null>(null);
 
-  constructor(private usuarioService: UsuarioService) {}
+  constructor(private usuarioService: UsuarioService, private router: Router ) {}
 
   ngOnInit(): void {
-    this.cargarCarritoCompleto();
+    this.cargarCarritoCompleto(); 
   }
 
-  /**
-   * Carga el carrito completo desde el backend (items y total).
-   */
-  private cargarCarritoCompleto(): void {
+  confirmarPedido(): void {
+    this.usuarioService.crearPedidoDesdeCarrito().subscribe({
+      next: (resp: MensajeDTO<MostrarPedidoDTO>) => {
+        // Navega a la vista de detalle del pedido creado
+        this.router.navigate(['orden', resp.respuesta.idPedido]);
+      },
+      error: err => {
+        console.error('Error al confirmar pedido', err);
+        this.error.set('No se pudo confirmar el pedido.');
+      },
+    });
+  }
 
-    this.usuarioService.obtenerCarritoCompleto()
-      .subscribe({
-        next: (respuesta: MensajeDTO<CarritoResponseDTO>) => {
-          this.carrito.set(respuesta.respuesta);
-          this.listaCarrito.set(respuesta.respuesta.items);
-        },
-        error: () => this.error.set('No se pudo cargar el carrito. Intenta nuevamente.')
-      });
+  private cargarCarritoCompleto(): void {
+    this.cargando.set(true);
+
+    this.usuarioService.obtenerCarritoCompleto().subscribe({
+      next: (respuesta: MensajeDTO<CarritoResponseDTO>) => {
+        this.carrito.set(respuesta.respuesta);
+        this.listaCarrito.set(respuesta.respuesta.items);
+        this.cargando.set(false);
+      },
+      error: () => {
+        this.error.set('No se pudo cargar el carrito. Intenta nuevamente.');
+        this.cargando.set(false);
+      },
+    });
   }
 
   /**

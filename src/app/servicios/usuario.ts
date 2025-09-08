@@ -6,6 +6,8 @@ import { CarritoDTO } from '../dto/carrito/carrito-dto';
 import { CarritoResponseDTO } from '../dto/carrito/carrito-response-dto';
 import { DetalleCarritoDTO } from '../dto/carrito/detalle-carrito-dto';
 import { InformacionProductoCarritoDTO } from '../dto/carrito/informacion-producto-carrito-dto';
+import { MostrarPedidoDTO } from '../dto/pedido/mostrar-pedido-dto';
+import { PreferenceDTO } from '../dto/pedido/preference-dto';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +15,7 @@ import { InformacionProductoCarritoDTO } from '../dto/carrito/informacion-produc
 export class UsuarioService {
 
   private readonly baseUrl = 'https://renechardon.onrender.com/api/usuarios';
+  // private readonly baseUrl = 'http://localhost:8081/api/usuarios' 
   public readonly cartItemCount = signal<number>(0);
 
 
@@ -29,9 +32,6 @@ export class UsuarioService {
   private refrescarCantidadCarrito(): void {
     this.cargarCantidadCarrito();
   }
-
-
-
 
 //_______________________________ENDPOINTS CARRITO________________________________//
 
@@ -78,5 +78,35 @@ export class UsuarioService {
            this.cartItemCount.set(resp.respuesta.totalProductos ?? 0);
         })
       );
+  }
+
+  // ==================== PEDIDOS ==================== //
+
+  // Listar pedidos del cliente
+  listarPedidosCliente(): Observable<MensajeDTO<MostrarPedidoDTO[]>> {
+    return this.http.get<MensajeDTO<MostrarPedidoDTO[]>>(`${this.baseUrl}/pedido`);
+  }
+
+  // Crear pedido desde carrito
+  crearPedidoDesdeCarrito(): Observable<MensajeDTO<MostrarPedidoDTO>> {
+    return this.http.post<MensajeDTO<MostrarPedidoDTO>>(
+      `${this.baseUrl}/orden/crear-pedido`,
+      {}
+    );
+  }
+
+
+  // Ver detalle de pedido
+  verDetallePedido(idPedido: string): Observable<MensajeDTO<MostrarPedidoDTO>> {
+    return this.http.get<MensajeDTO<MostrarPedidoDTO>>(`${this.baseUrl}/detalle/${idPedido}`);
+  }
+
+  iniciarPago(idPedido: string): Observable<MensajeDTO<PreferenceDTO>> {
+    return this.http.post<MensajeDTO<PreferenceDTO>>(`${this.baseUrl}/pago/${idPedido}`, {});
+  }
+
+  // Eliminar pedido del cliente
+  eliminarPedidoCliente(idPedido: string): Observable<MensajeDTO<string>> {
+    return this.http.delete<MensajeDTO<string>>(`${this.baseUrl}/eliminar-pedido/${idPedido}`);
   }
 }

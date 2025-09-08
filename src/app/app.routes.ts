@@ -7,6 +7,7 @@ import { AuthGuard, PublicGuard } from './interceptor/AuthGuard';
 import { Carrito } from './componentes/carrito/carrito';
 import { CrudProducto} from './componentes/crud-productos/crud-productos';
 import { RolesGuard } from './servicios/roles.service';
+import { DetallePedido } from './componentes/detalle-pedido/detalle-pedido';
 
 export const routes: Routes = [
 
@@ -21,6 +22,7 @@ export const routes: Routes = [
 
     //USUARIO ROUTES
     { path: 'carrito', component: Carrito, canActivate: [AuthGuard] },
+    { path: 'orden', component: DetallePedido, canActivate: [AuthGuard] },
 
 
     { path: '**', pathMatch: 'full', redirectTo: ''}

@@ -5,6 +5,7 @@ import { CrearProductoDTO } from '../dto/producto/crear-producto-dto';
 import { MensajeDTO } from '../dto/autenticacion/mensaje-dto';
 import { EditarProductoDTO } from '../dto/producto/editar-producto-dto';
 import { ImagenDTO } from '../dto/producto/imagen-dto';
+import { MostrarPedidoDTO } from '../dto/pedido/mostrar-pedido-dto';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +13,7 @@ import { ImagenDTO } from '../dto/producto/imagen-dto';
 export class AdminService {
 
   private adminURL = 'https://renechardon.onrender.com/api/admin'; 
+  // private adminURL = 'http://localhost:8081/api/admin'; // Cambia esto a tu URL de backend
 
   constructor(private http: HttpClient) {}
 
@@ -38,4 +40,17 @@ export class AdminService {
   public eliminarProducto(id: string): Observable<MensajeDTO<string>> {
     return this.http.delete<MensajeDTO<string>>(`${this.adminURL}/eliminar-producto/${id}`);
   }
+
+  // ==================== PEDIDOS ==================== //
+
+  // Ver pedido (admin)
+  verPedidoAdmin(idPedido: string): Observable<MensajeDTO<MostrarPedidoDTO>> {
+    return this.http.get<MensajeDTO<MostrarPedidoDTO>>(`${this.adminURL}/pedido/${idPedido}`);
+  }
+
+  // Eliminar pedido (admin)
+  eliminarPedidoAdmin(idPedido: string): Observable<MensajeDTO<string>> {
+    return this.http.delete<MensajeDTO<string>>(`${this.adminURL}/eliminar-pedido/${idPedido}`);
+  }
+
 }

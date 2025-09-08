@@ -17,6 +17,7 @@ import { TokenDTO } from '../dto/autenticacion/token-dto';
 export class AuthService {
 
   private authURL = "https://renechardon.onrender.com/api/auth";
+  // private authURL = 'http://localhost:8081/api/auth'; // Cambia esto a tu URL de backend
 
   private emailTemp: string;
 

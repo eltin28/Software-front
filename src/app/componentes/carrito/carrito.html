@@ -23,6 +23,6 @@
 
   <div class="carrito-footer">
     <p class="total">Total: <span>{{ carrito()?.total| currency:'USD':'symbol':'1.0-0' }}</span></p>
-    <button class="btn-pagar" type="button">Ir a pagar</button>
+    <button class="btn-pagar" (click)="confirmarPedido()">Confirmar pedido</button>
   </div>
 </div>

@@ -1,0 +1,30 @@
+<div class="pedido-detalle">
+  @if (pedido()) {
+    <h2>Pedido #{{ pedido()?.idPedido }}</h2>
+    <p><strong>Cliente:</strong> {{ pedido()?.nombreCliente }}</p>
+    <p><strong>Fecha:</strong> {{ pedido()?.fechaCompra }}</p>
+    <p><strong>Total:</strong> {{ pedido()?.total | currency:'USD' }}</p>
+
+    <h3>Productos:</h3>
+    <ul>
+      @for (d of pedido()?.detalles; track d.idProducto) {
+        <li>
+          {{ d.nombreProducto }} (x{{ d.cantidad }}) -
+          {{ d.precioUnitario | currency:'USD' }} →
+          {{ d.subtotal | currency:'USD' }}
+        </li>
+      }
+    </ul>
+
+    <button (click)="irAPagar()">Ir a pagar</button>
+  }
+</div>
+
+<div class="pago-info">
+  @if (pago()) {
+    <h3>Pago iniciado</h3>
+    <p><strong>ID Pago:</strong> {{ pago()?.idPago }}</p>
+    <p><strong>Estado:</strong> {{ pago()?.estado }}</p>
+    <p><strong>Monto:</strong> {{ pago()?.valorTransaccion | currency:pago()?.moneda }}</p>
+  }
+</div>

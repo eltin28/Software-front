@@ -12,6 +12,7 @@ import { TipoProducto } from '../model/enums/TipoProducto';
 export class publicoService {
   
   private readonly baseUrl = 'https://renechardon.onrender.com/api/publico';
+  // private readonly baseUrl = 'http://localhost:8081/api/publico'
 
   constructor(private http: HttpClient) {}
 
@@ -26,4 +27,12 @@ export class publicoService {
   obtenerProductoPorId(id: string): Observable<MensajeDTO<ProductoDetalleDTO>> {
     return this.http.get<MensajeDTO<ProductoDetalleDTO>>(`${this.baseUrl}/${id}`);
   }
+
+  // ==================== PAGOS (WEBHOOK) ==================== //
+
+  // Recibir notificación de MercadoPago
+  recibirNotificacionMercadoPago(payload: any): Observable<void> {
+    return this.http.post<void>(`${this.baseUrl}/pagos/notificacion`, payload);
+  }
+
 }
