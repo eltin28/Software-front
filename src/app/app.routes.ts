@@ -17,7 +17,7 @@ export const routes: Routes = [
     { path: 'cambio-contrasena', component: CambioContrasena, canActivate: [PublicGuard]  },
 
     //ADMIN ROUTES
-    { path: 'modificar-productos', component: CrudProducto, canActivate: [RolesGuard], data: { expectedRole: ["ADMINISTRADOR"] } },
+    { path: 'admin-productos', component: CrudProducto, canActivate: [RolesGuard], data: { expectedRole: ["ADMINISTRADOR"] } },
 
     //USUARIO ROUTES
     { path: 'carrito', component: Carrito, canActivate: [AuthGuard] },

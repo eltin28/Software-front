@@ -12,7 +12,7 @@ import { InformacionProductoCarritoDTO } from '../dto/carrito/informacion-produc
 })
 export class UsuarioService {
 
-  private readonly baseUrl = 'http://localhost:8081/api/usuarios';
+  private readonly baseUrl = 'https://renechardon.onrender.com/api/usuarios';
   public readonly cartItemCount = signal<number>(0);
 
 
