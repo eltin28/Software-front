@@ -15,7 +15,7 @@ import { PreferenceDTO } from '../dto/pedido/preference-dto';
 export class UsuarioService {
 
   private readonly baseUrl = 'https://renechardon.onrender.com/api/usuarios';
-  // private readonly baseUrl = 'http://localhost:8081/api/usuarios' 
+  //private readonly baseUrl = 'http://localhost:8081/api/usuarios'
   public readonly cartItemCount = signal<number>(0);
 
 
@@ -35,10 +35,10 @@ export class UsuarioService {
 
 //_______________________________ENDPOINTS CARRITO________________________________//
 
-  
+
   // Agregar ítems al carrito
   agregarItemsAlCarrito(items: DetalleCarritoDTO[]): Observable<MensajeDTO<CarritoDTO>> {
-    return this.http.post<MensajeDTO<CarritoDTO>>(`${this.baseUrl}/mi-carrito/items`, items)      
+    return this.http.post<MensajeDTO<CarritoDTO>>(`${this.baseUrl}/mi-carrito/items`, items)
     .pipe(
         tap(() => this.refrescarCantidadCarrito())
       );
@@ -72,9 +72,9 @@ export class UsuarioService {
 
   // Obtener carrito completo (con items y total)
   obtenerCarritoCompleto(): Observable<MensajeDTO<CarritoResponseDTO>> {
-    return this.http.get<MensajeDTO<CarritoResponseDTO>>(`${this.baseUrl}/mi-carrito`)      
+    return this.http.get<MensajeDTO<CarritoResponseDTO>>(`${this.baseUrl}/mi-carrito`)
     .pipe(
-        tap((resp: MensajeDTO<CarritoResponseDTO>) => { 
+        tap((resp: MensajeDTO<CarritoResponseDTO>) => {
            this.cartItemCount.set(resp.respuesta.totalProductos ?? 0);
         })
       );

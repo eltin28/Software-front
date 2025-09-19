@@ -10,9 +10,9 @@ import { TipoProducto } from '../model/enums/TipoProducto';
   providedIn: 'root'
 })
 export class publicoService {
-  
+
   private readonly baseUrl = 'https://renechardon.onrender.com/api/publico';
-  // private readonly baseUrl = 'http://localhost:8081/api/publico'
+   //private readonly baseUrl = 'http://localhost:8081/api/publico'
 
   constructor(private http: HttpClient) {}
 

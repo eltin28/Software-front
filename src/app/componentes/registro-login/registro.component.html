@@ -1,59 +1,167 @@
 <div class="container" id="container">
-    <div class="form-container sign-up-container" style=" background-color: white">
-        <div style="margin: 0 auto; width: 80%;">
-            <h1 style="font-weight: bold; margin-bottom: 20px; margin-top: 12px; font-size: 45px;">Crea tu cuenta</h1>
+  <div class="form-container sign-up-container" style=" background-color: white">
+    <div style="margin: 0 auto; width: 80%;">
+      <h1 style="font-weight: bold; margin-bottom: 20px; margin-top: 12px; font-size: 45px;">Crea tu cuenta</h1>
+    </div>
+    <form class="formRegistro" [formGroup]="registroForm" (ngSubmit)="registrar()" novalidate="">
+      <!-- Campo Cédula -->
+      <div class="input-container" [class.error]="(submittedRegistro && this.fRegistro['cedula'].errors) || (this.fRegistro['cedula'].touched && this.fRegistro['cedula'].errors)">
+        <i class="fa-solid fa-user"></i>
+        <input class="Input-registro" type="text" placeholder="Cédula" formControlName="cedula"/>
+      </div>
+      @if ((submittedRegistro || fRegistro['cedula'].touched) && fRegistro['cedula'].errors) {
+        <div class="error-message">
+          @if (fRegistro['cedula'].errors['required']) {
+            <div>La cédula es requerida</div>
+          }
+          @if (fRegistro['cedula'].errors['minlength']) {
+            <div>La cédula debe tener al menos 7 caracteres</div>
+          }
+          @if (fRegistro['cedula'].errors['maxlength']) {
+            <div>La cédula no puede tener más de 11 caracteres</div>
+          }
+          @if (fRegistro['cedula'].errors['pattern']) {
+            <div>La cédula solo debe contener números</div>
+          }
         </div>
-        <form class="formRegistro" [formGroup]="registroForm" (ngSubmit)="registrar()" novalidate="">
-            <div class="input-container">
-                <i class="fa-solid fa-user"></i>
-                <input class="Input-registro" type="text" placeholder="Cedula" formControlName="cedula"/>
-            </div>
-            <div class="input-container">
-                <i class="fa-solid fa-user"></i>
-                <input class="Input-registro" type="text" placeholder="Nombre Completo" formControlName="nombre"/>
-            </div>
-            <div class="input-container">
-                <i class="fa-solid fa-user"></i>
-                <input class="Input-registro" type="number" placeholder="Telefono" formControlName="telefono"/>
-            </div>
-            <div class="input-container">
-                <i class="fa-solid fa-envelope"></i>
-                <input class="Input-registro" type="email" name="correoElectronico" placeholder="Email" formControlName="correoElectronico"/>
-            </div>
-            <div class="input-container">
-                <i class="fa-solid fa-lock"></i>
-                <input class="Input-registro" [type]="showPassword? 'text' : 'password'" placeholder="Contraseña" formControlName="contrasenia"/>
-                <i class="fa-solid {{activeIcon}}" (click)="togglePasswordVisibility()"></i>
-            </div>
-            <div class="input-container">
-                <i class="fa-solid fa-lock"></i>
-                <input class="Input-registro" [type]="showPassword? 'text' : 'password'" placeholder="Repetir contraseña" formControlName="confirmaContrasenia"/>
-                <i class="fa-solid {{activeIcon}}" (click)="togglePasswordVisibility()"></i>
-            </div>
-            @if (registroForm.hasError('passwordsMismatch')) {
-                <p>Las contraseñas no coinciden</p>
-            }
-            <button class="buttonRegistro" type="submit" [disabled]="registroForm.invalid">Ingresar</button>
-        </form>
-    </div>
-    <div class="form-container sign-in-container">
-        <form class="formRegistro" [formGroup]="loginForm" (ngSubmit)="login()" novalidate="">
-            <div style="margin: 0 auto; width: 80%;">
-                <h1 style="font-weight: bold; margin-bottom: 20px; margin-top: 12px">Ingresa</h1>
-            </div>
-            <div class="input-container">
-                <i class="fa-solid fa-user"></i>
-                <input class="Input-registro" type="email" placeholder="Email" formControlName="correoElectronico" />
-            </div>
-            <div class="input-container">
-                <i class="fa-solid fa-lock"></i>
-                <input class="Input-registro" [type]="showPassword? 'text' : 'password'" placeholder="Contraseña" formControlName="password" />
-                <i class="fa-solid {{activeIcon}}" (click)="togglePasswordVisibility()"></i>
-            </div>
-            <a routerLink="/cambio-contrasena"style="color: #333; font-size: 14px; text-decoration: none; margin: 15px 0;">Olvidaste tu contraseña?</a>
-            <button class="buttonRegistro" type="submit" [disabled]="loginForm.invalid">Ingresa</button>
-        </form>
-    </div>
+      }
+
+      <!-- Campo Nombre -->
+      <div class="input-container" [class.error]="(submittedRegistro && this.fRegistro['nombre'].errors) || (this.fRegistro['nombre'].touched && this.fRegistro['nombre'].errors)">
+        <i class="fa-solid fa-user"></i>
+        <input class="Input-registro" type="text" placeholder="Nombre Completo" formControlName="nombre"/>
+      </div>
+      @if ((submittedRegistro || fRegistro['nombre'].touched) && fRegistro['nombre'].errors) {
+        <div class="error-message">
+          @if (fRegistro['nombre'].errors['required']) {
+            <div>El nombre es requerido</div>
+          }
+          @if (fRegistro['nombre'].errors['maxlength']) {
+            <div>El nombre no puede tener más de 100 caracteres</div>
+          }
+        </div>
+      }
+
+      <!-- Campo Teléfono -->
+      <div class="input-container" [class.error]="(submittedRegistro && this.fRegistro['telefono'].errors) || (this.fRegistro['telefono'].touched && this.fRegistro['telefono'].errors)">
+        <i class="fa-solid fa-user"></i>
+        <input class="Input-registro" type="number" placeholder="Teléfono" formControlName="telefono"/>
+      </div>
+      @if ((submittedRegistro || fRegistro['telefono'].touched) && fRegistro['telefono'].errors) {
+        <div class="error-message">
+          @if (fRegistro['telefono'].errors['required']) {
+            <div>El teléfono es requerido</div>
+          }
+          @if (fRegistro['telefono'].errors['maxlength']) {
+            <div>El teléfono no puede tener más de 10 caracteres</div>
+          }
+          @if (fRegistro['telefono'].errors['pattern']) {
+            <div>El teléfono debe contener solo números (10 dígitos)</div>
+          }
+        </div>
+      }
+
+      <!-- Campo Email -->
+      <div class="input-container" [class.error]="(submittedRegistro && this.fRegistro['correoElectronico'].errors) || (this.fRegistro['correoElectronico'].touched && this.fRegistro['correoElectronico'].errors)">
+        <i class="fa-solid fa-envelope"></i>
+        <input class="Input-registro" type="email" name="correoElectronico" placeholder="Email" formControlName="correoElectronico"/>
+      </div>
+      @if ((submittedRegistro || fRegistro['correoElectronico'].touched) && fRegistro['correoElectronico'].errors) {
+        <div class="error-message">
+          @if (fRegistro['correoElectronico'].errors['required']) {
+            <div>El email es requerido</div>
+          }
+          @if (fRegistro['correoElectronico'].errors['email']) {
+            <div>El email no es válido</div>
+          }
+          @if (fRegistro['correoElectronico'].errors['maxlength']) {
+            <div>El email no puede tener más de 50 caracteres</div>
+          }
+        </div>
+      }
+
+      <!-- Campo Contraseña -->
+      <div class="input-container" [class.error]="(submittedRegistro && this.fRegistro['contrasenia'].errors) || (this.fRegistro['contrasenia'].touched && this.fRegistro['contrasenia'].errors)">
+        <i class="fa-solid fa-lock"></i>
+        <input class="Input-registro" [type]="showPassword? 'text' : 'password'" placeholder="Contraseña" formControlName="contrasenia"/>
+        <i class="fa-solid {{activeIcon}}" (click)="togglePasswordVisibility()"></i>
+      </div>
+      @if ((submittedRegistro || fRegistro['contrasenia'].touched) && fRegistro['contrasenia'].errors) {
+        <div class="error-message">
+          @if (fRegistro['contrasenia'].errors['required']) {
+            <div>La contraseña es requerida</div>
+          }
+          @if (fRegistro['contrasenia'].errors['minlength']) {
+            <div>La contraseña debe tener al menos 7 caracteres</div>
+          }
+          @if (fRegistro['contrasenia'].errors['maxlength']) {
+            <div>La contraseña no puede tener más de 20 caracteres</div>
+          }
+        </div>
+      }
+
+      <!-- Campo Confirmar Contraseña -->
+      <div class="input-container" [class.error]="(submittedRegistro && this.fRegistro['confirmaContrasenia'].errors) || (this.fRegistro['confirmaContrasenia'].touched && this.fRegistro['confirmaContrasenia'].errors) || registroForm.hasError('passwordsMismatch')">
+        <i class="fa-solid fa-lock"></i>
+        <input class="Input-registro" [type]="showPassword? 'text' : 'password'" placeholder="Repetir contraseña" formControlName="confirmaContrasenia"/>
+        <i class="fa-solid {{activeIcon}}" (click)="togglePasswordVisibility()"></i>
+      </div>
+      @if ((submittedRegistro || fRegistro['confirmaContrasenia'].touched) && fRegistro['confirmaContrasenia'].errors) {
+        <div class="error-message">
+          @if (fRegistro['confirmaContrasenia'].errors['required']) {
+            <div>Confirmar contraseña es requerido</div>
+          }
+        </div>
+      }
+
+      @if (registroForm.hasError('passwordsMismatch') && (submittedRegistro || (this.fRegistro['contrasenia'].touched && this.fRegistro['confirmaContrasenia'].touched))) {
+        <div class="error-message">Las contraseñas no coinciden</div>
+      }
+
+      <button class="buttonRegistro" type="submit">Registrarse</button>
+    </form>
+  </div>
+
+  <div class="form-container sign-in-container">
+    <form class="formRegistro" [formGroup]="loginForm" (ngSubmit)="login()" novalidate="">
+      <div style="margin: 0 auto; width: 80%;">
+        <h1 style="font-weight: bold; margin-bottom: 20px; margin-top: 12px">Ingresa</h1>
+      </div>
+
+      <!-- Campo Email Login -->
+      <div class="input-container" [class.error]="(submittedLogin && this.fLogin['correoElectronico'].errors) || (this.fLogin['correoElectronico'].touched && this.fLogin['correoElectronico'].errors)">
+        <i class="fa-solid fa-user"></i>
+        <input class="Input-registro" type="email" placeholder="Email" formControlName="correoElectronico" />
+      </div>
+      @if ((submittedLogin || fLogin['correoElectronico'].touched) && fLogin['correoElectronico'].errors) {
+        <div class="error-message">
+          @if (fLogin['correoElectronico'].errors['required']) {
+            <div>El correo electrónico es requerido</div>
+          }
+          @if (fLogin['correoElectronico'].errors['email']) {
+            <div>El correo electrónico no es válido</div>
+          }
+        </div>
+      }
+
+      <!-- Campo Password Login -->
+      <div class="input-container" [class.error]="(submittedLogin && this.fLogin['password'].errors) || (this.fLogin['password'].touched && this.fLogin['password'].errors)">
+        <i class="fa-solid fa-lock"></i>
+        <input class="Input-registro" [type]="showPassword? 'text' : 'password'" placeholder="Contraseña" formControlName="password" />
+        <i class="fa-solid {{activeIcon}}" (click)="togglePasswordVisibility()"></i>
+      </div>
+      @if ((submittedLogin || fLogin['password'].touched) && fLogin['password'].errors) {
+        <div class="error-message">
+          @if (fLogin['password'].errors['required']) {
+            <div>La contraseña es requerida</div>
+          }
+        </div>
+      }
+
+      <a routerLink="/cambio-contrasena" style="color: #333; font-size: 14px; text-decoration: none; margin: 15px 0;">Olvidaste tu contraseña?</a>
+      <button class="buttonRegistro" type="submit">Ingresa</button>
+    </form>
+  </div>
     <div class="overlay-container">
         <div class="overlay">
             <div class="overlay-panel overlay-left">

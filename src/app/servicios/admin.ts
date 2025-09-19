@@ -12,8 +12,8 @@ import { MostrarPedidoDTO } from '../dto/pedido/mostrar-pedido-dto';
 })
 export class AdminService {
 
-  private adminURL = 'https://renechardon.onrender.com/api/admin'; 
-  // private adminURL = 'http://localhost:8081/api/admin'; // Cambia esto a tu URL de backend
+  private adminURL = 'https://renechardon.onrender.com/api/admin';
+  //private adminURL = 'http://localhost:8081/api/admin';
 
   constructor(private http: HttpClient) {}
 

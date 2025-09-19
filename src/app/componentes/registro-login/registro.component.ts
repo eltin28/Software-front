@@ -13,7 +13,7 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-inicio',
   standalone: true,
-  imports: [ ReactiveFormsModule , FontAwesomeModule, RouterModule ],
+  imports: [ ReactiveFormsModule , FontAwesomeModule, RouterModule],
   templateUrl: './registro.component.html',
   styleUrls: ['./registro.component.css']
 })
@@ -24,6 +24,8 @@ export class RegistroLoginComponent implements OnInit {
   activeIcon = 'fa-eye';
   registroForm!: FormGroup;
   loginForm!: FormGroup;
+  submittedRegistro = false;
+  submittedLogin = false;
 
 
   constructor(@Inject(DOCUMENT ) private document: Document, private formBuilder: FormBuilder,
@@ -34,31 +36,57 @@ export class RegistroLoginComponent implements OnInit {
   }
 
   private crearFormulario() {
-
     this.registroForm = this.formBuilder.group(
       {
-      cedula: ['', [Validators.required]],
-      nombre: ['', [Validators.required]],
-      correoElectronico: ['', [Validators.required, Validators.email]],
-      telefono: ['', [Validators.required, Validators.maxLength(10)]],
-      contrasenia: ['', [Validators.required, Validators.minLength(7)]],
-      confirmaContrasenia: ['', [Validators.required]]
+        cedula: ['', [
+          Validators.required,
+          Validators.minLength(7),
+          Validators.maxLength(11),
+          Validators.pattern(/^\d+$/)
+        ]],
+        nombre: ['', [
+          Validators.required,
+          Validators.maxLength(100)
+        ]],
+        correoElectronico: ['', [
+          Validators.required,
+          Validators.email,
+          Validators.maxLength(50)
+        ]],
+        telefono: ['', [
+          Validators.required,
+          Validators.maxLength(10),
+          Validators.pattern(/^\d{10}$/)
+        ]],
+        contrasenia: ['', [
+          Validators.required,
+          Validators.minLength(7),
+          Validators.maxLength(20)
+        ]],
+        confirmaContrasenia: ['', [Validators.required]]
       },
-      { 
+      {
         validators: [this.passwordsMatchValidator]
       } as AbstractControlOptions
     );
-
     this.loginForm = this.formBuilder.group(
       {
-        correoElectronico: ['', [Validators.required, Validators.email]],
+        correoElectronico: ['', [
+          Validators.required,
+          Validators.email
+        ]],
         password: ['', [Validators.required]]
       }
     );
-
-   }
+  }
 
   public registrar() {
+    this.submittedRegistro = true;
+
+    if (this.registroForm.invalid) {
+      return;
+    }
+
     const crearCuenta = this.registroForm.value as CrearCuentaDTO;
     this.authService.crearCuenta(crearCuenta).subscribe({
       next: (data) => {
@@ -72,7 +100,7 @@ export class RegistroLoginComponent implements OnInit {
         }).then((result) => {
           /* Read more about isConfirmed, isDenied below */
           if (result.isConfirmed) {
-           this.router.navigate(["/codigo-validacion"]);
+            this.router.navigate(["/codigo-validacion"]);
           }
         })
       },
@@ -84,10 +112,16 @@ export class RegistroLoginComponent implements OnInit {
           confirmButtonText: 'Aceptar'
         })
       }
-    });   
+    });
   }
 
   public login() {
+    this.submittedLogin = true;
+
+    if (this.loginForm.invalid) {
+      return;
+    }
+
     const loginDTO = this.loginForm.value as LoginDTO;
 
     this.authService.iniciarSesion(loginDTO).subscribe({
@@ -103,18 +137,20 @@ export class RegistroLoginComponent implements OnInit {
       },
     });
   }
+  get fRegistro() { return this.registroForm.controls; }
+  get fLogin() { return this.loginForm.controls; }
 
   passwordsMatchValidator(formGroup: FormGroup) {
     const contrasenia = formGroup.get('contrasenia')?.value ?? '';
     const confirmaContrasenia = formGroup.get('confirmaContrasenia')?.value ?? '';
-   
-    // Si las contraseñas no coinciden, devuelve un error, de lo contrario, null
+
+  
     return contrasenia == confirmaContrasenia ? null : { passwordsMismatch: true };
-  }   
+  }
 
   /** Configuración de eventos para el cambio de panel */
   ngOnInit(): void {
-    this.container = this.document.getElementById('auth-container') || this.document.getElementById('container');
+    this['container'] = this.document.getElementById('auth-container') || this.document.getElementById('container');
 
     const signUpButton = this.document.getElementById('signUp');
     const signInButton = this.document.getElementById('signIn');
