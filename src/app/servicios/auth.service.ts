@@ -10,6 +10,7 @@ import { ValidarCodigoDTO } from '../dto/usuario/validar-codigo-dto';
 import { CambiarPasswordDTO } from '../dto/usuario/cambiar-password-dto';
 import { CodigoContraseniaDTO } from '../dto/usuario/codigo-contrasenia-dto';
 import { TokenDTO } from '../dto/autenticacion/token-dto';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +18,8 @@ import { TokenDTO } from '../dto/autenticacion/token-dto';
 export class AuthService {
 
   // private authURL = "https://renechardon.onrender.com/api/auth";
-  private authURL = 'http://localhost:8081/api/auth'; // Cambia esto a tu URL de backend
+  // private authURL = 'http://localhost:8081/api/auth';
+    private authURL = `${environment.apiUrl}/auth`;
 
   private emailTemp: string;
 

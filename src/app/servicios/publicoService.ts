@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { ItemProductoDTO } from '../dto/producto/item-producto-dto';
 import { ProductoDetalleDTO } from '../dto/producto/producto-detalle-dto';
 import { TipoProducto } from '../model/enums/TipoProducto';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,8 @@ import { TipoProducto } from '../model/enums/TipoProducto';
 export class publicoService {
   
   // private readonly baseUrl = 'https://renechardon.onrender.com/api/publico';
-  private readonly baseUrl = 'http://localhost:8081/api/publico'
+  // private readonly baseUrl = 'http://localhost:8081/api/publico'
+    private readonly baseUrl = `${environment.apiUrl}/publico`;
 
   constructor(private http: HttpClient) {}
 

@@ -6,6 +6,7 @@ import { MensajeDTO } from '../dto/autenticacion/mensaje-dto';
 import { EditarProductoDTO } from '../dto/producto/editar-producto-dto';
 import { ImagenDTO } from '../dto/producto/imagen-dto';
 import { MostrarPedidoDTO } from '../dto/pedido/mostrar-pedido-dto';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,8 @@ import { MostrarPedidoDTO } from '../dto/pedido/mostrar-pedido-dto';
 export class AdminService {
 
   // private adminURL = 'https://renechardon.onrender.com/api/admin'; 
-  private adminURL = 'http://localhost:8081/api/admin'; // Cambia esto a tu URL de backend
+  // private adminURL = 'http://localhost:8081/api/admin'; 
+  private adminURL = `${environment.apiUrl}/admin`;
 
   constructor(private http: HttpClient) {}
 

@@ -8,6 +8,7 @@ import { DetalleCarritoDTO } from '../dto/carrito/detalle-carrito-dto';
 import { InformacionProductoCarritoDTO } from '../dto/carrito/informacion-producto-carrito-dto';
 import { MostrarPedidoDTO } from '../dto/pedido/mostrar-pedido-dto';
 import { PreferenceDTO } from '../dto/pedido/preference-dto';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,9 @@ import { PreferenceDTO } from '../dto/pedido/preference-dto';
 export class UsuarioService {
 
   // private readonly baseUrl = 'https://renechardon.onrender.com/api/usuarios';
-  private readonly baseUrl = 'http://localhost:8081/api/usuarios' 
+  // private readonly baseUrl = 'http://localhost:8081/api/usuarios' 
+  private readonly baseUrl = `${environment.apiUrl}/publico`;
+
   public readonly cartItemCount = signal<number>(0);
 
   constructor(private http: HttpClient) {}
