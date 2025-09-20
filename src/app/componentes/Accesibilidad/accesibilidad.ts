@@ -1,84 +1,48 @@
-import { Component, HostListener, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, signal, WritableSignal } from '@angular/core';
 
 @Component({
-  selector: 'app-Accesibilidad',
-  standalone: true, // ✅ lo ponemos standalone para evitar problemas
-  imports: [CommonModule],
-  templateUrl: './componentes/accesibilidad.component.html',
-  styleUrls: ['./Accesibilidad.component.css']
+  selector: 'app-accesibilidad',
+  imports: [],
+  templateUrl: './accesibilidad.html',
+  styleUrl: './accesibilidad.css'
 })
-export class AccesibilidadComponent implements OnInit {
-  panelOpen = false;
-  fontSize = 100; // tamaño de fuente %
-  contrasteActivo = false;
+export class Accesibilidad {
+  // Estado del panel (abierto/cerrado)
+  panelOpen: WritableSignal<boolean> = signal(false);
 
-  constructor() {}
+  // Estado del contraste
+  contrasteActivo: WritableSignal<boolean> = signal(false);
 
-  ngOnInit(): void {
-    // Recuperar valores guardados en localStorage
-    const fuenteGuardada = localStorage.getItem('fontSize');
-    const contrasteGuardado = localStorage.getItem('contrasteActivo');
+  // Tamaño de fuente base (en porcentaje)
+  fontSize: WritableSignal<number> = signal(100);
 
-    if (fuenteGuardada) {
-      this.fontSize = parseInt(fuenteGuardada, 10);
-      this.aplicarFuente();
-    }
-
-    if (contrasteGuardado === 'true') {
-      this.contrasteActivo = true;
-      document.body.classList.add('contraste-oscuro');
-    }
-  }
-
-  // ====== Panel ======
   togglePanel(): void {
-    this.panelOpen = !this.panelOpen;
+    this.panelOpen.update(open => !open);
   }
 
   closePanel(): void {
-    this.panelOpen = false;
+    this.panelOpen.set(false);
   }
 
-  // cerrar con tecla ESC
-  @HostListener('document:keydown.escape', ['$event'])
-  onEscape(event: KeyboardEvent): void {
-    if (this.panelOpen) {
-      this.closePanel();
+  activarContraste(): void {
+    this.contrasteActivo.update(activo => !activo);
+
+    if (this.contrasteActivo()) {
+      document.body.classList.add('alto-contraste');
+    } else {
+      document.body.classList.remove('alto-contraste');
     }
-  }
-
-  // ====== Accesibilidad ======
-
-  // Fuente
-  aplicarFuente(): void {
-    document.body.style.fontSize = this.fontSize + '%';
-    localStorage.setItem('fontSize', this.fontSize.toString());
   }
 
   aumentarFuente(): void {
-    if (this.fontSize < 200) {
-      this.fontSize += 10;
-      this.aplicarFuente();
-    }
+    const nuevaFuente = this.fontSize() + 10;
+    this.fontSize.set(nuevaFuente);
+    document.documentElement.style.fontSize = `${nuevaFuente}%`;
   }
 
   disminuirFuente(): void {
-    if (this.fontSize > 80) {
-      this.fontSize -= 10;
-      this.aplicarFuente();
-    }
-  }
-
-  // Contraste
-  activarContraste(): void {
-    this.contrasteActivo = !this.contrasteActivo;
-    if (this.contrasteActivo) {
-      document.body.classList.add('contraste-oscuro');
-      localStorage.setItem('contrasteActivo', 'true');
-    } else {
-      document.body.classList.remove('contraste-oscuro');
-      localStorage.setItem('contrasteActivo', 'false');
-    }
+    const nuevaFuente = Math.max(80, this.fontSize() - 10);
+    this.fontSize.set(nuevaFuente);
+    document.documentElement.style.fontSize = `${nuevaFuente}%`;
   }
 }

@@ -1,0 +1,91 @@
+/* ==============================
+   🔹 Contenedor general
+   ============================== */
+.accesibilidad-container {
+  position: fixed;
+  top: 50%;
+  left: 2px;
+  transform: translateY(-50%);
+  z-index: 2147483647; /* 📌 z-index máximo posible */
+}
+
+/* ==============================
+   🔹 Botón flotante circular
+   ============================== */
+.btn-flotante {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: #88a9c3;
+  color: #ffffff;
+  border: none;
+  font-size: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 2147483647;
+
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-flotante:hover {
+  background-color: #0056b3;
+  transform: scale(1.07);
+}
+
+/* ==============================
+   🔹 Menú accesibilidad (popover)
+   ============================== */
+.menu-accesibilidad {
+  position: absolute;
+  bottom: 0;
+  left: 70px;
+  width: 240px;
+  background: #88a9c3;
+  border-radius: 7px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+  overflow: hidden;
+  padding: 10px 0;
+  animation: fadeInRight 0.25s ease-out;
+}
+
+/* Lista */
+.menu-accesibilidad ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.menu-accesibilidad li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  cursor: pointer;
+  font-size: 15px;
+  color: #374151;
+  transition: background 0.2s ease, padding-left 0.2s ease;
+}
+
+.menu-accesibilidad li:hover {
+  background: #f3f4f6;
+  padding-left: 20px;
+}
+
+/* Íconos */
+.menu-accesibilidad i {
+  font-size: 17px;
+  color: #000;
+  min-width: 20px;
+  text-align: center;
+}
+
+/* ==============================
+   🔹 Animaciones
+   ============================== */
+@keyframes fadeInRight {
+  from { opacity: 0; transform: translateX(12px); }
+  to { opacity: 1; transform: translateX(0); }
+}

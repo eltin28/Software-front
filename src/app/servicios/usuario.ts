@@ -18,8 +18,6 @@ export class UsuarioService {
   private readonly baseUrl = 'http://localhost:8081/api/usuarios' 
   public readonly cartItemCount = signal<number>(0);
 
-
-
   constructor(private http: HttpClient) {}
 
   /**

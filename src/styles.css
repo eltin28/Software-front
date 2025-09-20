@@ -2,3 +2,25 @@ body {
   margin: 0;  /* ← Elimina los 8px por defecto */
   padding: 0; /* ← Elimina padding adicional */
 }
+
+/* ==============================
+   🔹 Modo Alto Contraste
+   ============================== */
+.alto-contraste, 
+.alto-contraste {
+  background-color: #000 !important;
+  color: #fff !important;
+  border-color: #fff !important;
+}
+
+.alto-contraste a {
+  color: #ffcc00 !important;
+}
+
+.alto-contraste i {
+  color: #ffcc00 !important;
+}
+
+.alto-contraste h1 {
+  color: #ffcc00 !important;
+}

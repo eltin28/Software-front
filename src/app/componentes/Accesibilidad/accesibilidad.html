@@ -1,0 +1,34 @@
+<div class="accesibilidad-container">
+  <!-- Botón flotante -->
+  <button 
+    (click)="togglePanel()" 
+    class="btn-flotante"
+    aria-label="Abrir menú de accesibilidad"
+    aria-haspopup="true"
+    aria-expanded="{{ panelOpen() }}"
+    aria-controls="menuAccesibilidad"
+  >
+    <i class="fas fa-universal-access"></i>
+  </button>
+
+  <!-- Menú accesibilidad -->
+  @if (panelOpen()) {
+    <div id="menuAccesibilidad" class="menu-accesibilidad" role="menu">
+      <ul>
+        <li role="menuitem" (click)="aumentarFuente()">
+          <i class="fas fa-search-plus"></i> Aumentar texto
+        </li>
+        <li role="menuitem" (click)="disminuirFuente()">
+          <i class="fas fa-search-minus"></i> Disminuir texto
+        </li>
+        <li role="menuitem" (click)="activarContraste()">
+          <i class="fas fa-adjust"></i> 
+          {{ contrasteActivo() ? 'Desactivar contraste' : 'Activar contraste' }}
+        </li>
+        <li role="menuitem" (click)="closePanel()">
+            <i class="fa-solid fa-x"></i>Cerrar
+        </li>
+      </ul>
+    </div>
+  }
+</div>
