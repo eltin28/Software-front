@@ -21,7 +21,7 @@ export class AuthService {
 
   private emailTemp: string;
 
-  constructor(private http: HttpClient, private tokenService: TokenService, private router: Router) { 
+  constructor(private http: HttpClient, private tokenService: TokenService, private router: Router) {
     this.emailTemp = this.getEmailTemp();
   }
 
@@ -33,7 +33,7 @@ export class AuthService {
   getEmailTemp() {
     return this.emailTemp;
   }
-  
+
 
   //_______________________________ METODOS CUENTA _____________________________________________
 
@@ -52,9 +52,9 @@ export class AuthService {
   public cambiarPassword(cambiarPasswordDTO: CambiarPasswordDTO): Observable<MensajeDTO<string>> {
     return this.http.put<MensajeDTO<string>>(`${this.authURL}/cambiar-password`, cambiarPasswordDTO);
   }
-   
+
   public iniciarSesion(loginDTO: LoginDTO): Observable<MensajeDTO<TokenDTO>> {
     return this.http.post<MensajeDTO<TokenDTO>>(`${this.authURL}/iniciar-sesion`, loginDTO);
   }
-   
+
 }

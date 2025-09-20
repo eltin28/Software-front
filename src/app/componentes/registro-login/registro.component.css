@@ -1,5 +1,5 @@
 @import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
- 
+
 * {
 	box-sizing: border-box;
 }
@@ -51,7 +51,7 @@
     background-position: center;
     position: absolute;
     width: 100%;
-    height: 89%; 
+    height: 89%;
 }
 
 .Input-registro {
@@ -60,9 +60,9 @@
 	width: 100%;
 	padding: 9px 15px;
 	font-size: 16px;
-	outline: none; 
+	outline: none;
 	border-radius: 10px;
-	  
+
 }
 
 .input-container {
@@ -83,7 +83,7 @@
 	margin-bottom: 3%;
 	background-color: #fff;
 	border-radius: 10px;
-  	box-shadow: 0 14px 28px rgba(0,0,0,0.25), 
+  	box-shadow: 0 14px 28px rgba(0,0,0,0.25),
 				0 10px 10px rgba(0,0,0,0.22);
 	position: relative;
 	overflow: hidden;
@@ -130,7 +130,7 @@
 		opacity: 0;
 		z-index: 1;
 	}
-	
+
 	50%, 100% {
 		opacity: 1;
 		z-index: 5;
@@ -202,4 +202,234 @@
 
 .container.right-panel-active .overlay-right {
 	transform: translateX(20%);
+}
+
+
+.input-container.error {
+  border: 1px solid #ff3860;
+  background-color: #fff5f5;
+}
+
+.error-message {
+  color: #ff3860;
+  font-size: 12px;
+  margin-top: -5px;
+  margin-bottom: 10px;
+  text-align: left;
+  width: 100%;
+}
+
+.Input-registro:focus {
+  outline: none;
+}
+
+.input-container.error .Input-registro {
+  background-color: #fff5f5;
+}
+
+.input-container.error i {
+  color: #ff3860;
+}
+
+.terminos-container {
+  margin: 15px 0;
+  width: 100%;
+  text-align: left;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 14px;
+  color: #333;
+  position: relative;
+  padding-left: 30px;
+}
+
+.checkbox-input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.checkmark {
+  position: absolute;
+  left: 0;
+  height: 20px;
+  width: 20px;
+  background-color: #eee;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+}
+
+.checkbox-label:hover .checkbox-input ~ .checkmark {
+  background-color: #ddd;
+}
+
+.checkbox-input:checked ~ .checkmark {
+  background-color: #fc2f2f;
+  border-color: #fc2f2f;
+}
+
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.checkbox-input:checked ~ .checkmark:after {
+  display: block;
+}
+
+.checkbox-label .checkmark:after {
+  left: 7px;
+  top: 3px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.terminos-link {
+  color: #fc2f2f;
+  text-decoration: none;
+  margin-left: 5px;
+}
+
+.terminos-link:hover {
+  text-decoration: underline;
+}
+
+/* Estilo de error para el checkbox */
+.terminos-container.error .checkmark {
+  border-color: #ff3860;
+  background-color: #fff5f5;
+}
+
+/* Estilos para el modal de términos y condiciones */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal-container {
+  background-color: white;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 700px;
+  max-height: 80vh;
+  overflow: hidden;
+  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+  transform: translateY(-50px);
+  transition: transform 0.3s ease;
+}
+
+.modal-overlay.active .modal-container {
+  transform: translateY(0);
+}
+
+.modal-header {
+  background: linear-gradient(to right, #9c00fe, #ca2d54);
+  color: white;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 2rem;
+  cursor: pointer;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  padding: 20px;
+  overflow-y: auto;
+  max-height: 50vh;
+}
+
+.terminos-text {
+  line-height: 1.6;
+  color: #333;
+}
+
+.terminos-text h3 {
+  color: #ca2d54;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  font-size: 1.1rem;
+}
+
+.terminos-text p {
+  margin-bottom: 15px;
+}
+
+.terminos-text ul {
+  margin-bottom: 15px;
+  padding-left: 20px;
+}
+
+.terminos-text li {
+  margin-bottom: 5px;
+}
+
+.fecha-actualizacion {
+  background-color: #f8f9fa;
+  padding: 10px;
+  border-left: 4px solid #ca2d54;
+  margin-top: 20px;
+}
+
+.modal-footer {
+  padding: 20px;
+  text-align: center;
+  border-top: 1px solid #eee;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .modal-container {
+    width: 95%;
+    margin: 20px;
+  }
+
+  .modal-header h2 {
+    font-size: 1.2rem;
+  }
+
+  .modal-content {
+    padding: 15px;
+  }
 }

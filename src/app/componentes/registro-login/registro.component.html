@@ -1,75 +1,270 @@
 <div class="container" id="container">
-    <div class="form-container sign-up-container" style=" background-color: white">
-        <div style="margin: 0 auto; width: 80%;">
-            <h1 style="font-weight: bold; margin-bottom: 20px; margin-top: 12px; font-size: 45px;">Crea tu cuenta</h1>
+  <div class="form-container sign-up-container" style=" background-color: white">
+    <div style="margin: 0 auto; width: 80%;">
+      <h1 style="font-weight: bold; margin-bottom: 20px; margin-top: 12px; font-size: 45px;">Crea tu cuenta</h1>
+    </div>
+    <form class="formRegistro" [formGroup]="registroForm" (ngSubmit)="registrar()" novalidate="">
+      <!-- Campo Cédula -->
+      <div class="input-container" [class.error]="(submittedRegistro && this.fRegistro['cedula'].errors) || (this.fRegistro['cedula'].touched && this.fRegistro['cedula'].errors)">
+        <i class="fa-solid fa-user"></i>
+        <input class="Input-registro" type="text" placeholder="Cédula" formControlName="cedula"/>
+      </div>
+      @if ((submittedRegistro || fRegistro['cedula'].touched) && fRegistro['cedula'].errors) {
+        <div class="error-message">
+          @if (fRegistro['cedula'].errors['required']) {
+            <div>La cédula es requerida</div>
+          }
+          @if (fRegistro['cedula'].errors['minlength']) {
+            <div>La cédula debe tener al menos 7 caracteres</div>
+          }
+          @if (fRegistro['cedula'].errors['maxlength']) {
+            <div>La cédula no puede tener más de 11 caracteres</div>
+          }
+          @if (fRegistro['cedula'].errors['pattern']) {
+            <div>La cédula solo debe contener números</div>
+          }
         </div>
-        <form class="formRegistro" [formGroup]="registroForm" (ngSubmit)="registrar()" novalidate="">
-            <div class="input-container">
-                <i class="fa-solid fa-user"></i>
-                <input class="Input-registro" type="text" placeholder="Cedula" formControlName="cedula"/>
-            </div>
-            <div class="input-container">
-                <i class="fa-solid fa-user"></i>
-                <input class="Input-registro" type="text" placeholder="Nombre Completo" formControlName="nombre"/>
-            </div>
-            <div class="input-container">
-                <i class="fa-solid fa-user"></i>
-                <input class="Input-registro" type="number" placeholder="Telefono" formControlName="telefono"/>
-            </div>
-            <div class="input-container">
-                <i class="fa-solid fa-envelope"></i>
-                <input class="Input-registro" type="email" name="correoElectronico" placeholder="Email" formControlName="correoElectronico"/>
-            </div>
-            <div class="input-container">
-                <i class="fa-solid fa-lock"></i>
-                <input class="Input-registro" [type]="showPassword? 'text' : 'password'" placeholder="Contraseña" formControlName="contrasenia"/>
-                <i class="fa-solid {{activeIcon}}" (click)="togglePasswordVisibility()"></i>
-            </div>
-            <div class="input-container">
-                <i class="fa-solid fa-lock"></i>
-                <input class="Input-registro" [type]="showPassword? 'text' : 'password'" placeholder="Repetir contraseña" formControlName="confirmaContrasenia"/>
-                <i class="fa-solid {{activeIcon}}" (click)="togglePasswordVisibility()"></i>
-            </div>
-            @if (registroForm.hasError('passwordsMismatch')) {
-                <p>Las contraseñas no coinciden</p>
+      }
+
+      <!-- Campo Nombre -->
+      <div class="input-container" [class.error]="(submittedRegistro && this.fRegistro['nombre'].errors) || (this.fRegistro['nombre'].touched && this.fRegistro['nombre'].errors)">
+        <i class="fa-solid fa-user"></i>
+        <input class="Input-registro" type="text" placeholder="Nombre Completo" formControlName="nombre"/>
+      </div>
+      @if ((submittedRegistro || fRegistro['nombre'].touched) && fRegistro['nombre'].errors) {
+        <div class="error-message">
+          @if (fRegistro['nombre'].errors['required']) {
+            <div>El nombre es requerido</div>
+          }
+          @if (fRegistro['nombre'].errors['maxlength']) {
+            <div>El nombre no puede tener más de 100 caracteres</div>
+          }
+        </div>
+      }
+
+      <!-- Campo Teléfono -->
+      <div class="input-container" [class.error]="(submittedRegistro && this.fRegistro['telefono'].errors) || (this.fRegistro['telefono'].touched && this.fRegistro['telefono'].errors)">
+        <i class="fa-solid fa-user"></i>
+        <input class="Input-registro" type="number" placeholder="Teléfono" formControlName="telefono"/>
+      </div>
+      @if ((submittedRegistro || fRegistro['telefono'].touched) && fRegistro['telefono'].errors) {
+        <div class="error-message">
+          @if (fRegistro['telefono'].errors['required']) {
+            <div>El teléfono es requerido</div>
+          }
+          @if (fRegistro['telefono'].errors['maxlength']) {
+            <div>El teléfono no puede tener más de 10 caracteres</div>
+          }
+          @if (fRegistro['telefono'].errors['pattern']) {
+            <div>El teléfono debe contener solo números (10 dígitos)</div>
+          }
+        </div>
+      }
+
+      <!-- Campo Email -->
+      <div class="input-container" [class.error]="(submittedRegistro && this.fRegistro['correoElectronico'].errors) || (this.fRegistro['correoElectronico'].touched && this.fRegistro['correoElectronico'].errors)">
+        <i class="fa-solid fa-envelope"></i>
+        <input class="Input-registro" type="email" name="correoElectronico" placeholder="Email" formControlName="correoElectronico"/>
+      </div>
+      @if ((submittedRegistro || fRegistro['correoElectronico'].touched) && fRegistro['correoElectronico'].errors) {
+        <div class="error-message">
+          @if (fRegistro['correoElectronico'].errors['required']) {
+            <div>El email es requerido</div>
+          }
+          @if (fRegistro['correoElectronico'].errors['email']) {
+            <div>El email no es válido</div>
+          }
+          @if (fRegistro['correoElectronico'].errors['maxlength']) {
+            <div>El email no puede tener más de 50 caracteres</div>
+          }
+        </div>
+      }
+
+      <!-- Campo Contraseña -->
+      <div class="input-container" [class.error]="(submittedRegistro && this.fRegistro['contrasenia'].errors) || (this.fRegistro['contrasenia'].touched && this.fRegistro['contrasenia'].errors)">
+        <i class="fa-solid fa-lock"></i>
+        <input class="Input-registro" [type]="showPassword? 'text' : 'password'" placeholder="Contraseña" formControlName="contrasenia"/>
+        <i class="fa-solid {{activeIcon}}" (click)="togglePasswordVisibility()"></i>
+      </div>
+      @if ((submittedRegistro || fRegistro['contrasenia'].touched) && fRegistro['contrasenia'].errors) {
+        <div class="error-message">
+          @if (fRegistro['contrasenia'].errors['required']) {
+            <div>La contraseña es requerida</div>
+          }
+          @if (fRegistro['contrasenia'].errors['minlength']) {
+            <div>La contraseña debe tener al menos 7 caracteres</div>
+          }
+          @if (fRegistro['contrasenia'].errors['maxlength']) {
+            <div>La contraseña no puede tener más de 20 caracteres</div>
+          }
+        </div>
+      }
+
+      <!-- Campo Confirmar Contraseña -->
+      <div class="input-container" [class.error]="(submittedRegistro && this.fRegistro['confirmaContrasenia'].errors) || (this.fRegistro['confirmaContrasenia'].touched && this.fRegistro['confirmaContrasenia'].errors) || registroForm.hasError('passwordsMismatch')">
+        <i class="fa-solid fa-lock"></i>
+        <input class="Input-registro" [type]="showPassword? 'text' : 'password'" placeholder="Repetir contraseña" formControlName="confirmaContrasenia"/>
+        <i class="fa-solid {{activeIcon}}" (click)="togglePasswordVisibility()"></i>
+      </div>
+      @if ((submittedRegistro || fRegistro['confirmaContrasenia'].touched) && fRegistro['confirmaContrasenia'].errors) {
+        <div class="error-message">
+          @if (fRegistro['confirmaContrasenia'].errors['required']) {
+            <div>Confirmar contraseña es requerido</div>
+          }
+        </div>
+      }
+
+      @if (registroForm.hasError('passwordsMismatch') && (submittedRegistro || (this.fRegistro['contrasenia'].touched && this.fRegistro['confirmaContrasenia'].touched))) {
+        <div class="error-message">Las contraseñas no coinciden</div>
+      }
+
+      <!-- CHECKBOX TÉRMINOS Y CONDICIONES -->
+      <div class="terminos-container">
+        <label class="checkbox-label">
+          <input type="checkbox" formControlName="aceptaTerminos" class="checkbox-input">
+          <span class="checkmark"></span>
+          Acepto los <a href="#" class="terminos-link" (click)="openModal($event)">términos y condiciones</a>
+        </label>
+        @if ((submittedRegistro || fRegistro['aceptaTerminos'].touched) && fRegistro['aceptaTerminos'].errors) {
+          <div class="error-message">
+            @if (fRegistro['aceptaTerminos'].errors['required']) {
+              <div>Debes aceptar los términos y condiciones</div>
             }
-            <button class="buttonRegistro" type="submit" [disabled]="registroForm.invalid">Ingresar</button>
-        </form>
-    </div>
-    <div class="form-container sign-in-container">
-        <form class="formRegistro" [formGroup]="loginForm" (ngSubmit)="login()" novalidate="">
-            <div style="margin: 0 auto; width: 80%;">
-                <h1 style="font-weight: bold; margin-bottom: 20px; margin-top: 12px">Ingresa</h1>
-            </div>
-            <div class="input-container">
-                <i class="fa-solid fa-user"></i>
-                <input class="Input-registro" type="email" placeholder="Email" formControlName="correoElectronico" />
-            </div>
-            <div class="input-container">
-                <i class="fa-solid fa-lock"></i>
-                <input class="Input-registro" [type]="showPassword? 'text' : 'password'" placeholder="Contraseña" formControlName="password" />
-                <i class="fa-solid {{activeIcon}}" (click)="togglePasswordVisibility()"></i>
-            </div>
-            <a routerLink="/cambio-contrasena"style="color: #333; font-size: 14px; text-decoration: none; margin: 15px 0;">Olvidaste tu contraseña?</a>
-            <button class="buttonRegistro" type="submit" [disabled]="loginForm.invalid">Ingresa</button>
-        </form>
-    </div>
-    <div class="overlay-container">
-        <div class="overlay">
-            <div class="overlay-panel overlay-left">
-                <h1 style="font-weight: bold; margin: 0;">¿Ya tienes una cuenta?</h1>
-                <p style="font-size: 14px; font-weight: 100; line-height: 20px; letter-spacing: 0.5px; margin: 20px 0 30px;">
-                    Para mantenerte conectado con nosotros, inicia sesión con tu información personal
-                </p>
-                <button class="buttonRegistro ghost" id="signIn">Inicia sesion</button>
-            </div>
-            <div class="overlay-panel overlay-right">
-                <h1 style="font-weight: bold; margin: 0;">¿Eres nuevo?</h1>
-                <p style="font-size: 14px; font-weight: 100; line-height: 20px; letter-spacing: 0.5px; margin: 20px 0 30px;">
-                    Da click en el botón "REGISTRATE" y comienza tu viaje con nosotros.
-                </p>
-                <button class="buttonRegistro ghost" id="signUp" >Registrate</button>
-            </div>
+          </div>
+        }
+      </div>
+
+      <button class="buttonRegistro" type="submit">Registrarse</button>
+    </form>
+  </div>
+
+  <div class="form-container sign-in-container">
+    <form class="formRegistro" [formGroup]="loginForm" (ngSubmit)="login()" novalidate="">
+      <div style="margin: 0 auto; width: 80%;">
+        <h1 style="font-weight: bold; margin-bottom: 20px; margin-top: 12px">Ingresa</h1>
+      </div>
+
+      <!-- Campo Email Login -->
+      <div class="input-container" [class.error]="(submittedLogin && this.fLogin['correoElectronico'].errors) || (this.fLogin['correoElectronico'].touched && this.fLogin['correoElectronico'].errors)">
+        <i class="fa-solid fa-user"></i>
+        <input class="Input-registro" type="email" placeholder="Email" formControlName="correoElectronico" />
+      </div>
+      @if ((submittedLogin || fLogin['correoElectronico'].touched) && fLogin['correoElectronico'].errors) {
+        <div class="error-message">
+          @if (fLogin['correoElectronico'].errors['required']) {
+            <div>El correo electrónico es requerido</div>
+          }
+          @if (fLogin['correoElectronico'].errors['email']) {
+            <div>El correo electrónico no es válido</div>
+          }
         </div>
+      }
+
+      <!-- Campo Password Login -->
+      <div class="input-container" [class.error]="(submittedLogin && this.fLogin['password'].errors) || (this.fLogin['password'].touched && this.fLogin['password'].errors)">
+        <i class="fa-solid fa-lock"></i>
+        <input class="Input-registro" [type]="showPassword? 'text' : 'password'" placeholder="Contraseña" formControlName="password" />
+        <i class="fa-solid {{activeIcon}}" (click)="togglePasswordVisibility()"></i>
+      </div>
+      @if ((submittedLogin || fLogin['password'].touched) && fLogin['password'].errors) {
+        <div class="error-message">
+          @if (fLogin['password'].errors['required']) {
+            <div>La contraseña es requerida</div>
+          }
+        </div>
+      }
+
+      <a routerLink="/cambio-contrasena" style="color: #333; font-size: 14px; text-decoration: none; margin: 15px 0;">Olvidaste tu contraseña?</a>
+      <button class="buttonRegistro" type="submit">Ingresa</button>
+    </form>
+  </div>
+
+  <div class="overlay-container">
+    <div class="overlay">
+      <div class="overlay-panel overlay-left">
+        <h1 style="font-weight: bold; margin: 0;">¿Ya tienes una cuenta?</h1>
+        <p style="font-size: 14px; font-weight: 100; line-height: 20px; letter-spacing: 0.5px; margin: 20px 0 30px;">
+          Para mantenerte conectado con nosotros, inicia sesión con tu información personal
+        </p>
+        <button class="buttonRegistro ghost" id="signIn">Inicia sesion</button>
+      </div>
+      <div class="overlay-panel overlay-right">
+        <h1 style="font-weight: bold; margin: 0;">¿Eres nuevo?</h1>
+        <p style="font-size: 14px; font-weight: 100; line-height: 20px; letter-spacing: 0.5px; margin: 20px 0 30px;">
+          Da click en el botón "REGISTRATE" y comienza tu viaje con nosotros.
+        </p>
+        <button class="buttonRegistro ghost" id="signUp">Registrate</button>
+      </div>
     </div>
+  </div>
+
+  <!-- MODAL DE TÉRMINOS Y CONDICIONES -->
+  <div class="modal-overlay" id="terminosModal" [class.active]="showModal">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h2>Términos y Condiciones & Política de Privacidad</h2>
+        <button class="modal-close" (click)="closeModal()">&times;</button>
+      </div>
+      <div class="modal-content">
+        <div class="terminos-text">
+          <h3>1. Aceptación de Términos</h3>
+          <p>Al registrarte en nuestra plataforma, aceptas expresamente los siguientes términos y condiciones que rigen el uso de nuestros servicios.</p>
+
+          <h3>2. Protección de Datos Personales</h3>
+          <p>En cumplimiento de la Ley 1581 de 2012 y el Decreto 1377 de 2013, le informamos que sus datos personales serán tratados para:</p>
+          <ul>
+            <li>Gestión de su cuenta de usuario</li>
+            <li>Procesamiento de pedidos y transacciones</li>
+            <li>Envío de información sobre productos y promociones</li>
+            <li>Mejora de nuestros servicios</li>
+          </ul>
+
+          <h3>3. Seguridad de la Información</h3>
+          <p><strong>Sus contraseñas son encriptadas usando algoritmos de hash seguros (BCrypt)</strong> con salt de 12 rondas. Esto significa que:</p>
+          <ul>
+            <li>Nunca almacenamos su contraseña en texto plano</li>
+            <li>La contraseña se convierte en un hash irreversible</li>
+            <li>Ni siquiera nosotros podemos ver su contraseña real</li>
+            <li>Cada contraseña tiene un salt único que previene ataques por rainbow tables</li>
+          </ul>
+
+          <h3>4. Datos que Recopilamos</h3>
+          <p>Recopilamos únicamente la información necesaria para brindarle nuestros servicios:</p>
+          <ul>
+            <li>Nombre completo</li>
+            <li>Número de cédula</li>
+            <li>Correo electrónico</li>
+            <li>Número de teléfono</li>
+            <li>Dirección de entrega</li>
+            <li>Información de transacciones</li>
+          </ul>
+
+          <h3>5. Derechos del Titular</h3>
+          <p>Usted tiene derecho a:</p>
+          <ul>
+            <li>Conocer, actualizar y rectificar sus datos personales</li>
+            <li>Solicitar prueba de la autorización otorgada</li>
+            <li>Ser informado sobre el uso de sus datos</li>
+            <li>Presentar quejas ante la autoridad competente</li>
+            <li>Revocar la autorización y/o solicitar la supresión del dato</li>
+            <li>Acceder en forma gratuita a sus datos personales</li>
+          </ul>
+
+          <h3>6. Conservación de la Información</h3>
+          <p>Conservaremos sus datos personales durante el tiempo necesario para cumplir con las finalidades para las que fueron recogidos.</p>
+
+          <h3>7. Contacto</h3>
+          <p>Para ejercer sus derechos o resolver dudas sobre el tratamiento de sus datos, puede contactarnos a: <strong>privacia</strong></p>
+
+          <h3>8. Modificaciones</h3>
+          <p>Nos reservamos el derecho de modificar estos términos en cualquier momento. Los cambios serán notificados a través de nuestra plataforma.</p>
+
+          <p class="fecha-actualizacion"><strong>Última actualización:</strong> 19 de Septiembre de 2025</p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="buttonRegistro" (click)="closeModal()">Entendido</button>
+      </div>
+    </div>
+  </div>
 </div>
