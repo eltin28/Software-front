@@ -118,6 +118,22 @@
         <div class="error-message">Las contraseñas no coinciden</div>
       }
 
+      <!-- CHECKBOX TÉRMINOS Y CONDICIONES -->
+      <div class="terminos-container">
+        <label class="checkbox-label">
+          <input type="checkbox" formControlName="aceptaTerminos" class="checkbox-input">
+          <span class="checkmark"></span>
+          Acepto los <a href="#" class="terminos-link" (click)="openModal($event)">términos y condiciones</a>
+        </label>
+        @if ((submittedRegistro || fRegistro['aceptaTerminos'].touched) && fRegistro['aceptaTerminos'].errors) {
+          <div class="error-message">
+            @if (fRegistro['aceptaTerminos'].errors['required']) {
+              <div>Debes aceptar los términos y condiciones</div>
+            }
+          </div>
+        }
+      </div>
+
       <button class="buttonRegistro" type="submit">Registrarse</button>
     </form>
   </div>
@@ -162,22 +178,93 @@
       <button class="buttonRegistro" type="submit">Ingresa</button>
     </form>
   </div>
-    <div class="overlay-container">
-        <div class="overlay">
-            <div class="overlay-panel overlay-left">
-                <h1 style="font-weight: bold; margin: 0;">¿Ya tienes una cuenta?</h1>
-                <p style="font-size: 14px; font-weight: 100; line-height: 20px; letter-spacing: 0.5px; margin: 20px 0 30px;">
-                    Para mantenerte conectado con nosotros, inicia sesión con tu información personal
-                </p>
-                <button class="buttonRegistro ghost" id="signIn">Inicia sesion</button>
-            </div>
-            <div class="overlay-panel overlay-right">
-                <h1 style="font-weight: bold; margin: 0;">¿Eres nuevo?</h1>
-                <p style="font-size: 14px; font-weight: 100; line-height: 20px; letter-spacing: 0.5px; margin: 20px 0 30px;">
-                    Da click en el botón "REGISTRATE" y comienza tu viaje con nosotros.
-                </p>
-                <button class="buttonRegistro ghost" id="signUp" >Registrate</button>
-            </div>
-        </div>
+
+  <div class="overlay-container">
+    <div class="overlay">
+      <div class="overlay-panel overlay-left">
+        <h1 style="font-weight: bold; margin: 0;">¿Ya tienes una cuenta?</h1>
+        <p style="font-size: 14px; font-weight: 100; line-height: 20px; letter-spacing: 0.5px; margin: 20px 0 30px;">
+          Para mantenerte conectado con nosotros, inicia sesión con tu información personal
+        </p>
+        <button class="buttonRegistro ghost" id="signIn">Inicia sesion</button>
+      </div>
+      <div class="overlay-panel overlay-right">
+        <h1 style="font-weight: bold; margin: 0;">¿Eres nuevo?</h1>
+        <p style="font-size: 14px; font-weight: 100; line-height: 20px; letter-spacing: 0.5px; margin: 20px 0 30px;">
+          Da click en el botón "REGISTRATE" y comienza tu viaje con nosotros.
+        </p>
+        <button class="buttonRegistro ghost" id="signUp">Registrate</button>
+      </div>
     </div>
+  </div>
+
+  <!-- MODAL DE TÉRMINOS Y CONDICIONES -->
+  <div class="modal-overlay" id="terminosModal" [class.active]="showModal">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h2>Términos y Condiciones & Política de Privacidad</h2>
+        <button class="modal-close" (click)="closeModal()">&times;</button>
+      </div>
+      <div class="modal-content">
+        <div class="terminos-text">
+          <h3>1. Aceptación de Términos</h3>
+          <p>Al registrarte en nuestra plataforma, aceptas expresamente los siguientes términos y condiciones que rigen el uso de nuestros servicios.</p>
+
+          <h3>2. Protección de Datos Personales</h3>
+          <p>En cumplimiento de la Ley 1581 de 2012 y el Decreto 1377 de 2013, le informamos que sus datos personales serán tratados para:</p>
+          <ul>
+            <li>Gestión de su cuenta de usuario</li>
+            <li>Procesamiento de pedidos y transacciones</li>
+            <li>Envío de información sobre productos y promociones</li>
+            <li>Mejora de nuestros servicios</li>
+          </ul>
+
+          <h3>3. Seguridad de la Información</h3>
+          <p><strong>Sus contraseñas son encriptadas usando algoritmos de hash seguros (BCrypt)</strong> con salt de 12 rondas. Esto significa que:</p>
+          <ul>
+            <li>Nunca almacenamos su contraseña en texto plano</li>
+            <li>La contraseña se convierte en un hash irreversible</li>
+            <li>Ni siquiera nosotros podemos ver su contraseña real</li>
+            <li>Cada contraseña tiene un salt único que previene ataques por rainbow tables</li>
+          </ul>
+
+          <h3>4. Datos que Recopilamos</h3>
+          <p>Recopilamos únicamente la información necesaria para brindarle nuestros servicios:</p>
+          <ul>
+            <li>Nombre completo</li>
+            <li>Número de cédula</li>
+            <li>Correo electrónico</li>
+            <li>Número de teléfono</li>
+            <li>Dirección de entrega</li>
+            <li>Información de transacciones</li>
+          </ul>
+
+          <h3>5. Derechos del Titular</h3>
+          <p>Usted tiene derecho a:</p>
+          <ul>
+            <li>Conocer, actualizar y rectificar sus datos personales</li>
+            <li>Solicitar prueba de la autorización otorgada</li>
+            <li>Ser informado sobre el uso de sus datos</li>
+            <li>Presentar quejas ante la autoridad competente</li>
+            <li>Revocar la autorización y/o solicitar la supresión del dato</li>
+            <li>Acceder en forma gratuita a sus datos personales</li>
+          </ul>
+
+          <h3>6. Conservación de la Información</h3>
+          <p>Conservaremos sus datos personales durante el tiempo necesario para cumplir con las finalidades para las que fueron recogidos.</p>
+
+          <h3>7. Contacto</h3>
+          <p>Para ejercer sus derechos o resolver dudas sobre el tratamiento de sus datos, puede contactarnos a: <strong>privacia</strong></p>
+
+          <h3>8. Modificaciones</h3>
+          <p>Nos reservamos el derecho de modificar estos términos en cualquier momento. Los cambios serán notificados a través de nuestra plataforma.</p>
+
+          <p class="fecha-actualizacion"><strong>Última actualización:</strong> 19 de Septiembre de 2025</p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="buttonRegistro" (click)="closeModal()">Entendido</button>
+      </div>
+    </div>
+  </div>
 </div>

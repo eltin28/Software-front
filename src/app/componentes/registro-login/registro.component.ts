@@ -26,6 +26,7 @@ export class RegistroLoginComponent implements OnInit {
   loginForm!: FormGroup;
   submittedRegistro = false;
   submittedLogin = false;
+  showModal = false;
 
 
   constructor(@Inject(DOCUMENT ) private document: Document, private formBuilder: FormBuilder,
@@ -63,7 +64,8 @@ export class RegistroLoginComponent implements OnInit {
           Validators.minLength(7),
           Validators.maxLength(20)
         ]],
-        confirmaContrasenia: ['', [Validators.required]]
+        confirmaContrasenia: ['', [Validators.required]],
+        aceptaTerminos: [false, [Validators.requiredTrue]]
       },
       {
         validators: [this.passwordsMatchValidator]
@@ -144,8 +146,18 @@ export class RegistroLoginComponent implements OnInit {
     const contrasenia = formGroup.get('contrasenia')?.value ?? '';
     const confirmaContrasenia = formGroup.get('confirmaContrasenia')?.value ?? '';
 
-  
+
     return contrasenia == confirmaContrasenia ? null : { passwordsMismatch: true };
+  }
+  openModal(event: Event): void {
+    event.preventDefault();
+    this.showModal = true;
+    document.body.style.overflow = 'hidden';
+  }
+
+  closeModal(): void {
+    this.showModal = false;
+    document.body.style.overflow = 'auto';
   }
 
   /** Configuración de eventos para el cambio de panel */
