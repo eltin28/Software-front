@@ -14,8 +14,8 @@ import { PreferenceDTO } from '../dto/pedido/preference-dto';
 })
 export class UsuarioService {
 
-  private readonly baseUrl = 'https://renechardon.onrender.com/api/usuarios';
-  // private readonly baseUrl = 'http://localhost:8081/api/usuarios' 
+  // private readonly baseUrl = 'https://renechardon.onrender.com/api/usuarios';
+  private readonly baseUrl = 'http://localhost:8081/api/usuarios' 
   public readonly cartItemCount = signal<number>(0);
 
 
