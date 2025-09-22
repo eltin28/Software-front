@@ -4,7 +4,7 @@
 .accesibilidad-container {
   position: fixed;
   top: 50%;
-  left: 2px;
+  right: 2px;
   transform: translateY(-50%);
   z-index: 2147483647; /* 📌 z-index máximo posible */
 }
