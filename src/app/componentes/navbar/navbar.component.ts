@@ -3,8 +3,6 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { TokenService } from '../../servicios/token.service';
 import { UsuarioService } from '../../servicios/usuario';
-import { MensajeDTO } from '../../dto/autenticacion/mensaje-dto';
-import { CarritoResponseDTO } from '../../dto/carrito/carrito-response-dto';
 
 @Component({
   selector: 'app-navbar',

@@ -32,7 +32,7 @@ export class Carrito implements OnInit {
     this.usuarioService.crearPedidoDesdeCarrito().subscribe({
       next: (resp: MensajeDTO<MostrarPedidoDTO>) => {
         // Navega a la vista de detalle del pedido creado
-        this.router.navigate(['orden', resp.respuesta.idPedido]);
+        this.router.navigate(['orden'], { queryParams: { idPedido: resp.respuesta.idPedido } });
       },
       error: err => {
         console.error('Error al confirmar pedido', err);

@@ -1,30 +1,45 @@
 <div class="pedido-detalle">
-  @if (pedido()) {
-    <h2>Pedido #{{ pedido()?.idPedido }}</h2>
-    <p><strong>Cliente:</strong> {{ pedido()?.nombreCliente }}</p>
-    <p><strong>Fecha:</strong> {{ pedido()?.fechaCompra }}</p>
-    <p><strong>Total:</strong> {{ pedido()?.total | currency:'USD' }}</p>
+  @if (pedido(); as p) {
+    <section class="pedido-header">
+      <h2 class="pedido-titulo">Pedido #{{ p.idPedido }}</h2>
+      <div class="pedido-info">
+        <p><strong>Cliente:</strong> {{ p.nombreCliente }}</p>
+        <p><strong>Fecha:</strong> {{ p.fechaCompra | date:'mediumDate' }}</p>
+        <p class="pedido-total">
+          <strong>Total:</strong> {{ p.total | currency:'USD' }}
+        </p>
+      </div>
+    </section>
 
-    <h3>Productos:</h3>
-    <ul>
-      @for (d of pedido()?.detalles; track d.idProducto) {
-        <li>
-          {{ d.nombreProducto }} (x{{ d.cantidad }}) -
-          {{ d.precioUnitario | currency:'USD' }} →
-          {{ d.subtotal | currency:'USD' }}
-        </li>
-      }
-    </ul>
+    <section class="pedido-productos">
+      <h3 class="productos-titulo">Productos</h3>
+      <div class="productos-grid">
+        @for (d of p.detalles; track d.idProducto) {
+          <article class="producto-card">
+            <img 
+              [src]="d.imagenProducto" 
+              [alt]="d.nombreProducto" 
+              class="producto-imagen"
+            />
+            <div class="producto-info">
+              <h4 class="producto-nombre">{{ d.nombreProducto }}</h4>
+              <p class="producto-tipo">{{ d.tipoProducto }}</p>
+              <p class="producto-precio">
+                {{ d.precioUnitario | currency:'USD' }} × {{ d.cantidad }}
+              </p>
+              <p class="producto-subtotal">
+                Subtotal: <strong>{{ d.subtotal | currency:'USD' }}</strong>
+              </p>
+            </div>
+          </article>
+        }
+      </div>
+    </section>
 
-    <button (click)="irAPagar()">Ir a pagar</button>
-  }
-</div>
-
-<div class="pago-info">
-  @if (pago()) {
-    <h3>Pago iniciado</h3>
-    <p><strong>ID Pago:</strong> {{ pago()?.idPago }}</p>
-    <p><strong>Estado:</strong> {{ pago()?.estado }}</p>
-    <p><strong>Monto:</strong> {{ pago()?.valorTransaccion | currency:pago()?.moneda }}</p>
+    <div class="pedido-acciones">
+      <button class="btn-pagar" (click)="irAPagar()">Ir a pagar</button>
+    </div>
+  } @else {
+    <p class="pedido-vacio">No se encontró información del pedido.</p>
   }
 </div>
