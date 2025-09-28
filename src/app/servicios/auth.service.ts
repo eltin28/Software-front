@@ -17,9 +17,8 @@ import { environment } from '../../environments/environment';
 })
 export class AuthService {
 
-  // private authURL = "https://renechardon.onrender.com/api/auth";
-  // private authURL = 'http://localhost:8081/api/auth';
-    private authURL = `${environment.apiUrl}/auth`;
+
+   private authURL = `${environment.apiUrl}/auth`;
 
   private emailTemp: string;
 

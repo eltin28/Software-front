@@ -15,8 +15,7 @@ import { environment } from '../../environments/environment';
 })
 export class UsuarioService {
 
-  // private readonly baseUrl = 'https://renechardon.onrender.com/api/usuarios';
-  // private readonly baseUrl = 'http://localhost:8081/api/usuarios' 
+
   private readonly baseUrl = `${environment.apiUrl}/usuarios`;
 
   public readonly cartItemCount = signal<number>(0);

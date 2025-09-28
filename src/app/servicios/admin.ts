@@ -13,8 +13,7 @@ import { environment } from '../../environments/environment';
 })
 export class AdminService {
 
-  // private adminURL = 'https://renechardon.onrender.com/api/admin'; 
-  // private adminURL = 'http://localhost:8081/api/admin'; 
+
   private adminURL = `${environment.apiUrl}/admin`;
 
   constructor(private http: HttpClient) {}

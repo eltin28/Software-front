@@ -1,11 +1,11 @@
 <!-- navbar.component.html -->
 <nav class="navbar" role="navigation" aria-label="Navegación principal">
   <div class="navbar-container">
-    
+
     <!-- Brand Section -->
     <div class="navbar-brand-section">
-      <a 
-        routerLink="/" 
+      <a
+        routerLink="/"
         class="navbar-brand-link"
         aria-label="Ir a página principal"
         (click)="closeAllMenus()"
@@ -17,14 +17,14 @@
     <!-- Search Section - Desktop -->
     <div class="navbar-search-desktop">
       <div class="search-container">
-        <input 
-          type="search" 
+        <input
+          type="search"
           class="search-input"
           placeholder="Buscar productos..."
           aria-label="Buscar productos"
         />
-        <button 
-          type="button" 
+        <button
+          type="button"
           class="search-button"
           aria-label="Buscar"
         >
@@ -35,10 +35,10 @@
 
     <!-- Actions Section -->
     <div class="navbar-actions">
-      
+
       <!-- Search Button - Mobile -->
-      <button 
-        type="button" 
+      <button
+        type="button"
         class="action-button search-mobile"
         aria-label="Buscar"
       >
@@ -46,30 +46,30 @@
       </button>
 
       <!-- User Section -->
-      @if (isLoggedIn) {
-      <!-- Authenticated User -->
+      @if (isLoggedIn()) {  <!-- CAMBIAR: isLoggedIn -> isLoggedIn() -->
+        <!-- Authenticated User -->
         <!-- Cart Button -->
-        <button 
-          type="button" 
+        <button
+          type="button"
           class="action-button cart-button"
           (click)="navigateToCart()"
           aria-label="Carrito de compras"
           [attr.aria-describedby]="usuarioService.cartItemCount() > 0 ? 'cart-count' : null"
         >
           <i class="fa fa-shopping-cart" aria-hidden="true"></i>
-            @if (usuarioService.cartItemCount() > 0) {
-              <span 
-                class="cart-badge"
-                id="cart-count"
-                [attr.aria-label]="usuarioService.cartItemCount() + ' productos en el carrito'"
-              >
+          @if (usuarioService.cartItemCount() > 0) {
+            <span
+              class="cart-badge"
+              id="cart-count"
+              [attr.aria-label]="usuarioService.cartItemCount() + ' productos en el carrito'"
+            >
                 {{ usuarioService.cartItemCount() }}
               </span>
-            }
+          }
         </button>
 
         <div class="user-menu-container">
-          <button 
+          <button
             type="button"
             class="login-button"
             (click)="toggleUserMenu()"
@@ -77,17 +77,17 @@
             aria-haspopup="true"
             aria-label="Menú de usuario"
           >
-            <span class="user-greeting">Hola</span>
+            <span class="user-greeting">Hola, {{ userName }}</span>
           </button>
-          
+
           <!-- User Dropdown Menu -->
-          <div 
+          <div
             class="user-dropdown"
             [class.show]="showUserMenu()"
             role="menu"
             aria-labelledby="user-menu-trigger"
           >
-            <button 
+            <button
               type="button"
               class="dropdown-item"
               (click)="navigateToProfile()"
@@ -96,7 +96,7 @@
               <i class="fa-solid fa-user-circle" aria-hidden="true"></i>
               Mi Perfil
             </button>
-            <button 
+            <button
               type="button"
               class="dropdown-item"
               role="menuitem"
@@ -104,7 +104,7 @@
               <i class="fa-solid fa-heart" aria-hidden="true"></i>
               Favoritos
             </button>
-            <button 
+            <button
               type="button"
               class="dropdown-item"
               role="menuitem"
@@ -113,7 +113,7 @@
               Mis Pedidos
             </button>
             <hr class="dropdown-divider">
-            <button 
+            <button
               type="button"
               class="dropdown-item logout-item"
               (click)="logout()"
@@ -125,8 +125,8 @@
           </div>
         </div>
       } @else {
-        <!-- Non-authenticated User -->
-        <button 
+
+        <button
           type="button"
           class="login-button"
           (click)="navigateToLogin()"
@@ -137,7 +137,7 @@
       }
 
       <!-- Mobile Menu Toggle -->
-      <button 
+      <button
         type="button"
         class="mobile-menu-toggle"
         (click)="toggleMobileMenu()"
@@ -152,7 +152,7 @@
   </div>
 
   <!-- Mobile Navigation Menu -->
-  <div 
+  <div
     class="mobile-nav"
     [class.show]="showMobileMenu()"
     role="navigation"
@@ -160,14 +160,14 @@
   >
     <div class="mobile-search">
       <div class="search-container">
-        <input 
-          type="search" 
+        <input
+          type="search"
           class="search-input"
           placeholder="Buscar productos..."
           aria-label="Buscar productos"
         />
-        <button 
-          type="button" 
+        <button
+          type="button"
           class="search-button"
           aria-label="Buscar"
         >
@@ -178,8 +178,8 @@
 
     <ul class="mobile-nav-list" role="menubar">
       <li role="none">
-        <a 
-          routerLink="/" 
+        <a
+          routerLink="/"
           class="mobile-nav-link"
           role="menuitem"
           (click)="closeAllMenus()"
@@ -189,8 +189,8 @@
         </a>
       </li>
       <li role="none">
-        <a 
-          routerLink="/productos" 
+        <a
+          routerLink="/productos"
           class="mobile-nav-link"
           role="menuitem"
           (click)="closeAllMenus()"
@@ -200,8 +200,8 @@
         </a>
       </li>
       <li role="none">
-        <a 
-          routerLink="/categorias" 
+        <a
+          routerLink="/categorias"
           class="mobile-nav-link"
           role="menuitem"
           (click)="closeAllMenus()"
@@ -211,8 +211,8 @@
         </a>
       </li>
       <li role="none">
-        <a 
-          routerLink="/ofertas" 
+        <a
+          routerLink="/ofertas"
           class="mobile-nav-link"
           role="menuitem"
           (click)="closeAllMenus()"
@@ -221,11 +221,11 @@
           Ofertas
         </a>
       </li>
-      
-      @if (isLoggedIn) {
+
+      @if (isLoggedIn()) {
         <li role="none">
-          <a 
-            routerLink="/profile" 
+          <a
+            routerLink="/profile"
             class="mobile-nav-link"
             role="menuitem"
             (click)="closeAllMenus()"
@@ -235,7 +235,7 @@
           </a>
         </li>
         <li role="none">
-          <button 
+          <button
             type="button"
             class="mobile-nav-link logout-mobile"
             (click)="logout()"
@@ -247,8 +247,8 @@
         </li>
       } @else {
         <li role="none">
-          <a 
-            routerLink="login" 
+          <a
+            routerLink="login"
             class="mobile-nav-link"
             role="menuitem"
             (click)="closeAllMenus()"
@@ -263,7 +263,7 @@
 
   <!-- Overlay para cerrar menús al hacer click fuera -->
   @if (showUserMenu() || showMobileMenu()) {
-    <div 
+    <div
       class="menu-overlay"
       (click)="closeAllMenus()"
       aria-hidden="true"

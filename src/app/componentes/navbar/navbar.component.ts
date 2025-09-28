@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, signal, inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, signal, inject, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { TokenService } from '../../servicios/token.service';
@@ -11,31 +11,41 @@ import { UsuarioService } from '../../servicios/usuario';
   styleUrls: ['./navbar.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-
 export class NavbarComponent {
-
   public readonly showUserMenu = signal<boolean>(false);
   public readonly showMobileMenu = signal<boolean>(false);
+  public readonly isLoggedIn = signal<boolean>(false);
 
-  title = 'E-Shop';
+  title = 'Essencia';
 
   private readonly router = inject(Router);
   protected readonly usuarioService = inject(UsuarioService);
+  private readonly tokenService = inject(TokenService);
 
-  constructor(private tokenService: TokenService ) {}
+  constructor() {
 
-    ngOnInit(): void {
-    if (this.isLoggedIn) {
+    effect(() => {
+      this.isLoggedIn.set(this.tokenService.isLoggedSignal());
+
+      // Si el usuario cierra sesión, cerrar los menús automáticamente
+      if (!this.tokenService.isLoggedSignal()) {
+        this.showUserMenu.set(false);
+        this.showMobileMenu.set(false);
+      }
+    });
+  }
+
+  ngOnInit(): void {
+
+    this.isLoggedIn.set(this.tokenService.isLogged());
+
+    if (this.isLoggedIn()) {
       this.usuarioService.cargarCantidadCarrito();
     }
   }
 
-  get isLoggedIn(): boolean {
-    return this.tokenService.isLogged();
-  }
-
   get userName(): string {
-    return this.isLoggedIn ? this.tokenService.getAllTokenData().nombre : '';
+    return this.isLoggedIn() ? this.tokenService.getAllTokenData().nombre : '';
   }
 
   toggleUserMenu(): void {
@@ -60,7 +70,11 @@ export class NavbarComponent {
 
   navigateToCart(): void {
     this.closeAllMenus();
-    this.router.navigate(['/carrito']);
+    if (this.isLoggedIn()) {
+      this.router.navigate(['/carrito']);
+    } else {
+      this.router.navigate(['/login']);
+    }
   }
 
   navigateToLogin(): void {
@@ -70,6 +84,10 @@ export class NavbarComponent {
 
   navigateToProfile(): void {
     this.closeAllMenus();
-    this.router.navigate(['/profile']);
+    if (this.isLoggedIn()) {
+      this.router.navigate(['/profile']);
+    } else {
+      this.router.navigate(['/login']);
+    }
   }
 }

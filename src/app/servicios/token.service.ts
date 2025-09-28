@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { TokenData } from '../dto/autenticacion/TokenData';
 
@@ -6,13 +6,15 @@ import { TokenData } from '../dto/autenticacion/TokenData';
   providedIn: 'root'
 })
 export class TokenService {
-
   private readonly TOKEN_KEY = "AuthToken";
+  private readonly router = inject(Router);
 
-  constructor(private router: Router) { }
+  // Signal reactiva para el estado de autenticación
+  public isLoggedSignal = signal<boolean>(this.isLogged());
 
   public setToken(token: string) {
     sessionStorage.setItem(this.TOKEN_KEY, token);
+    this.isLoggedSignal.set(true);
   }
 
   public getToken(): string | null {
@@ -32,6 +34,7 @@ export class TokenService {
 
   public logout() {
     sessionStorage.clear();
+    this.isLoggedSignal.set(false);
     this.router.navigate(["/login"]);
   }
 

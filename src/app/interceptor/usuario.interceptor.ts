@@ -2,10 +2,12 @@ import { inject } from '@angular/core';
 import { HttpInterceptorFn } from '@angular/common/http';
 import { TokenService } from '../servicios/token.service';
 import { Router } from '@angular/router';
+import { TimerResetService } from '../servicios/timer-reset.service';
 
 export const usuarioInterceptor: HttpInterceptorFn = (req, next) => {
   const tokenService = inject(TokenService);
   const router = inject(Router);
+  const timerResetService = inject(TimerResetService);
 
   const isApiAuth = req.url.includes("api/auth");
   const isApiPublico = req.url.includes("api/publico");
@@ -15,10 +17,12 @@ export const usuarioInterceptor: HttpInterceptorFn = (req, next) => {
   }
 
   if (!tokenService.isLogged()) {
-    // Redirigir a login y cancelar la request
     router.navigate(['/login']);
     return next(req);
   }
+
+  // Resetear el timer de inactividad en cada request
+  timerResetService.resetInactivityTimer();
 
   const token = tokenService.getToken();
 
