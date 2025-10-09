@@ -3,6 +3,7 @@ import { HttpInterceptorFn } from '@angular/common/http';
 import { TokenService } from '../servicios/token.service';
 import { Router } from '@angular/router';
 import { TimerResetService } from '../servicios/timer-reset.service';
+import { EMPTY } from 'rxjs';
 
 export const usuarioInterceptor: HttpInterceptorFn = (req, next) => {
   const tokenService = inject(TokenService);
@@ -18,7 +19,8 @@ export const usuarioInterceptor: HttpInterceptorFn = (req, next) => {
 
   if (!tokenService.isLogged()) {
     router.navigate(['/login']);
-    return next(req);
+    //return next(req);
+    return EMPTY;
   }
 
   // Resetear el timer de inactividad en cada request

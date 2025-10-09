@@ -57,8 +57,14 @@ export class DetallePedido {
 
     this.usuarioService.iniciarPago(pedidoActual.idPedido).subscribe({
       next: (resp) => {
-        this.preference.set(resp.respuesta); // Guardamos todo el preference
-        window.location.href = resp.respuesta.init_point; // Redirigimos al checkout
+        const preference = resp.respuesta;
+        this.preference.set(preference);
+
+        // 🔹 Redirige correctamente al checkout
+        window.location.href = preference.initPoint;
+      },
+      error: (err) => {
+        console.error('Error iniciando pago:', err);
       }
     });
   }
