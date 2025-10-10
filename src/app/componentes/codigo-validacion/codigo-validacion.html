@@ -1,21 +1,28 @@
-<div class="forgot-password-container">
-  <div class="container">
-    <h3>Verificar Código</h3>
-    <form [formGroup]="validatorForm" (ngSubmit)="validacionCodigo()">
-      <div class="inp" formArrayName="code">
+<section class="verify-code">
+  <div class="verify-code__card">
+    <h1 class="verify-code__title">Verificar código</h1>
+    <p class="verify-code__subtitle">
+      Ingresa el código de 6 dígitos que enviamos a tu correo electrónico.
+    </p>
+
+    <form [formGroup]="validatorForm" (ngSubmit)="validacionCodigo()" novalidate>
+      <div class="verify-code__inputs" formArrayName="code">
         @for (control of codeArray.controls; track $index){
           <input
             type="text"
             id="inp-verifi"
             maxlength="1"
             [formControlName]="$index"
+            class="verify-code__input"
             (input)="moverAlSiguiente($event, $index)"
           />        
         }
       </div>
-      <div class="containerBoton">
-        <button class="buttonRegistro">Verificar</button>
-      </div>
+
+      <button type="submit" class="verify-code__button">
+        <i class="fa-solid fa-check"></i>
+        Verificar
+      </button>
     </form>
   </div>
-</div>
+</section>

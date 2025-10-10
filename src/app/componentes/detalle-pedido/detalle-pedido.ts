@@ -60,7 +60,7 @@ export class DetallePedido {
         const preference = resp.respuesta;
         this.preference.set(preference);
 
-        // 🔹 Redirige correctamente al checkout
+        // Redirige correctamente al checkout
         window.location.href = preference.initPoint;
       },
       error: (err) => {

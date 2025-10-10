@@ -1,0 +1,20 @@
+@import '../pago-exitoso/pago-exitoso.css';
+
+.pending-icon {
+  color: #f1c40f;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+.btn.neutral {
+  background-color: #f1c40f;
+  color: #2c3e50;
+}
+
+.btn.neutral:hover {
+  background-color: #d4ac0d;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.1); opacity: 0.7; }
+}

@@ -1,69 +1,59 @@
 <div class="forgot-password-container">
-  <!-- Input del correo electrónico -->
-    @if (step === 1) {
-      <div class="container">
-        <h3>Recuperar Contraseña</h3>
-        <form [formGroup]="validatorFormEmail" (ngSubmit)="EmailContra()">
-          <div class="input-container">
-            <div class="input-group">
-              <input type="email" name="Email" class="inputContra" formControlName="email"/>
-              <label class="user-label">Email</label>
-            </div>
-          </div>
-        <button class="buttonRegistro" [disabled]="validatorFormEmail.invalid">Enviar Código</button>
+  @if (step === 1) {
+    <div class="forgot-card">
+      <h3 class="title">Recuperar Contraseña</h3>
+      <form [formGroup]="validatorFormEmail" (ngSubmit)="EmailContra()">
+        <div class="input-group">
+          <input type="email" name="Email" class="input-text" formControlName="email" required />
+          <label>Email</label>
+        </div>
+        <button class="btn-primary" [disabled]="validatorFormEmail.invalid">Enviar Código</button>
       </form>
     </div>
   }
 
   <form [formGroup]="validatorFormContrase" (ngSubmit)="CodigoContra()">
-    <!-- Input del código de verificación -->
     @if (step === 2) {
-      <div class="container">
-        <h3>Verificar Código</h3>
-        <div class="inp">
+      <div class="forgot-card">
+        <h3 class="title">Verificar Código</h3>
+        <div class="code-inputs">
           @for (control of codeArray.controls; track $index){
-            <input
-              type="text"
-              id="inp-verifi"
-              maxlength="1"
-              autocomplete="off"
-              [formControlName]="$index"
-            />
+            <input type="text" maxlength="1" autocomplete="off" [formControlName]="$index" />
           }
         </div>
-        <div class="containerBoton">
-          <button class="buttonRegistro" (click)="nextStep()">Siguiente</button>
+        <div class="btn-group">
+          <button class="btn-primary" (click)="nextStep()">Siguiente</button>
         </div>
       </div>
     }
-    <!-- Inputs de la nueva contraseña -->
+
     @if (step === 3) {
-      <div class="container">
-        <h3>Nueva Contraseña</h3>
-        <div class="input-container">
-          <div class="input-container2">
-            <i class="fa-solid fa-lock"></i>
-            <input class="inputContra2" [type]="showPassword? 'text' : 'password'" placeholder="Contraseña nueva" formControlName="password" />
-            <i class="fa-solid {{activeIcon}}" (click)="togglePasswordVisibility()"></i>
-          </div>
+      <div class="forgot-card">
+        <h3 class="title">Nueva Contraseña</h3>
+
+        <div class="input-group icon-input">
+          <i class="fa-solid fa-lock"></i>
+          <input [type]="showPassword ? 'text' : 'password'" placeholder="Contraseña nueva" formControlName="password" />
+          <i class="fa-solid {{activeIcon}}" (click)="togglePasswordVisibility()"></i>
         </div>
-        <div class="input-container">
-          <div class="input-container2">
-            <i class="fa-solid fa-lock"></i>
-            <input class="inputContra2" [type]="showPassword? 'text' : 'password'" placeholder="Confirmar contraseña" formControlName="confirmaPassword" />
-            <i class="fa-solid {{activeIcon}}" (click)="togglePasswordVisibility()"></i>
-          </div>
+
+        <div class="input-group icon-input">
+          <i class="fa-solid fa-lock"></i>
+          <input [type]="showPassword ? 'text' : 'password'" placeholder="Confirmar contraseña" formControlName="confirmaPassword" />
+          <i class="fa-solid {{activeIcon}}" (click)="togglePasswordVisibility()"></i>
         </div>
+
         @if (validatorFormContrase.hasError('passwordsMismatch')) {
-          <p>Las contraseñas no coinciden</p>
+          <p class="error-text">Las contraseñas no coinciden</p>
         }
-        <div class="containerBoton">
-          <button class="buttonRegistro" (click)="previousStep()">Atrás</button>
-          <button class="buttonRegistro" type="submit" [disabled]="validatorFormContrase.invalid">
+
+        <div class="btn-group">
+          <button class="btn-secondary" (click)="previousStep()">Atrás</button>
+          <button class="btn-primary" type="submit" [disabled]="validatorFormContrase.invalid">
             Confirmar
           </button>
         </div>
       </div>  
     }
   </form>
-</div>    
+</div>
