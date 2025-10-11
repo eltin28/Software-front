@@ -1,0 +1,55 @@
+<div class="contenedor-pqr">
+
+  <h2 class="titulo">📋 Lista de PQR</h2>
+
+
+  <!--terminar integrar al api desde el pc-->
+
+  <!--
+  @if (pqrList && pqrList.length > 0) {
+    <table class="tabla-pqr">
+      <thead>
+      <tr>
+        <th>ID PQR</th>
+        <th>ID Usuario</th>
+        <th>Categoría</th>
+        <th>Descripción</th>
+        <th>ID Worker</th>
+        <th>Fecha Creación</th>
+        <th>Fecha Respuesta</th>
+        <th>Estado</th>
+      </tr>
+      </thead>
+      <tbody>
+        @for (pqr of pqrList; track pqr.idPqr) {
+          <tr>
+            <td>{{ pqr.idPqr }}</td>
+            <td>{{ pqr.idUsuario }}</td>
+            <td>{{ pqr.categoria }}</td>
+            <td>{{ pqr.descripcion }}</td>
+            <td>{{ pqr.idWorker ?? 'Sin asignar' }}</td>
+            <td>{{ pqr.fechaCreacion | date: 'short' }}</td>
+            <td>{{ pqr.fechaRespuesta ?? 'Pendiente' }}</td>
+            <td>
+              <span [ngClass]="{
+                'estado-pendiente': pqr.estadoPqr === 'PENDIENTE',
+                'estado-proceso': pqr.estadoPqr === 'EN_PROCESO',
+                'estado-resuelto': pqr.estadoPqr === 'RESUELTO',
+                'estado-cerrado': pqr.estadoPqr === 'CERRADO'
+              }">
+                {{ pqr.estadoPqr }}
+              </span>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  } @else {
+    <div class="sin-datos">
+      <p>No hay PQR registrados.</p>
+    </div>
+  }
+
+-->
+
+</div>

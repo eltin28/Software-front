@@ -56,4 +56,10 @@ export class TokenService {
   public getRol(): string {
     return this.getAllTokenData().rol;
   }
+
+  public getUserId(): number | null {
+    const tokenData = this.getAllTokenData();
+    return tokenData?.id ? Number(tokenData.id) : null;
+  }
+
 }

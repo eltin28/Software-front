@@ -1,0 +1,95 @@
+<div class="pqr-container">
+  <h2>Registrar PQR</h2>
+
+  <form (ngSubmit)="onSubmit()" #pqrForm="ngForm">
+    <!-- idPqr (oculto o readonly si lo genera el backend) -->
+    <input type="hidden" name="idPqr" [(ngModel)]="pqr.idPqr">
+
+    <!-- ID Usuario -->
+    <div class="form-group">
+      <label for="idUsuario">ID Usuario:</label>
+      <input
+        type="number"
+        id="idUsuario"
+        name="idUsuario"
+        [(ngModel)]="pqr.idUsuario"
+        required
+      />
+    </div>
+
+    <!-- Categoría (ENUM) -->
+    <div class="form-group">
+      <label for="categoria">Categoría:</label>
+      <select
+        id="categoria"
+        name="categoria"
+        [(ngModel)]="pqr.categoria"
+        required
+      >
+        <option value="">Seleccione una categoría</option>
+        <option *ngFor="let cat of categorias" [value]="cat">{{ cat }}</option>
+      </select>
+    </div>
+
+    <!-- Descripción -->
+    <div class="form-group">
+      <label for="descripcion">Descripción:</label>
+      <textarea
+        id="descripcion"
+        name="descripcion"
+        [(ngModel)]="pqr.descripcion"
+        rows="4"
+        required
+      ></textarea>
+    </div>
+
+    <!-- ID Worker -->
+    <div class="form-group">
+      <label for="idWorker">ID del Worker:</label>
+      <input
+        type="number"
+        id="idWorker"
+        name="idWorker"
+        [(ngModel)]="pqr.idWorker"
+      />
+    </div>
+
+    <!-- Fecha Creación -->
+    <div class="form-group">
+      <label for="fechaCreacion">Fecha de Creación:</label>
+      <input
+        type="date"
+        id="fechaCreacion"
+        name="fechaCreacion"
+        [(ngModel)]="pqr.fechaCreacion"
+      />
+    </div>
+
+    <!-- Fecha Respuesta -->
+    <div class="form-group">
+      <label for="fechaRespuesta">Fecha de Respuesta:</label>
+      <input
+        type="date"
+        id="fechaRespuesta"
+        name="fechaRespuesta"
+        [(ngModel)]="pqr.fechaRespuesta"
+      />
+    </div>
+
+    <!-- Estado PQR (ENUM) -->
+    <div class="form-group">
+      <label for="estadoPqr">Estado del PQR:</label>
+      <select
+        id="estadoPqr"
+        name="estadoPqr"
+        [(ngModel)]="pqr.estadoPqr"
+        required
+      >
+        <option value="">Seleccione un estado</option>
+        <option *ngFor="let estado of estados" [value]="estado">{{ estado }}</option>
+      </select>
+    </div>
+
+    <button type="submit" [disabled]="pqrForm.invalid">Guardar PQR</button>
+  </form>
+</div>

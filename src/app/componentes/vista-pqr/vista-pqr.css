@@ -1,0 +1,68 @@
+.pqr-container {
+  max-width: 1000px;
+  margin: 30px auto;
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.titulo {
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.loading, .error, .no-data {
+  text-align: center;
+  font-weight: 500;
+  margin-top: 15px;
+}
+
+.tabla-pqr {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tabla-pqr th, .tabla-pqr td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+}
+
+.tabla-pqr th {
+  background-color: #f4f4f4;
+}
+
+.estado-abierto {
+  color: #007bff;
+  font-weight: 600;
+}
+
+.estado-en-proceso {
+  color: #ff9800;
+  font-weight: 600;
+}
+
+.estado-cerrado {
+  color: #4caf50;
+  font-weight: 600;
+}
+
+.btn {
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-right: 5px;
+}
+
+.btn-editar {
+  background-color: #2196f3;
+  color: white;
+}
+
+.btn-eliminar {
+  background-color: #f44336;
+  color: white;
+}
