@@ -56,7 +56,7 @@ export class ValidarRolComponent implements OnInit {
     });
   }
 /*
-  // Método para consultar todos los PQR creados
+  // Método para consultar todos los PQR creados previamente
   obtenerPqr(): void {
     this.http.get(`${this.apiUrlPqr}/listar`).subscribe({
       next: (resp: any) => {
