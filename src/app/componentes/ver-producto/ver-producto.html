@@ -1,0 +1,31 @@
+@if (!loading()) {
+  @if (producto()) {
+    <div class="detalle-container">
+      <div class="detalle-card">
+        <div class="detalle-imagen">
+          <img [src]="producto()?.imagenProducto" [alt]="producto()?.nombreProducto">
+        </div>
+
+        <div class="detalle-info">
+          <h2>{{ producto()?.nombreProducto }}</h2>
+          <p class="detalle-descripcion">{{ producto()?.descripcion }}</p>
+
+          <p class="detalle-precio">
+            Precio: <span>${{ producto()?.valor | number:'1.0-0' }}</span>
+          </p>
+          <p class="detalle-tipo">
+            Tipo: <strong>{{ producto()?.tipo }}</strong>
+          </p>
+
+          <button type="button" class="btn-agregar-detalle" (click)="agregarAlCarrito()">
+            Agregar al carrito
+          </button>
+        </div>
+      </div>
+    </div>
+  } @else {
+    <div class="detalle-vacio">Producto no encontrado</div>
+  }
+} @else {
+  <div class="detalle-loading">Cargando información...</div>
+}

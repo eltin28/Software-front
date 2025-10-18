@@ -1,10 +1,11 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
 
-import { AdminService } from '../../servicios/admin';
+import { GestorProductosService } from '../../servicios/gestor-productos-service';
+import { MensajeDTO } from '../../dto/autenticacion/mensaje-dto';
 import { CrearProductoDTO } from '../../dto/producto/crear-producto-dto';
 import { TipoProducto } from '../../model/enums/TipoProducto';
 import { ImagenDTO } from '../../dto/producto/imagen-dto';
@@ -16,93 +17,66 @@ import { ImagenDTO } from '../../dto/producto/imagen-dto';
   templateUrl: './crud-productos.html',
   styleUrls: ['./crud-productos.css'],
 })
+
 export class CrudProducto implements OnInit {
-  /**
-   * Formulario reactivo de creación de productos
-   */
-  productoForm!: FormGroup;
 
-  /**
-   * Listado de tipos de producto basado en el enum
-   */
-  readonly tiposProducto: string[] = Object.values(TipoProducto);
-
-  private imagenSeleccionada?: File;
-
-
-  // Inyección de dependencias usando inject() para mayor claridad y testabilidad
-  private readonly formBuilder = inject(FormBuilder);
-  private readonly adminService = inject(AdminService);
+  private readonly fb = inject(FormBuilder);
+  private readonly gestorProductosService = inject(GestorProductosService);
   private readonly router = inject(Router);
+
+  productoForm!: FormGroup;
+  imagenSeleccionada = signal<File | null>(null);
+  readonly tiposProducto = Object.values(TipoProducto);
 
   ngOnInit(): void {
     this.inicializarFormulario();
   }
 
-  /**
-   * Inicializa el formulario con validadores adecuados
-   */
   private inicializarFormulario(): void {
-    this.productoForm = this.formBuilder.group({
+    this.productoForm = this.fb.group({
       nombre: ['', [Validators.required, Validators.minLength(3)]],
-      cantidad: [0, [Validators.required, Validators.min(1)]],
+      descripcion: ['', [Validators.required, Validators.minLength(10)]],
       valor: [0, [Validators.required, Validators.min(1000)]],
       tipo: ['', [Validators.required]],
     });
   }
 
-    /**
-   * Maneja el input de tipo file y almacena el archivo seleccionado.
-   */
-  public onFileSelected(event: Event): void {
+  onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length > 0) {
-      this.imagenSeleccionada = input.files[0];
-    }
+    if (input.files?.length) this.imagenSeleccionada.set(input.files[0]);
   }
 
-  /**
-   * Envia la imagen al backend, obtiene su URL y luego crea el producto.
-   */
-  public onSubmit(): void {
-    if (this.productoForm.invalid || !this.imagenSeleccionada) {
-      this.mostrarAlerta('Formulario inválido', 'Debe completar los campos y subir una imagen.', 'warning');
+  onSubmit(): void {
+    if (this.productoForm.invalid || !this.imagenSeleccionada()) {
+      this.mostrarAlerta('Formulario inválido', 'Complete los campos y seleccione una imagen.', 'warning');
       return;
     }
 
-
     const formData = new FormData();
-    formData.append('imagen', this.imagenSeleccionada);
+    formData.append('imagen', this.imagenSeleccionada()!);
 
-    // Paso 1: Subir la imagen
-    this.adminService.subirImagen(formData).subscribe({
-      next: (respuestaImagen: { respuesta: ImagenDTO }) => {
-        const urlImagen = respuestaImagen.respuesta.url;
-
-        // Paso 2: Crear producto con la URL de la imagen subida
+    this.gestorProductosService.subirImagen(formData).subscribe({
+      next: (res: MensajeDTO<ImagenDTO>) => {
         const nuevoProducto: CrearProductoDTO = {
           ...this.productoForm.value,
-          imagenProducto: urlImagen,
+          imagenProducto: res.respuesta.url,
         };
-
         this.crearProducto(nuevoProducto);
       },
-      error: () => {
-        this.manejarError('No se pudo subir la imagen. Intente nuevamente.');
-      },
+      error: () => this.manejarError('Error al subir la imagen. Intente nuevamente.')
     });
   }
 
-  private crearProducto(producto: CrearProductoDTO): void {
-    this.adminService.crearProducto(producto).subscribe({
-      next: (respuesta) => this.manejarExito(respuesta.respuesta),
-      error: (error) => this.manejarError(error.error?.respuesta ?? 'Error al crear producto'),
+  private crearProducto(dto: CrearProductoDTO): void {
+    this.gestorProductosService.crearProducto(dto).subscribe({
+      next: (res: MensajeDTO<string>) => this.manejarExito(res.respuesta),
+      error: (err) => this.manejarError(err.error?.respuesta ?? 'Error al crear el producto')
     });
   }
 
   private manejarExito(mensaje: string): void {
     this.mostrarAlerta('Producto creado', mensaje, 'success').then(() => {
-      this.router.navigate(['/modificar-productos']);
+      this.router.navigate(['/admin-productos']);
     });
   }
 

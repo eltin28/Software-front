@@ -14,34 +14,28 @@
       />
     </div>
 
+    <!-- Descripción -->
+    <div class="form-group">
+      <label for="descripcion">Descripción</label>
+      <textarea
+        id="descripcion"
+        rows="3"
+        formControlName="descripcion"
+        placeholder="Ej: Producto para el cuidado de la piel"
+        [class.is-invalid]="productoForm.get('descripcion')?.invalid && productoForm.get('descripcion')?.touched">
+      </textarea>
+    </div>
+
     <!-- Imagen -->
     <div class="form-group">
       <label for="imagenProducto">Imagen del Producto</label>
       <input id="imagenProducto" type="file" accept="image/*" (change)="onFileSelected($event)" />
     </div>
 
-    <!-- Cantidad -->
-    <div class="form-group">
-      <label for="cantidad">Cantidad</label>
-      <input
-        id="cantidad"
-        type="number"
-        formControlName="cantidad"
-        placeholder="Ej: 10"
-        min="1"
-      />
-    </div>
-
     <!-- Valor -->
     <div class="form-group">
       <label for="valor">Precio</label>
-      <input
-        id="valor"
-        type="number"
-        formControlName="valor"
-        placeholder="Ej: 25000"
-        min="1000"
-      />
+      <input id="valor" type="number" formControlName="valor" placeholder="Ej: 25000" min="1000" />
     </div>
 
     <!-- Tipo -->
@@ -49,13 +43,12 @@
       <label for="tipo">Tipo de Producto</label>
       <select id="tipo" formControlName="tipo">
         <option value="">Seleccione...</option>
-          @for (tipo of tiposProducto; track $index) {
-            <option [value]="tipo">
-              {{ tipo }}
-            </option>
-          }
+        @for (tipo of tiposProducto; track $index) {
+          <option [value]="tipo">{{ tipo }}</option>
+        }
       </select>
     </div>
+
     <!-- Botón -->
     <button type="submit" class="btn-submit" [disabled]="productoForm.invalid">
       Crear Producto

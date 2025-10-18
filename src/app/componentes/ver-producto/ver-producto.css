@@ -1,0 +1,82 @@
+.detalle-container {
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.detalle-card {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  max-width: 900px;
+  background: #fff;
+  border-radius: 1rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  gap: 2rem;
+  padding: 1.5rem;
+}
+
+.detalle-imagen img {
+  width: 100%;
+  height: auto;
+  border-radius: 1rem;
+  object-fit: cover;
+}
+
+.detalle-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.detalle-info h2 {
+  font-size: 1.8rem;
+  margin: 0;
+  color: #333;
+}
+
+.detalle-descripcion {
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.5;
+}
+
+.detalle-precio {
+  font-weight: 500;
+  color: #222;
+  font-size: 1.1rem;
+}
+
+.detalle-precio span {
+  font-weight: bold;
+  color: #007b55;
+}
+
+.detalle-tipo {
+  font-size: 0.95rem;
+  color: #666;
+}
+
+.btn-agregar-detalle {
+  background-color: #007b55;
+  color: #fff;
+  border: none;
+  padding: 0.75rem 1.2rem;
+  font-size: 1rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-agregar-detalle:hover {
+  background-color: #006146;
+}
+
+.detalle-loading,
+.detalle-vacio {
+  text-align: center;
+  font-size: 1.1rem;
+  padding: 2rem;
+  color: #666;
+}

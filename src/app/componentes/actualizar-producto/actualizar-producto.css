@@ -1,0 +1,106 @@
+.producto-container {
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.producto-card {
+  background: #fff;
+  border-radius: 1rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  width: 100%;
+  max-width: 800px;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.producto-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.producto-imagen {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.producto-imagen img {
+  width: 100%;
+  max-width: 250px;
+  border-radius: 1rem;
+  object-fit: cover;
+}
+
+.no-imagen {
+  background: #f4f4f4;
+  width: 250px;
+  height: 250px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #666;
+  border-radius: 1rem;
+  font-size: 0.9rem;
+}
+
+.producto-campos {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+input, select {
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+.producto-botones {
+  grid-column: span 2;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+}
+
+/* Botones con clases específicas */
+.btn-actualizar {
+  background: #1976d2;
+  color: #fff;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-actualizar:hover {
+  background: #145ca8;
+}
+
+.btn-eliminar {
+  background: #d32f2f;
+  color: #fff;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-eliminar:hover {
+  background: #b71c1c;
+}
+
+.producto-loading {
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.2rem;
+}
