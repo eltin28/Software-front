@@ -7,14 +7,13 @@ import { Router } from '@angular/router';
 export class InactivityService {
   private readonly inactivityTime = 60000; // 1 minuto
   private inactivityTimer: any = null;
-
   private readonly router = inject(Router);
-
   private logoutCallback: (() => void) | null = null;
   private isTimerActive = false;
 
-  // Eventos que resetearán el timer
   private events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'];
+  
+  private resetTimerBound = this.resetTimer.bind(this);
 
   public setLogoutCallback(callback: () => void): void {
     this.logoutCallback = callback;
@@ -27,7 +26,7 @@ export class InactivityService {
     this.resetTimer();
 
     this.events.forEach(event => {
-      document.addEventListener(event, () => this.resetTimer());
+      document.addEventListener(event, this.resetTimerBound);
     });
   }
 
@@ -40,7 +39,7 @@ export class InactivityService {
     }
 
     this.events.forEach(event => {
-      document.removeEventListener(event, () => this.resetTimer());
+      document.removeEventListener(event, this.resetTimerBound);
     });
   }
 
@@ -57,9 +56,8 @@ export class InactivityService {
   }
 
   private logoutDueToInactivity(): void {
-    // Solo ejecutar si el callback está definido y el timer está activo
     if (this.logoutCallback && this.isTimerActive) {
-      this.stopInactivityTimer(); // Detener primero el timer
+      this.stopInactivityTimer();
       this.logoutCallback();
       alert('Su sesión ha expirado por inactividad. Por favor, inicie sesión nuevamente.');
     }

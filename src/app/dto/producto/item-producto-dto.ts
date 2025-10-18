@@ -4,7 +4,7 @@ export interface ItemProductoDTO {
   idProducto: string;
   nombreProducto: string;
   imagenProducto: string;
-  cantidad: number;
+  descripcion: string;
   valor: number;
   tipo: TipoProducto;
 }

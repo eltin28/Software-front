@@ -4,8 +4,8 @@ export interface ProductoDetalleDTO {
   idProducto: string;
   nombreProducto: string;
   imagenProducto: string;
-  cantidad: number;
-  ultimaFechaModificacion: string; // LocalDateTime se mapea a string en JSON
+  descripcion: string;
+  ultimaFechaModificacion: string; // LocalDateTime → ISO string
   valor: number;
   tipo: TipoProducto;
 }

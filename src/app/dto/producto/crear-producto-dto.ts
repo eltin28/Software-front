@@ -1,9 +1,9 @@
 import { TipoProducto } from "../../model/enums/TipoProducto";
 
 export interface CrearProductoDTO {
-    nombre: string;
-    imagenProducto: string;
-    cantidad: number;
-    valor: number;
-    tipo: TipoProducto;
+  nombre: string;
+  imagenProducto: string;
+  descripcion: string;
+  valor: number;
+  tipo: TipoProducto;
 }

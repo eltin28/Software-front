@@ -54,7 +54,7 @@ export class UsuarioService {
 
   // Vaciar carrito
   vaciarCarrito(): Observable<MensajeDTO<CarritoDTO>> {
-    return this.http.delete<MensajeDTO<CarritoDTO>>(`${this.baseUrl}/mi-carrito/vaciar`)
+    return this.http.delete<MensajeDTO<CarritoDTO>>(`${this.baseUrl}/mi-carrito`)
           .pipe(
         tap(() => this.cartItemCount.set(0))
       );
@@ -82,31 +82,26 @@ export class UsuarioService {
 
   // ==================== PEDIDOS ==================== //
 
-  // Listar pedidos del cliente
   listarPedidosCliente(): Observable<MensajeDTO<MostrarPedidoDTO[]>> {
-    return this.http.get<MensajeDTO<MostrarPedidoDTO[]>>(`${this.baseUrl}/pedido`);
+    return this.http.get<MensajeDTO<MostrarPedidoDTO[]>>(`${this.baseUrl}/pedidos`);
   }
 
-  // Crear pedido desde carrito
   crearPedidoDesdeCarrito(): Observable<MensajeDTO<MostrarPedidoDTO>> {
     return this.http.post<MensajeDTO<MostrarPedidoDTO>>(
-      `${this.baseUrl}/orden/crear-pedido`,
+      `${this.baseUrl}/pedidos`,
       {}
     );
   }
 
-
-  // Ver detalle de pedido
   verDetallePedido(idPedido: string): Observable<MensajeDTO<MostrarPedidoDTO>> {
-    return this.http.get<MensajeDTO<MostrarPedidoDTO>>(`${this.baseUrl}/detalle/${idPedido}`);
+    return this.http.get<MensajeDTO<MostrarPedidoDTO>>(`${this.baseUrl}/pedidos/${idPedido}`);
   }
 
   iniciarPago(idPedido: string): Observable<MensajeDTO<PreferenceDTO>> {
-    return this.http.post<MensajeDTO<PreferenceDTO>>(`${this.baseUrl}/pago/${idPedido}`, {});
+    return this.http.post<MensajeDTO<PreferenceDTO>>(`${this.baseUrl}/pedidos/${idPedido}/pago`, {});
   }
 
-  // Eliminar pedido del cliente
   eliminarPedidoCliente(idPedido: string): Observable<MensajeDTO<string>> {
-    return this.http.delete<MensajeDTO<string>>(`${this.baseUrl}/eliminar-pedido/${idPedido}`);
+    return this.http.delete<MensajeDTO<string>>(`${this.baseUrl}/pedidos/${idPedido}`);
   }
 }

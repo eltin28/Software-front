@@ -5,7 +5,9 @@ export interface MostrarDetallePedidoDTO {
   nombreProducto: string;
   tipoProducto: TipoProducto;
   imagenProducto: string;
-  precioUnitario: number; // BigDecimal → number
-  cantidad: number;
-  subtotal: number; // BigDecimal → number
+  precioUnitario: number;
+  subtotal: number;
+  idLote: string;
+  codigoLote: string;
+  fechaVencimiento: string;   // LocalDate → string (ISO: 'yyyy-MM-dd')
 }

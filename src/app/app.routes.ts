@@ -8,6 +8,9 @@ import { Carrito } from './componentes/carrito/carrito';
 import { CrudProducto} from './componentes/crud-productos/crud-productos';
 import { RolesGuard } from './servicios/roles.service';
 import { DetallePedido } from './componentes/detalle-pedido/detalle-pedido';
+import { PagoExitoso } from './componentes/Estado-Pago/pago-exitoso/pago-exitoso';
+import { PagoFallido } from './componentes/Estado-Pago/pago-fallido/pago-fallido';
+import { PagoPendiente } from './componentes/Estado-Pago/pago-pendiente/pago-pendiente';
 
 export const routes: Routes = [
 
@@ -23,6 +26,11 @@ export const routes: Routes = [
     //USUARIO ROUTES
     { path: 'carrito', component: Carrito, canActivate: [AuthGuard] },
     { path: 'orden', component: DetallePedido, canActivate: [AuthGuard] },
+
+    //STATE BUY ROUTES
+    { path: 'pago-exitoso', component: PagoExitoso },
+    { path: 'pago-pendiente', component: PagoPendiente },
+    { path: 'pago-fallido', component: PagoFallido },
 
 
     { path: '**', pathMatch: 'full', redirectTo: ''}

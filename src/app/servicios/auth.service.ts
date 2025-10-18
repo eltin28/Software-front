@@ -17,45 +17,80 @@ import { environment } from '../../environments/environment';
 })
 export class AuthService {
 
+  private readonly authURL = `${environment.apiUrl}/auth`;
+  private readonly EMAIL_TEMP_KEY = 'emailTemp';
 
-   private authURL = `${environment.apiUrl}/auth`;
+  constructor(
+    private http: HttpClient, 
+    private tokenService: TokenService, 
+    private router: Router
+  ) {}
 
-  private emailTemp: string;
+  // ==================== GESTIÓN DE EMAIL TEMPORAL ==================== //
 
-  constructor(private http: HttpClient, private tokenService: TokenService, private router: Router) {
-    this.emailTemp = this.getEmailTemp();
+  /**
+   * Guarda el email temporalmente para el flujo de registro/recuperación
+   */
+  setEmailTemp(email: string): void {
+    sessionStorage.setItem(this.EMAIL_TEMP_KEY, email);
   }
 
-
-  setEmailTemp(email: string) {
-    this.emailTemp = email;
+  /**
+   * Obtiene el email temporal guardado
+   */
+  getEmailTemp(): string {
+    return sessionStorage.getItem(this.EMAIL_TEMP_KEY) || '';
   }
 
-  getEmailTemp() {
-    return this.emailTemp;
+  /**
+   * Limpia el email temporal
+   */
+  clearEmailTemp(): void {
+    sessionStorage.removeItem(this.EMAIL_TEMP_KEY);
   }
 
+  // ==================== ENDPOINTS DE AUTENTICACIÓN ==================== //
 
-  //_______________________________ METODOS CUENTA _____________________________________________
-
+  /**
+   * Crea una nueva cuenta de usuario
+   */
   public crearCuenta(cuentaDTO: CrearCuentaDTO): Observable<MensajeDTO<string>> {
     return this.http.post<MensajeDTO<string>>(`${this.authURL}/crear-cuenta`, cuentaDTO);
   }
 
+  /**
+   * Valida el código de activación enviado al correo
+   */
   public validarCodigo(validarCodigoDTO: ValidarCodigoDTO): Observable<MensajeDTO<string>> {
     return this.http.post<MensajeDTO<string>>(`${this.authURL}/validar-codigo`, validarCodigoDTO);
   }
 
+  /**
+   * Envía un código de recuperación de contraseña al email
+   */
   public enviarCodigoRecuperacion(codigoContraseniaDTO: CodigoContraseniaDTO): Observable<MensajeDTO<string>> {
     return this.http.post<MensajeDTO<string>>(`${this.authURL}/codigo-recuperacion-contasenia`, codigoContraseniaDTO);
   }
 
+  /**
+   * Cambia la contraseña usando el código de recuperación
+   */
   public cambiarPassword(cambiarPasswordDTO: CambiarPasswordDTO): Observable<MensajeDTO<string>> {
     return this.http.put<MensajeDTO<string>>(`${this.authURL}/cambiar-password`, cambiarPasswordDTO);
   }
 
+  /**
+   * Inicia sesión y obtiene el token JWT
+   */
   public iniciarSesion(loginDTO: LoginDTO): Observable<MensajeDTO<TokenDTO>> {
     return this.http.post<MensajeDTO<TokenDTO>>(`${this.authURL}/iniciar-sesion`, loginDTO);
   }
 
+  /**
+   * Cierra la sesión del usuario
+   */
+  public logout(): void {
+    this.clearEmailTemp();
+    this.tokenService.logout();
+  }
 }

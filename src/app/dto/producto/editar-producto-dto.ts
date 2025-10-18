@@ -3,7 +3,7 @@ import { TipoProducto } from "../../model/enums/TipoProducto";
 export interface EditarProductoDTO {
   nombre: string;
   imagenProducto: string;
-  cantidad: number;
+  descripcion: string;
   valor: number;
   tipo: TipoProducto;
 }

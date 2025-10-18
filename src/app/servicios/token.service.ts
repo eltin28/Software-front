@@ -9,7 +9,6 @@ export class TokenService {
   private readonly TOKEN_KEY = "AuthToken";
   private readonly router = inject(Router);
 
-  // Signal reactiva para el estado de autenticación
   public isLoggedSignal = signal<boolean>(this.isLogged());
 
   public setToken(token: string) {
@@ -28,7 +27,29 @@ export class TokenService {
   public login(token: string) {
     this.setToken(token);
     const rol = this.getRol();
-    const destino = rol === "ADMINISTRADOR" ? "/home-admin" : "/home-cliente";
+    
+    // Redirigir según rol
+    let destino: string;
+    
+    switch(rol) {
+      case 'ADMINISTRADOR':
+        destino = '/admin/dashboard';
+        break;
+      case 'GESTOR_PRODUCTOS':
+        destino = '/gestor/productos';
+        break;
+      case 'SUPERVISOR_PRODUCCION':
+        destino = '/supervisor/lotes';
+        break;
+      case 'ENCARGADO_ALMACEN':
+        destino = '/almacen/inventario';
+        break;
+      case 'CLIENTE':
+      default:
+        destino = '/home';
+        break;
+    }
+    
     this.router.navigate([destino]).then(() => window.location.reload());
   }
 
@@ -58,5 +79,14 @@ export class TokenService {
 
   public getRol(): string {
     return this.getAllTokenData().rol;
+  }
+
+  public hasRole(...roles: string[]): boolean {
+    const userRole = this.getRol();
+    return roles.includes(userRole);
+  }
+
+  public isWorker(): boolean {
+    return this.hasRole('GESTOR_PRODUCTOS', 'SUPERVISOR_PRODUCCION', 'ENCARGADO_ALMACEN', 'ADMINISTRADOR');
   }
 }
