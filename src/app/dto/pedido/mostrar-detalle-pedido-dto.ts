@@ -1,6 +1,7 @@
 import { TipoProducto } from "../../model/enums/TipoProducto";
 
 export interface MostrarDetallePedidoDTO {
+  cantidad: number;
   idProducto: string;
   nombreProducto: string;
   tipoProducto: TipoProducto;
