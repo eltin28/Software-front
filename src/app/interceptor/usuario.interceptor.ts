@@ -10,11 +10,16 @@ export const usuarioInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);
   const timerResetService = inject(TimerResetService);
 
-  const isApiAuth = req.url.includes("api/auth");
-  const isApiPublico = req.url.includes("api/publico");
+  // DEFINIR TODAS LAS RUTAS PÚBLICAS
+  const publicRoutes = [
+    'api/auth',           // Autenticación
+    'api/publico',        // Rutas públicas generales
+  ];
+
+  const isPublicRoute = publicRoutes.some(route => req.url.includes(route));
 
   // No interceptar rutas públicas
-  if (isApiAuth || isApiPublico) {
+  if (isPublicRoute) {
     return next(req);
   }
 
@@ -40,14 +45,11 @@ export const usuarioInterceptor: HttpInterceptorFn = (req, next) => {
   return next(authReq).pipe(
     catchError((error: HttpErrorResponse) => {
       if (error.status === 401 || error.status === 403) {
-        // Token inválido o expirado
-        tokenService.logout(); // Limpia el token
-        // Usar navigateByUrl y evitar recargas
+        tokenService.logout();
         router.navigateByUrl('/login', { replaceUrl: true });        
         return throwError(() => new Error('Sesión expirada'));
       }
       
-      // Otros errores se propagan normalmente
       return throwError(() => error);
     })
   );

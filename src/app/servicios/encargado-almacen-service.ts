@@ -6,6 +6,7 @@ import { MensajeDTO } from '../dto/autenticacion/mensaje-dto';
 import { ResumenInventarioDTO } from '../dto/inventario/resumen-inventario-dto';
 import { StockPorLoteDTO } from '../dto/inventario/stock-por-lote-dto';
 import { ProductoBajoStockDTO } from '../dto/inventario/producto-bajo-stock-dto';
+import { DetalleLoteDTO } from '../dto/inventario/detalle-lote-dto';
 
 @Injectable({
   providedIn: 'root'
@@ -49,6 +50,10 @@ export class EncargadoAlmacenService {
       params: { umbral: umbral.toString() }
     });
   }
+
+  listarLotes(): Observable<MensajeDTO<DetalleLoteDTO[]>> {
+  return this.http.get<MensajeDTO<DetalleLoteDTO[]>>(`${this.baseUrl}/lotes`);
+}
 
   // ==================== OPERACIONES DE ALMACÉN ==================== //
 

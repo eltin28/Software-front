@@ -125,17 +125,17 @@
     <div class="acciones-rapidas">
       <h3>Acciones Rápidas</h3>
       <div class="acciones-grid">
-        <button class="accion-card" routerLink="/almacen/registrar-entrada">
+        <button class="accion-card" (click)="registrarEntrada()">
           <i class="fa-solid fa-truck-ramp-box"></i>
           <span>Registrar Entrada</span>
         </button>
         
-        <button class="accion-card" routerLink="/almacen/inventario">
+        <button class="accion-card" (click)="verInventario()">
           <i class="fa-solid fa-clipboard-list"></i>
           <span>Ver Inventario</span>
         </button>
         
-        <button class="accion-card" routerLink="/almacen/alertas">
+        <button class="accion-card" (click)="verAlertas()">
           <i class="fa-solid fa-bell"></i>
           <span>Ver Alertas</span>
         </button>

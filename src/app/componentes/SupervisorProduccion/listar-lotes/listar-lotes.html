@@ -1,0 +1,327 @@
+<div class="listar-lotes-container">
+  <!-- Header -->
+  <div class="header">
+    <div>
+      <h2 class="titulo">Gestión de Lotes</h2>
+      <p class="subtitulo">Administra todos los lotes de producción</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn-recargar" (click)="recargarDatos()" [disabled]="cargando()">
+        <i class="fa-solid fa-rotate-right" [class.spinning]="cargando()"></i>
+        Actualizar
+      </button>
+      <button class="btn-primary" routerLink="/supervisor/lotes/nuevo">
+        <i class="fa-solid fa-plus"></i>
+        Nuevo Lote
+      </button>
+    </div>
+  </div>
+
+  <!-- Error -->
+  @if (error()) {
+    <div class="alert-error">
+      <i class="fa-solid fa-circle-exclamation"></i>
+      <span>{{ error() }}</span>
+      <button (click)="error.set(null)">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+  }
+
+  <!-- Estadísticas -->
+  <div class="estadisticas">
+    <div class="stat-card">
+      <div class="stat-icon total">
+        <i class="fa-solid fa-boxes-stacked"></i>
+      </div>
+      <div class="stat-content">
+        <h3>{{ totalLotes() }}</h3>
+        <p>Total Lotes</p>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon disponible">
+        <i class="fa-solid fa-check-circle"></i>
+      </div>
+      <div class="stat-content">
+        <h3>{{ lotesDisponibles() }}</h3>
+        <p>Disponibles</p>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon produccion">
+        <i class="fa-solid fa-industry"></i>
+      </div>
+      <div class="stat-content">
+        <h3>{{ lotesEnProduccion() }}</h3>
+        <p>En Producción</p>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon bloqueado">
+        <i class="fa-solid fa-lock"></i>
+      </div>
+      <div class="stat-content">
+        <h3>{{ lotesBloqueados() }}</h3>
+        <p>Bloqueados</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filtros -->
+  <div class="card filtros-card">
+    <div class="filtros-header">
+      <h3>
+        <i class="fa-solid fa-filter"></i>
+        Filtros
+      </h3>
+      @if (busqueda() || estadoFiltro() || productoFiltro()) {
+        <button class="btn-limpiar" (click)="limpiarFiltros()">
+          <i class="fa-solid fa-broom"></i>
+          Limpiar Filtros
+        </button>
+      }
+    </div>
+
+    <div class="filtros-grid">
+      <div class="filtro-group">
+        <label>
+          <i class="fa-solid fa-search"></i>
+          Buscar por código
+        </label>
+        <input
+          type="text"
+          placeholder="Ej: PROD-240115-001"
+          [(ngModel)]="busqueda"
+          (ngModelChange)="busqueda.set($event)"
+        >
+      </div>
+
+      <div class="filtro-group">
+        <label>
+          <i class="fa-solid fa-list"></i>
+          Estado
+        </label>
+        <select [(ngModel)]="estadoFiltro" (ngModelChange)="estadoFiltro.set($event)">
+          <option value="">Todos los estados</option>
+          @for (estado of estadosLote; track estado) {
+            <option [value]="estado">{{ obtenerTextoEstado(estado) }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="filtro-group">
+        <label>
+          <i class="fa-solid fa-box"></i>
+          Producto
+        </label>
+        <select [(ngModel)]="productoFiltro" (ngModelChange)="productoFiltro.set($event)">
+          <option value="">Todos los productos</option>
+          @for (producto of productos(); track producto.id) {
+            <option [value]="producto.id">{{ producto.nombre }}</option>
+          }
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabla de Lotes -->
+  @if (cargando()) {
+    <div class="loading-container">
+      <div class="spinner"></div>
+      <p>Cargando lotes...</p>
+    </div>
+  } @else if (lotesFiltrados().length === 0) {
+    <div class="card sin-resultados">
+      <i class="fa-solid fa-inbox"></i>
+      <h3>No se encontraron lotes</h3>
+      <p>No hay lotes que coincidan con los filtros aplicados</p>
+      @if (busqueda() || estadoFiltro() || productoFiltro()) {
+        <button class="btn-secondary" (click)="limpiarFiltros()">
+          Limpiar Filtros
+        </button>
+      } @else {
+        <button class="btn-primary" routerLink="/supervisor/lotes/crear">
+          <i class="fa-solid fa-plus"></i>
+          Crear Primer Lote
+        </button>
+      }
+    </div>
+  } @else {
+    <div class="card tabla-card">
+      <div class="tabla-container">
+        <table class="tabla">
+          <thead>
+            <tr>
+              <th>Código Lote</th>
+              <th>Producto</th>
+              <th class="text-center">Cantidad</th>
+              <th class="text-center">Producción</th>
+              <th class="text-center">Vencimiento</th>
+              <th class="text-center">Estado</th>
+              <th class="text-center">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (lote of lotesFiltrados(); track lote.id) {
+              <tr>
+                <td>
+                  <strong class="codigo-lote">{{ lote.codigoLote }}</strong>
+                </td>
+                <td>{{ lote.nombreProducto }}</td>
+                <td class="text-center">
+                  <span class="badge-cantidad">{{ lote.cantidadDisponible }}</span>
+                </td>
+                <td class="text-center">{{ formatearFecha(lote.fechaProduccion) }}</td>
+                <td class="text-center">{{ formatearFecha(lote.fechaVencimiento) }}</td>
+                <td class="text-center">
+                  <span class="badge-estado" [class]="obtenerClaseEstado(lote.estado)">
+                    {{ obtenerTextoEstado(lote.estado) }}
+                  </span>
+                </td>
+                <td class="text-center">
+                  <div class="acciones">
+                    <button 
+                      class="btn-accion ver" 
+                      (click)="verDetalle(lote.id)"
+                      title="Ver detalle"
+                    >
+                      <i class="fa-solid fa-eye"></i>
+                    </button>
+
+                    <button 
+                      class="btn-accion editar" 
+                      (click)="editarLote(lote.id)"
+                      title="Editar lote"
+                    >
+                      <i class="fa-solid fa-pen"></i>
+                    </button>
+
+                    @if (puedeBloquear(lote)) {
+                      <button 
+                        class="btn-accion bloquear" 
+                        (click)="abrirModalBloqueo(lote)"
+                        title="Bloquear lote"
+                      >
+                        <i class="fa-solid fa-lock"></i>
+                      </button>
+                    }
+
+                    @if (puedeDesbloquear(lote)) {
+                      <button 
+                        class="btn-accion desbloquear" 
+                        (click)="desbloquearLote(lote)"
+                        title="Desbloquear lote"
+                      >
+                        <i class="fa-solid fa-lock-open"></i>
+                      </button>
+                    }
+
+                    @if (puedeEliminar(lote)) {
+                      <button 
+                        class="btn-accion eliminar" 
+                        (click)="abrirModalEliminar(lote)"
+                        title="Eliminar lote"
+                      >
+                        <i class="fa-solid fa-trash"></i>
+                      </button>
+                    }
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }
+
+  <!-- Modal Bloquear Lote -->
+  @if (mostrarModalBloqueo()) {
+    <div class="modal-overlay" (click)="cerrarModalBloqueo()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h3>
+            <i class="fa-solid fa-lock"></i>
+            Bloquear Lote
+          </h3>
+          <button class="btn-cerrar" (click)="cerrarModalBloqueo()">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <p>¿Está seguro de bloquear el lote <strong>{{ loteABloquear()?.codigoLote }}</strong>?</p>
+          
+          <div class="form-group">
+            <label for="motivoBloqueo">
+              Motivo del bloqueo <span class="required">*</span>
+            </label>
+            <textarea
+              id="motivoBloqueo"
+              [(ngModel)]="motivoBloqueo"
+              (ngModelChange)="motivoBloqueo.set($event)"
+              rows="3"
+              placeholder="Especifique el motivo por el cual se bloqueará este lote..."
+            ></textarea>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn-secondary" (click)="cerrarModalBloqueo()">
+            Cancelar
+          </button>
+          <button 
+            class="btn-danger" 
+            (click)="bloquearLote()"
+            [disabled]="!motivoBloqueo().trim()"
+          >
+            <i class="fa-solid fa-lock"></i>
+            Bloquear Lote
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Modal Eliminar Lote -->
+  @if (mostrarModalEliminar()) {
+    <div class="modal-overlay" (click)="cerrarModalEliminar()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h3>
+            <i class="fa-solid fa-trash"></i>
+            Eliminar Lote
+          </h3>
+          <button class="btn-cerrar" (click)="cerrarModalEliminar()">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <div class="warning-message">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <div>
+              <h4>¿Está seguro de eliminar este lote?</h4>
+              <p>Se eliminará el lote <strong>{{ loteAEliminar()?.codigoLote }}</strong></p>
+              <p class="warning-text">Esta acción no se puede deshacer.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn-secondary" (click)="cerrarModalEliminar()">
+            Cancelar
+          </button>
+          <button class="btn-danger" (click)="confirmarEliminar()">
+            <i class="fa-solid fa-trash"></i>
+            Eliminar
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+</div>

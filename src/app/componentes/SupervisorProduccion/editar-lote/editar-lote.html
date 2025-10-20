@@ -1,0 +1,57 @@
+@if (!cargando) {
+  <div class="editar-lote-container">
+    <h2 class="titulo-editar-lote">Editar Lote: {{ lote?.codigoLote }}</h2>
+
+    <form [formGroup]="loteForm" (ngSubmit)="actualizar()" novalidate>
+      <div class="form-grid">
+
+        <label class="form-label">Código de Lote</label>
+        <input type="text" formControlName="codigoLote" class="form-input" />
+
+        <label class="form-label">Fecha de Producción</label>
+        <input type="date" formControlName="fechaProduccion" class="form-input" />
+
+        <label class="form-label">Fecha de Vencimiento</label>
+        <input type="date" formControlName="fechaVencimiento" class="form-input" />
+
+        <label class="form-label">Cantidad Producida</label>
+        <input type="number" formControlName="cantidadProducida" class="form-input" />
+
+        <label class="form-label">Cantidad Disponible</label>
+        <input type="number" formControlName="cantidadDisponible" class="form-input" />
+
+        <label class="form-label">Estado</label>
+        <select formControlName="estado" class="form-input">
+          @for (estado of estados; track estado) {
+            <option [value]="estado">{{ estado }}</option>
+          }
+        </select>
+
+        <label class="form-label">Observaciones</label>
+        <textarea formControlName="observaciones" rows="2" class="form-textarea"></textarea>
+
+        <label class="form-label form-label-motivo">Motivo de Edición *</label>
+        <textarea
+          formControlName="motivo"
+          rows="3"
+          class="form-textarea form-textarea-motivo"
+          placeholder="Indica el motivo de la modificación"
+          required>
+        </textarea>
+
+        @if (loteForm.get('motivo')?.invalid && loteForm.get('motivo')?.touched) {
+          <small class="error">
+            El motivo es obligatorio y debe tener al menos 5 caracteres.
+          </small>
+        }
+      </div>
+
+      <div class="acciones">
+        <button type="submit" class="button1" [disabled]="loteForm.invalid">Guardar Cambios</button>
+        <button type="button" class="button2" routerLink="/supervisor/lotes">Cancelar</button>
+      </div>
+    </form>
+  </div>
+} @else {
+  <div class="loading">Cargando información del lote...</div>
+}

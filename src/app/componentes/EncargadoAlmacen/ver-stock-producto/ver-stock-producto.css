@@ -1,0 +1,48 @@
+.detalle-container {
+  padding: 1.5rem;
+}
+
+.resumen {
+  background: #f7f7f7;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+}
+
+.resumen-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.5rem;
+}
+
+.tabla {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tabla th, .tabla td {
+  padding: 0.75rem;
+  border-bottom: 1px solid #ddd;
+}
+
+.vencido {
+  color: #b71c1c;
+  font-weight: bold;
+}
+
+.disponible {
+  color: #2e7d32;
+}
+
+.agotado {
+  color: #616161;
+}
+
+.bloqueado {
+  color: #f57c00;
+}
+
+.loading, .error {
+  text-align: center;
+  padding: 1rem;
+}

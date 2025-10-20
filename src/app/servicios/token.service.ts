@@ -39,7 +39,7 @@ export class TokenService {
         destino = '/gestor/home';
         break;
       case 'SUPERVISOR_PRODUCCION':
-        destino = '/supervisor/lotes';
+        destino = '/supervisor/home';
         break;
       case 'ENCARGADO_ALMACEN':
         destino = '/almacen/home';
@@ -88,5 +88,13 @@ export class TokenService {
 
   public isWorker(): boolean {
     return this.hasRole('GESTOR_PRODUCTOS', 'SUPERVISOR_PRODUCCION', 'ENCARGADO_ALMACEN', 'ADMINISTRADOR');
+  }
+
+  public isCliente(): boolean {
+    return this.getRol() === 'CLIENTE';
+  }
+
+  public isAdmin(): boolean {
+    return this.getRol() === 'ADMINISTRADOR';
   }
 }

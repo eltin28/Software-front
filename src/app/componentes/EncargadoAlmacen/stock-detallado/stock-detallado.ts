@@ -1,9 +1,10 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { EncargadoAlmacenService } from '../../../servicios/encargado-almacen-service';
 import { StockPorLoteDTO } from '../../../dto/inventario/stock-por-lote-dto';
 import { MensajeDTO } from '../../../dto/autenticacion/mensaje-dto';
+import { ResumenInventarioDTO } from '../../../dto/inventario/resumen-inventario-dto';
 
 @Component({
   selector: 'app-stock-detallado',
@@ -11,33 +12,40 @@ import { MensajeDTO } from '../../../dto/autenticacion/mensaje-dto';
   templateUrl: './stock-detallado.html',
   styleUrl: './stock-detallado.css'
 })
-export class StockDetallado implements OnInit {
+export class StockDetallado {
+  private service = inject(EncargadoAlmacenService);
 
-  idProducto = '';
+  resumenProductos = signal<ResumenInventarioDTO[]>([]);
   stockPorLote = signal<StockPorLoteDTO[]>([]);
+  productoSeleccionado = signal<string>('');
   cargando = signal(false);
   error = signal<string | null>(null);
 
-  constructor(private almacenService: EncargadoAlmacenService) {}
+  constructor() {
+    this.cargarProductos();
+  }
 
-  ngOnInit(): void {}
+  private cargarProductos(): void {
+    this.service.obtenerResumenInventario().subscribe({
+      next: resp => this.resumenProductos.set(resp.respuesta),
+      error: err => this.error.set(err.error?.mensaje || 'Error al cargar productos.')
+    });
+  }
 
   buscarStock(): void {
-    if (!this.idProducto.trim()) {
-      this.error.set('Debe ingresar un ID de producto.');
-      return;
-    }
+    const idProducto = this.productoSeleccionado();
+    if (!idProducto) return;
 
     this.cargando.set(true);
     this.error.set(null);
 
-    this.almacenService.obtenerStockPorLote(this.idProducto).subscribe({
-      next: (resp: MensajeDTO<StockPorLoteDTO[]>) => {
+    this.service.obtenerStockPorLote(idProducto).subscribe({
+      next: resp => {
         this.stockPorLote.set(resp.respuesta);
         this.cargando.set(false);
       },
-      error: () => {
-        this.error.set('Error al obtener el stock por lote.');
+      error: err => {
+        this.error.set(err.error?.mensaje || 'Error al obtener stock.');
         this.cargando.set(false);
       }
     });

@@ -1,0 +1,50 @@
+<div class="alertas-container">
+  <h2>Alertas de Stock Bajo</h2>
+
+  <div class="control-panel">
+    <label for="umbral">Umbral de alerta:</label>
+    <input id="umbral" type="number" [(ngModel)]="umbralInput" min="1" />
+    <button (click)="actualizarUmbral()">Actualizar</button>
+  </div>
+
+  @if (cargando()) {
+    <div class="cargando">Cargando datos de inventario...</div>
+  }
+
+  @if (error()) {
+    <div class="error">{{ error() }}</div>
+  }
+
+  @if (!cargando() && !error() && productos().length > 0) {
+    <table class="tabla-alertas">
+      <thead>
+        <tr>
+          <th>Producto</th>
+          <th>Stock Actual</th>
+          <th>Umbral</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (p of productos(); track p.idProducto) {
+          <tr [class.peligro]="p.stockTotal === 0" [class.advertencia]="p.stockTotal > 0 && p.stockTotal < p.umbral">
+            <td>{{ p.nombreProducto }}</td>
+            <td>{{ p.stockTotal }}</td>
+            <td>{{ p.umbral }}</td>
+            <td>
+              @if (p.stockTotal === 0) {
+                <span class="estado peligro">Agotado</span>
+              } @else if (p.stockTotal < p.umbral) {
+                <span class="estado advertencia">Bajo</span>
+              } @else {
+                <span class="estado normal">OK</span>
+              }
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  } @else if (!cargando() && !error() && productos().length === 0) {
+    <p class="sin-alertas">No hay productos con stock bajo.</p>
+  }
+</div>

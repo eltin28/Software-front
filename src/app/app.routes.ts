@@ -18,15 +18,24 @@ import { GestorProductosHome } from './componentes/GestorProductos/gestor-produc
 import { EncargadoAlmacenHome } from './componentes/EncargadoAlmacen/encargado-almacen-home/encargado-almacen-home';
 import { ResumenInventario } from './componentes/EncargadoAlmacen/resumen-inventario/resumen-inventario';
 import { StockDetallado } from './componentes/EncargadoAlmacen/stock-detallado/stock-detallado';
+import { ClienteOnlyGuard } from './interceptor/ClienteOnlyGuard';
+import { SupervisorProduccionHome } from './componentes/SupervisorProduccion/supervisor-produccion-home/supervisor-produccion-home';
+import { ListarLotes } from './componentes/SupervisorProduccion/listar-lotes/listar-lotes';
+import { CrearLote } from './componentes/SupervisorProduccion/crear-lote/crear-lote';
+import { RegistrarEntrada } from './componentes/EncargadoAlmacen/registrar-entrada/registrar-entrada';
+import { VerStockProducto } from './componentes/EncargadoAlmacen/ver-stock-producto/ver-stock-producto';
+import { AlertasStockBajo } from './componentes/EncargadoAlmacen/alertas-stock-bajo/alertas-stock-bajo';
+import { EditarLoteComponent } from './componentes/SupervisorProduccion/editar-lote/editar-lote';
+import { VerDetalleLote } from './componentes/SupervisorProduccion/ver-detalle-lote/ver-detalle-lote';
 
 export const routes: Routes = [
 
     // PUBLIC ROUTES
-    { path: '', component: Home },
+    { path: '', component: Home, canActivate: [ClienteOnlyGuard] },
     { path: 'login', component: RegistroLoginComponent, canActivate: [PublicGuard] },
     { path: 'codigo-validacion', component: CodigoValidacion, canActivate: [PublicGuard] },
     { path: 'cambio-contrasena', component: CambioContrasena, canActivate: [PublicGuard]  },
-    { path: 'producto/:id', component: VerProducto },
+    { path: 'producto/:id', component: VerProducto, canActivate: [ClienteOnlyGuard] },
 
     // GESTOR_PRODUCTOS ROUTES
     { path: 'gestor/home', component: GestorProductosHome, canActivate: [RolesGuard], data: { expectedRole: ["GESTOR_PRODUCTOS", "ADMINISTRADOR"] } },
@@ -38,6 +47,16 @@ export const routes: Routes = [
     { path: 'almacen/home', component: EncargadoAlmacenHome, canActivate: [RolesGuard], data: { expectedRole: ["ENCARGADO_ALMACEN", "ADMINISTRADOR"] } },
     { path: 'almacen/inventario', component: ResumenInventario, canActivate: [RolesGuard], data: { expectedRole: ["ENCARGADO_ALMACEN", "ADMINISTRADOR"] } },
     { path: 'almacen/stock', component: StockDetallado, canActivate: [RolesGuard], data: { expectedRole: ["ENCARGADO_ALMACEN", "ADMINISTRADOR"] } },
+    { path: 'almacen/registrar-entrada', component: RegistrarEntrada, canActivate: [RolesGuard], data: { expectedRole: ["ENCARGADO_ALMACEN", "ADMINISTRADOR"] } },
+    { path: 'almacen/ver-stock-producto/:id', component: VerStockProducto, canActivate: [RolesGuard], data: { expectedRole: ["ENCARGADO_ALMACEN", "ADMINISTRADOR"] } },
+    { path: 'almacen/alertas-stock-bajo', component: AlertasStockBajo, canActivate: [RolesGuard], data: { expectedRole: ["ENCARGADO_ALMACEN", "ADMINISTRADOR"] } },
+
+    //SUPERVISOR DE PRODUCCION ROUTES
+    { path: 'supervisor/home', component: SupervisorProduccionHome, canActivate: [RolesGuard], data: { expectedRole: ["SUPERVISOR_PRODUCCION", "ADMINISTRADOR"] } },
+    { path: 'supervisor/lotes/listar-lotes', component: ListarLotes, canActivate: [RolesGuard], data: { expectedRole: ["SUPERVISOR_PRODUCCION", "ADMINISTRADOR"] } },
+    { path: 'supervisor/lotes/crear', component: CrearLote, canActivate: [RolesGuard], data: { expectedRole: ["SUPERVISOR_PRODUCCION", "ADMINISTRADOR"] } },
+    { path: 'supervisor/lotes/ver-detalle/:id', component: VerDetalleLote, canActivate: [RolesGuard], data: { expectedRole: ["SUPERVISOR_PRODUCCION", "ADMINISTRADOR"] } },
+    { path: 'supervisor/lotes/editar/:id', component: EditarLoteComponent, canActivate: [RolesGuard], data: { expectedRole: ["SUPERVISOR_PRODUCCION", "ADMINISTRADOR"] } },
 
     //USUARIO ROUTES
     { path: 'carrito', component: Carrito, canActivate: [AuthGuard] },

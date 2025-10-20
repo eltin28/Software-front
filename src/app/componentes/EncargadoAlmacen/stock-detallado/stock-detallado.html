@@ -2,11 +2,13 @@
   <h2>Detalle de Stock por Lote</h2>
 
   <div class="busqueda">
-    <input
-      type="text"
-      placeholder="Ingrese ID de producto"
-      [(ngModel)]="idProducto" />
-    <button (click)="buscarStock()">Buscar</button>
+    <label for="producto">Seleccione un producto:</label>
+    <select id="producto" [(ngModel)]="productoSeleccionado" (change)="buscarStock()">
+      <option value="" disabled selected>-- Seleccione --</option>
+      @for (p of resumenProductos(); track p.idProducto) {
+        <option [value]="p.idProducto">{{ p.nombreProducto }}</option>
+      }
+    </select>
   </div>
 
   @if (error()) {
@@ -40,7 +42,7 @@
         }
       </tbody>
     </table>
-  } @else if (!cargando() && stockPorLote().length === 0 && !error()) {
-    <p>No se encontraron lotes para este producto.</p>
+  } @else if (!cargando() && stockPorLote().length === 0 && productoSeleccionado() && !error()) {
+    <p>No hay lotes registrados para este producto.</p>
   }
 </div>

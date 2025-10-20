@@ -1,0 +1,230 @@
+<div class="home-container">
+  <!-- Header -->
+  <div class="header">
+    <h2 class="titulo">Panel del Supervisor de Producción</h2>
+    <button class="btn-recargar" (click)="recargarDatos()" [disabled]="cargando()">
+      <i class="fa-solid fa-rotate-right" [class.spinning]="cargando()"></i>
+      Actualizar
+    </button>
+  </div>
+
+  @if (error()) {
+    <div class="alert-error">
+      <i class="fa-solid fa-circle-exclamation"></i>
+      <span>{{ error() }}</span>
+      <button (click)="recargarDatos()">Reintentar</button>
+    </div>
+  }
+
+  @if (cargando()) {
+    <div class="loading-container">
+      <div class="spinner"></div>
+      <p>Cargando datos de producción...</p>
+    </div>
+  } @else {
+    <!-- Indicadores -->
+    <div class="indicadores">
+      <div class="card indicador">
+        <div class="indicador-icon lotes">
+          <i class="fa-solid fa-boxes-stacked"></i>
+        </div>
+        <div class="indicador-content">
+          <h3>{{ totalLotes() }}</h3>
+          <p>Lotes totales</p>
+        </div>
+      </div>
+
+      <div class="card indicador">
+        <div class="indicador-icon produccion">
+          <i class="fa-solid fa-industry"></i>
+        </div>
+        <div class="indicador-content">
+          <h3>{{ lotesEnProduccion().length }}</h3>
+          <p>En producción</p>
+        </div>
+      </div>
+
+      <div class="card indicador">
+        <div class="indicador-icon stock">
+          <i class="fa-solid fa-warehouse"></i>
+        </div>
+        <div class="indicador-content">
+          <h3>{{ stockTotal() }}</h3>
+          <p>Unidades disponibles</p>
+        </div>
+      </div>
+
+      <div class="card indicador" [class.alerta]="alertasVencimiento() > 0">
+        <div class="indicador-icon vencimiento">
+          <i class="fa-solid fa-calendar-xmark"></i>
+        </div>
+        <div class="indicador-content">
+          <h3>{{ alertasVencimiento() }}</h3>
+          <p>Próximos a vencer</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Alertas de Vencimiento -->
+    @if (lotesPorVencer().length > 0) {
+      <div class="card alertas-vencimiento">
+        <div class="card-header">
+          <h3>
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            Alertas de Vencimiento (30 días)
+          </h3>
+          <span class="badge">{{ lotesPorVencer().length }}</span>
+        </div>
+
+        <div class="tabla-container">
+          <table class="tabla">
+            <thead>
+              <tr>
+                <th>Código Lote</th>
+                <th>Producto</th>
+                <th class="text-center">Cantidad</th>
+                <th class="text-center">Fecha Vencimiento</th>
+                <th class="text-center">Días Restantes</th>
+                <th class="text-center">Estado</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (lote of lotesPorVencer(); track lote.codigoLote) {
+                <tr>
+                  <td>
+                    <strong>{{ lote.codigoLote }}</strong>
+                  </td>
+                  <td>{{ lote.nombreProducto }}</td>
+                  <td class="text-center">
+                    <span class="badge-cantidad">{{ lote.cantidadDisponible }}</span>
+                  </td>
+                  <td class="text-center">{{ formatearFecha(lote.fechaVencimiento) }}</td>
+                  <td class="text-center">
+                    <span class="badge-dias" [class]="obtenerEstiloVencimiento(lote.diasRestantes)">
+                      {{ lote.diasRestantes }} días
+                    </span>
+                  </td>
+                  <td class="text-center">
+                    @if (lote.diasRestantes <= 7) {
+                      <span class="badge-status critico">Urgente</span>
+                    } @else if (lote.diasRestantes <= 15) {
+                      <span class="badge-status advertencia">Advertencia</span>
+                    } @else {
+                      <span class="badge-status normal">Normal</span>
+                    }
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    }
+
+    <!-- Lotes Bloqueados -->
+    @if (lotesBloqueados().length > 0) {
+      <div class="card alertas-bloqueados">
+        <div class="card-header">
+          <h3>
+            <i class="fa-solid fa-lock"></i>
+            Lotes Bloqueados
+          </h3>
+          <span class="badge badge-bloqueado">{{ lotesBloqueados().length }}</span>
+        </div>
+
+        <div class="tabla-container">
+          <table class="tabla">
+            <thead>
+              <tr>
+                <th>Código Lote</th>
+                <th>Producto</th>
+                <th class="text-center">Cantidad</th>
+                <th class="text-center">Fecha Producción</th>
+                <th>Motivo Bloqueo</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (lote of lotesBloqueados(); track lote.id) {
+                <tr>
+                  <td>
+                    <strong>{{ lote.codigoLote }}</strong>
+                  </td>
+                  <td>{{ lote.nombreProducto }}</td>
+                  <td class="text-center">{{ lote.cantidadDisponible }}</td>
+                  <td class="text-center">{{ formatearFecha(lote.fechaProduccion) }}</td>
+                  <td>
+                    <span class="motivo-bloqueo">{{ lote.observaciones }}</span>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    }
+
+    <!-- Últimos Lotes Creados -->
+    @if (ultimosLotes().length > 0) {
+      <div class="card ultimos-lotes">
+        <div class="card-header">
+          <h3>
+            <i class="fa-solid fa-clock-rotate-left"></i>
+            Últimos Lotes Creados
+          </h3>
+        </div>
+
+        <div class="lotes-grid">
+          @for (lote of ultimosLotes(); track $index) {
+            <div class="lote-item" (click)="verDetalleLote(lote.id)">
+              <div class="lote-header">
+                <span class="lote-codigo">{{ lote.codigoLote }}</span>
+                <span class="lote-estado" [class]="lote.estado.toLowerCase().replace('_', '-')">
+                  {{ lote.estado }}
+                </span>
+              </div>
+              <div class="lote-info">
+                <p class="lote-producto">{{ lote.nombreProducto }}</p>
+                <div class="lote-detalles">
+                  <span>
+                    <i class="fa-solid fa-box"></i>
+                    {{ lote.cantidadDisponible }} unidades
+                  </span>
+                  <span>
+                    <i class="fa-solid fa-calendar"></i>
+                    {{ formatearFecha(lote.fechaProduccion) }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- Acciones Rápidas -->
+    <div class="acciones-rapidas">
+      <h3>Acciones Rápidas</h3>
+      <div class="acciones-grid">
+        <button class="accion-card" (click)="crearLote()">
+          <i class="fa-solid fa-plus-circle"></i>
+          <span>Crear Lote</span>
+        </button>
+        
+        <button class="accion-card" (click)="verTodosLotes()">
+          <i class="fa-solid fa-list"></i>
+          <span>Ver Todos los Lotes</span>
+        </button>
+        
+        <button class="accion-card" (click)="verAlertas()">
+          <i class="fa-solid fa-bell"></i>
+          <span>Ver Alertas</span>
+        </button>
+
+        <button class="accion-card" (click)="verReportes()">
+          <i class="fa-solid fa-chart-line"></i>
+          <span>Reportes</span>
+        </button>
+      </div>
+    </div>
+  }
+</div>

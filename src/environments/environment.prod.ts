@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://renechardon.onrender.com/api'
+  apiUrl: 'http://107.21.73.190:8081/api/'
 };

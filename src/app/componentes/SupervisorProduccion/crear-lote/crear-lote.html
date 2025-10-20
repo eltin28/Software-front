@@ -1,0 +1,226 @@
+<div class="crear-lote-container">
+  <!-- Header -->
+  <div class="header">
+    <div class="header-content">
+      <button class="btn-back" (click)="cancelar()">
+        <i class="fa-solid fa-arrow-left"></i>
+      </button>
+      <div>
+        <h2 class="titulo">Crear Nuevo Lote</h2>
+        <p class="subtitulo">Registra un nuevo lote de producción</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mensaje de Éxito -->
+  @if (exito()) {
+    <div class="alert-success">
+      <i class="fa-solid fa-circle-check"></i>
+      <span>¡Lote creado exitosamente! Redirigiendo...</span>
+    </div>
+  }
+
+  <!-- Mensaje de Error -->
+  @if (error()) {
+    <div class="alert-error">
+      <i class="fa-solid fa-circle-exclamation"></i>
+      <span>{{ error() }}</span>
+    </div>
+  }
+
+  <!-- Formulario -->
+  <div class="card">
+    <form [formGroup]="loteForm" (ngSubmit)="onSubmit()">
+      
+      <!-- Sección: Información del Lote -->
+      <div class="form-section">
+        <h3 class="section-title">
+          <i class="fa-solid fa-barcode"></i>
+          Información del Lote
+        </h3>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="codigoLote">
+              Código del Lote <span class="required">*</span>
+            </label>
+            <div class="input-with-button">
+              <input
+                type="text"
+                id="codigoLote"
+                formControlName="codigoLote"
+                placeholder="Ej: PROD-240115-001"
+                [class.invalid]="campoInvalido('codigoLote')"
+              >
+              <button 
+                type="button" 
+                class="btn-generate" 
+                (click)="generarCodigoAutomatico()"
+                [disabled]="!loteForm.get('idProducto')?.value"
+                title="Generar código automático"
+              >
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+              </button>
+            </div>
+            @if (campoInvalido('codigoLote')) {
+              <span class="error-message">{{ obtenerMensajeError('codigoLote') }}</span>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="idProducto">
+              Producto <span class="required">*</span>
+            </label>
+            @if (cargandoProductos()) {
+              <div class="loading-select">
+                <div class="spinner-small"></div>
+                <span>Cargando productos...</span>
+              </div>
+            } @else {
+              <select
+                id="idProducto"
+                formControlName="idProducto"
+                [class.invalid]="campoInvalido('idProducto')"
+              >
+                <option value="">Seleccione un producto</option>
+                @for (producto of productos(); track producto.idProducto) {
+                  <option [value]="producto.idProducto">{{ producto.nombreProducto }}</option>
+                }
+              </select>
+              @if (campoInvalido('idProducto')) {
+                <span class="error-message">{{ obtenerMensajeError('idProducto') }}</span>
+              }
+            }
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="cantidadProducida">
+            Cantidad Producida <span class="required">*</span>
+          </label>
+          <input
+            type="number"
+            id="cantidadProducida"
+            formControlName="cantidadProducida"
+            min="1"
+            placeholder="Ej: 1000"
+            [class.invalid]="campoInvalido('cantidadProducida')"
+          >
+          @if (campoInvalido('cantidadProducida')) {
+            <span class="error-message">{{ obtenerMensajeError('cantidadProducida') }}</span>
+          }
+        </div>
+      </div>
+
+      <!-- Sección: Fechas -->
+      <div class="form-section">
+        <h3 class="section-title">
+          <i class="fa-solid fa-calendar"></i>
+          Fechas
+        </h3>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="fechaProduccion">
+              Fecha de Producción <span class="required">*</span>
+            </label>
+            <input
+              type="date"
+              id="fechaProduccion"
+              formControlName="fechaProduccion"
+              [max]="fechaMinima"
+              [class.invalid]="campoInvalido('fechaProduccion')"
+            >
+            @if (campoInvalido('fechaProduccion')) {
+              <span class="error-message">{{ obtenerMensajeError('fechaProduccion') }}</span>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="fechaVencimiento">
+              Fecha de Vencimiento <span class="required">*</span>
+            </label>
+            <input
+              type="date"
+              id="fechaVencimiento"
+              formControlName="fechaVencimiento"
+              [min]="loteForm.get('fechaProduccion')?.value"
+              [class.invalid]="campoInvalido('fechaVencimiento')"
+            >
+            @if (campoInvalido('fechaVencimiento')) {
+              <span class="error-message">{{ obtenerMensajeError('fechaVencimiento') }}</span>
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- Sección: Observaciones -->
+      <div class="form-section">
+        <h3 class="section-title">
+          <i class="fa-solid fa-note-sticky"></i>
+          Observaciones (Opcional)
+        </h3>
+
+        <div class="form-group">
+          <label for="observaciones">
+            Observaciones adicionales
+          </label>
+          <textarea
+            id="observaciones"
+            formControlName="observaciones"
+            rows="4"
+            placeholder="Ingrese cualquier observación relevante sobre este lote..."
+            [class.invalid]="campoInvalido('observaciones')"
+          ></textarea>
+          <small class="char-counter">
+            {{ loteForm.get('observaciones')?.value?.length || 0 }} / 500 caracteres
+          </small>
+          @if (campoInvalido('observaciones')) {
+            <span class="error-message">{{ obtenerMensajeError('observaciones') }}</span>
+          }
+        </div>
+      </div>
+
+      <!-- Botones de Acción -->
+      <div class="form-actions">
+        <button
+          type="button"
+          class="btn-secondary"
+          (click)="cancelar()"
+          [disabled]="enviando()"
+        >
+          <i class="fa-solid fa-xmark"></i>
+          Cancelar
+        </button>
+
+        <button
+          type="submit"
+          class="btn-primary"
+          [disabled]="enviando() || loteForm.invalid"
+        >
+          @if (enviando()) {
+            <div class="spinner-small"></div>
+            <span>Creando...</span>
+          } @else {
+            <i class="fa-solid fa-check"></i>
+            <span>Crear Lote</span>
+          }
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Información de Ayuda -->
+  <div class="info-card">
+    <i class="fa-solid fa-circle-info"></i>
+    <div>
+      <h4>Información importante</h4>
+      <ul>
+        <li>El código del lote debe ser único en el sistema</li>
+        <li>Puedes generar un código automático basado en el producto seleccionado</li>
+        <li>La fecha de vencimiento debe ser posterior a la fecha de producción</li>
+        <li>Una vez creado, el lote tendrá estado "EN_PRODUCCION"</li>
+      </ul>
+    </div>
+  </div>
+</div>

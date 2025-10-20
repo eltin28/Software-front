@@ -2,6 +2,7 @@ import { Component, OnInit, signal, computed  } from '@angular/core';
 import { EncargadoAlmacenService } from '../../../servicios/encargado-almacen-service';
 import { ResumenInventarioDTO } from '../../../dto/inventario/resumen-inventario-dto';
 import { ProductoBajoStockDTO } from '../../../dto/inventario/producto-bajo-stock-dto';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-encargado-almacen-home',
@@ -38,7 +39,7 @@ export class EncargadoAlmacenHome implements OnInit {
     }).length;
   });
 
-  constructor(private almacenService: EncargadoAlmacenService) {}
+  constructor(private almacenService: EncargadoAlmacenService, private router: Router) {}
 
   ngOnInit(): void {
     this.cargarDatos();
@@ -83,5 +84,17 @@ export class EncargadoAlmacenHome implements OnInit {
 
   recargarDatos(): void {
     this.cargarDatos();
+  }
+
+    registrarEntrada(): void {
+    this.router.navigate(['/almacen/registrar-entrada']);
+  }
+
+  verInventario(): void {
+    this.router.navigate(['/almacen/inventario']);
+  }
+
+  verAlertas(): void {
+    this.router.navigate(['/almacen/alertas-stock-bajo']);
   }
 }

@@ -1,0 +1,51 @@
+<div class="detalle-container">
+  @if (cargando()) {
+    <div class="loading">Cargando información del producto...</div>
+  } @else if (error()) {
+    <div class="error">{{ error() }}</div>
+  } @else if (producto()) {
+
+    <section class="resumen">
+      <h2>{{ producto()?.nombreProducto }}</h2>
+      <div class="resumen-grid">
+        <div><strong>Stock total:</strong> {{ producto()?.stockTotal }}</div>
+        <div><strong>Lotes disponibles:</strong> {{ producto()?.lotesDisponibles }}</div>
+        <div>
+          <strong>Próximo vencimiento:</strong>
+          {{ producto()?.proximoVencimiento | date: 'yyyy-MM-dd' }}
+        </div>
+      </div>
+    </section>
+
+    <section class="lotes">
+      <h3>Detalle por Lote</h3>
+
+      @if (lotes().length === 0) {
+        <p>No hay lotes registrados para este producto.</p>
+      } @else {
+        <table class="tabla">
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Cantidad</th>
+              <th>Vencimiento</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (lote of lotes(); track lote.codigoLote) {
+            <tr [class.vencido]="esVencido(lote.fechaVencimiento)">
+                <td>{{ lote.codigoLote }}</td>
+                <td>{{ lote.cantidad }}</td>
+                <td>{{ lote.fechaVencimiento | date: 'yyyy-MM-dd' }}</td>
+                <td [class]="lote.estado.toLowerCase()">{{ lote.estado }}</td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      }
+    </section>
+  } @else {
+    <div>No se encontró información del producto.</div>
+  }
+</div>

@@ -2,30 +2,27 @@ import { CanActivateFn, Router } from '@angular/router';
 import { inject } from '@angular/core';
 import { TokenService } from '../servicios/token.service';
 
-export const AuthGuard: CanActivateFn = () => {
+/**
+ * Guard que permite acceso solo a usuarios NO autenticados o CLIENTES
+ * Bloquea el acceso a trabajadores (GESTOR_PRODUCTOS, SUPERVISOR_PRODUCCION, ENCARGADO_ALMACEN, ADMINISTRADOR)
+ */
+export const ClienteOnlyGuard: CanActivateFn = () => {
   const tokenService = inject(TokenService);
   const router = inject(Router);
 
-  if (tokenService.isLogged()) {
-    return true;
-  }
-
-  router.navigate(['/login']);
-  return false;
-};
-
-// Guard para rutas públicas (evitar acceso si ya está autenticado)
-export const PublicGuard: CanActivateFn = () => {
-  const tokenService = inject(TokenService);
-  const router = inject(Router);
-
+  // Permitir acceso si no está logueado
   if (!tokenService.isLogged()) {
     return true;
   }
 
-  // Si está logueado, redirigir según su rol
   const rol = tokenService.getRol();
-  
+
+  // Permitir solo si es CLIENTE
+  if (rol === 'CLIENTE') {
+    return true;
+  }
+
+  // Bloquear a trabajadores y redirigir a su home
   switch(rol) {
     case 'ADMINISTRADOR':
       router.navigate(['/admin/dashboard']);
@@ -39,9 +36,8 @@ export const PublicGuard: CanActivateFn = () => {
     case 'ENCARGADO_ALMACEN':
       router.navigate(['/almacen/home']);
       break;
-    case 'CLIENTE':
     default:
-      router.navigate(['/home']);
+      router.navigate(['/login']);
       break;
   }
   

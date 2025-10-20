@@ -1,0 +1,49 @@
+<div class="entrada-container">
+
+  <h2>Registrar Entrada de Lote</h2>
+
+  @if (cargando()) {
+    <div class="spinner"></div>
+    <p>Cargando lotes pendientes...</p>
+  } @else {
+
+    @if (error()) {
+      <div class="alert-error">
+        <i class="fa-solid fa-circle-exclamation"></i> {{ error() }}
+        <button (click)="cargarLotesPendientes()">Reintentar</button>
+      </div>
+    }
+
+    @if (mensaje()) {
+      <div class="alert-success">
+        <i class="fa-solid fa-circle-check"></i> {{ mensaje() }}
+      </div>
+    }
+
+    @if (lotesPendientes().length > 0) {
+      <div class="form-section">
+        <label for="lote">Seleccione un lote pendiente:</label>
+        <select id="lote" [(ngModel)]="loteSeleccionado">
+          <option value="">-- Seleccionar Lote --</option>
+          @for (lote of lotesPendientes(); track lote.idProducto) {
+            <option [value]="lote.idLote">
+              {{ lote.nombreProducto }} — Próximo vencimiento: 
+              {{ lote.fechaVencimiento ? (lote.fechaVencimiento | date: 'yyyy-MM-dd') : 'N/A' }}
+            </option>
+          }
+        </select>
+
+        <button 
+          (click)="registrarEntrada()" 
+          [disabled]="!loteSeleccionado() || cargando()">
+          Registrar Entrada
+        </button>
+      </div>
+    } @else {
+      <div class="alert-info">
+        <i class="fa-solid fa-boxes-stacked"></i>
+        No hay lotes pendientes por registrar.
+      </div>
+    }
+  }
+</div>
