@@ -1,0 +1,55 @@
+<div class="resumen-container">
+  <div class="header">
+    <h2>Resumen de Inventario</h2>
+    <button class="btn-recargar" (click)="recargar()" [disabled]="cargando()">
+      <i class="fa-solid fa-rotate-right" [class.spinning]="cargando()"></i>
+      Actualizar
+    </button>
+  </div>
+
+  @if (error()) {
+    <div class="alert-error">
+      <i class="fa-solid fa-circle-exclamation"></i>
+      <span>{{ error() }}</span>
+      <button (click)="recargar()">Reintentar</button>
+    </div>
+  }
+
+  @if (cargando()) {
+    <div class="loading">
+      <div class="spinner"></div>
+      <p>Cargando resumen de inventario...</p>
+    </div>
+  } @else {
+    <div class="tabla-container">
+      <table class="tabla">
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th class="text-center">Stock Total</th>
+            <th class="text-center">Lotes Disponibles</th>
+            <th class="text-center">Próximo Vencimiento</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of resumenInventario(); track item.idProducto) {
+            <tr>
+              <td>{{ item.nombreProducto }}</td>
+              <td class="text-center">{{ item.stockTotal }}</td>
+              <td class="text-center">{{ item.lotesDisponibles }}</td>
+              <td class="text-center">
+                @if (item.proximoVencimiento) {
+                    <span [class.alerta]="esProximoAVencer(item.proximoVencimiento)">
+                    {{ item.proximoVencimiento | date:'yyyy-MM-dd' }}
+                    </span>
+                } @else {
+                  <span class="sin-vencimiento">—</span>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

@@ -1,0 +1,83 @@
+@if (!loading()) {
+  <div class="producto-container">
+    <div class="producto-card">
+      <h2>Editar producto</h2>
+
+      <form [formGroup]="form" (ngSubmit)="actualizar()" class="producto-form">
+        <div class="producto-imagen">
+          @if (producto()?.imagenProducto) {
+            <div class="imagen-contenedor">
+              <img [src]="producto()?.imagenProducto" alt="Imagen del producto">
+              <button type="button" class="btn-eliminar-imagen" (click)="eliminarImagen()" title="Eliminar imagen">
+                <i class="fas fa-trash-alt"></i>
+              </button>
+            </div>
+          } @else {
+            <div class="no-imagen">
+              <i class="fas fa-image"></i>
+              <span>Sin imagen</span>
+            </div>
+          }
+
+          <div class="controles-imagen">
+            <label class="file-input-container">
+              <input type="file" (change)="onFileSelected($event)" accept="image/*" class="file-input">
+              <span class="file-input-label">
+                <i class="fas fa-cloud-upload-alt"></i>
+                Seleccionar imagen
+              </span>
+            </label>
+            
+            <button type="button" class="btn-subir-imagen" (click)="subirImagen()" [disabled]="!imagenSeleccionada">
+              <i class="fas fa-upload"></i>
+              Subir imagen
+            </button>
+          </div>
+        </div>
+
+        <div class="producto-campos">
+          <div class="campo">
+            <label>Nombre</label>
+            <input type="text" formControlName="nombre" placeholder="Ingrese el nombre del producto">
+          </div>
+
+          <div class="campo">
+            <label>Descripción</label>
+            <textarea formControlName="descripcion" rows="3" placeholder="Ingrese la descripción del producto"></textarea>
+          </div>
+
+          <div class="campo">
+            <label>Valor</label>
+            <input type="number" formControlName="valor" min="0" placeholder="0">
+          </div>
+
+          <div class="campo">
+            <label>Tipo</label>
+            <select formControlName="tipo">
+              <option value="">Seleccione un tipo</option>
+              @for (tipo of tiposProducto(); track tipo) {
+                <option [value]="tipo">{{ tipo }}</option>
+              }
+            </select>
+          </div>
+        </div>
+
+        <div class="producto-botones">
+          <button type="button" class="btn-eliminar" (click)="eliminar()">
+            <i class="fas fa-trash"></i>
+            Eliminar
+          </button>
+          <button type="submit" class="btn-actualizar" [disabled]="form.invalid || loading()">
+            <i class="fas fa-save"></i>
+            Actualizar producto
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+} @else {
+  <div class="producto-loading">
+    <i class="fas fa-spinner fa-spin"></i>
+    Cargando producto...
+  </div>
+}

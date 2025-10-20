@@ -4,13 +4,14 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
-import { PublicoService } from '../../servicios/publicoService';
-import { GestorProductosService } from '../../servicios/gestor-productos-service';
-import { MensajeDTO } from '../../dto/autenticacion/mensaje-dto';
-import { ImagenDTO } from '../../dto/producto/imagen-dto';
-import { ProductoDetalleDTO } from '../../dto/producto/producto-detalle-dto';
-import { EditarProductoDTO } from '../../dto/producto/editar-producto-dto';
+import { PublicoService } from '../../../servicios/publicoService';
+import { GestorProductosService } from '../../../servicios/gestor-productos-service';
+import { MensajeDTO } from '../../../dto/autenticacion/mensaje-dto';
+import { ImagenDTO } from '../../../dto/producto/imagen-dto';
+import { ProductoDetalleDTO } from '../../../dto/producto/producto-detalle-dto';
+import { EditarProductoDTO } from '../../../dto/producto/editar-producto-dto';
 import { MatSnackBar  } from '@angular/material/snack-bar';
+import { TipoProducto } from '../../../model/enums/TipoProducto';
 
 @Component({
   selector: 'app-actualizar-producto',
@@ -33,11 +34,13 @@ export class ActualizarProducto implements OnInit {
   imagenSeleccionada?: File;
   form!: FormGroup;
   idProducto!: string;
+  tiposProducto = signal<string[]>([]);
 
   ngOnInit(): void {
     this.idProducto = this.route.snapshot.paramMap.get('id')!;
     this.inicializarFormulario();
     this.cargarProducto();
+    this.cargarTiposProducto();
   }
 
   private inicializarFormulario(): void {
@@ -55,11 +58,26 @@ export class ActualizarProducto implements OnInit {
     this.publicoService.obtenerProductoPorId(this.idProducto).subscribe({
       next: (res: MensajeDTO<ProductoDetalleDTO>) => {
         this.producto.set(res.respuesta);
-        this.form.patchValue(res.respuesta);
+        
+        // Mapear los nombres de propiedades diferentes
+        const formData = {
+          nombre: res.respuesta.nombreProducto, 
+          descripcion: res.respuesta.descripcion,
+          valor: res.respuesta.valor,
+          tipo: res.respuesta.tipo,
+          imagenProducto: res.respuesta.imagenProducto
+        };
+        
+        this.form.patchValue(formData);
         this.loading.set(false);
       },
       error: () => this.mostrarMensaje('Error al cargar el producto')
     });
+  }
+
+  private cargarTiposProducto(): void {
+    const tipos = Object.values(TipoProducto);
+    this.tiposProducto.set(tipos);
   }
 
   actualizar(): void {
@@ -72,7 +90,7 @@ export class ActualizarProducto implements OnInit {
       next: () => {
         this.loading.set(false);
         this.snackBar.open('Producto actualizado correctamente', 'Cerrar', { duration: 3000 });
-        this.router.navigate(['/admin-productos']);
+        this.router.navigate(['/gestor/home']);
       },
       error: () => {
         this.loading.set(false);
@@ -89,7 +107,7 @@ export class ActualizarProducto implements OnInit {
       next: () => {
         this.loading.set(false);
         this.mostrarMensaje('Producto eliminado correctamente');
-        this.router.navigate(['/admin-productos']);
+        this.router.navigate(['/gestor/home']);
       },
       error: () => this.mostrarMensaje('Error al eliminar el producto')
     });
@@ -99,7 +117,14 @@ export class ActualizarProducto implements OnInit {
 
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
-    if (input.files?.length) this.imagenSeleccionada = input.files[0];
+    if (input.files?.length) {
+      this.imagenSeleccionada = input.files[0];
+      
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+      };
+      reader.readAsDataURL(this.imagenSeleccionada);
+    }
   }
 
   subirImagen(): void {
@@ -115,6 +140,11 @@ export class ActualizarProducto implements OnInit {
         this.form.patchValue({ imagenProducto: url });
         this.mostrarMensaje('Imagen subida correctamente');
         this.loading.set(false);
+        this.imagenSeleccionada = undefined;
+        
+        // Limpiar el input file
+        const fileInput = document.querySelector('.file-input') as HTMLInputElement;
+        if (fileInput) fileInput.value = '';
       },
       error: () => this.mostrarMensaje('Error al subir la imagen')
     });

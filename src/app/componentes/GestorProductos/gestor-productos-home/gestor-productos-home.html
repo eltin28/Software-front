@@ -1,0 +1,63 @@
+<div class="productos-container">
+  <!-- Productos existentes -->
+  @for (producto of listaProductos; track producto.idProducto) {
+    <div class="producto-card">
+      <div class="producto-img">
+        <img [src]="producto.imagenProducto" [alt]="producto.nombreProducto" />
+      </div>
+
+      <div class="producto-info">
+        <h3>{{ producto.nombreProducto }}</h3>
+        <p class="precio">${{ producto.valor | number:'1.0-0' }}</p>
+      </div>
+
+      <div class="overlay">
+        <button 
+          type="button" 
+          class="btn-icon ver" 
+          (click)="verProducto(producto.idProducto)"
+          aria-label="Ver producto">
+          <i class="fa-solid fa-eye"></i>
+        </button>
+        <button 
+          type="button" 
+          class="btn-icon editar" 
+          (click)="editarProducto(producto.idProducto)"
+          aria-label="Editar producto">
+          <i class="fa-solid fa-pen"></i>
+        </button>
+      </div>
+    </div>
+  }
+
+  <!-- Tarjeta para crear nuevo producto -->
+  <div class="producto-card crear-card" (click)="crearProducto()">
+    <div class="crear-content">
+      <div class="crear-icon">
+        <i class="fa-solid fa-plus"></i>
+      </div>
+      <h3>Crear Producto</h3>
+    </div>
+  </div>
+</div>
+
+<!-- Loader mientras carga -->
+@if (estaCargando) {
+  <div class="loader-container">
+    <div class="spinner"></div>
+    <p>Cargando productos...</p>
+  </div>
+}
+
+<!-- Mensaje si no hay productos -->
+@if (!estaCargando && listaProductos.length === 0) {
+  <div class="empty-state">
+    <i class="fa-solid fa-box-open"></i>
+    <h3>No hay productos registrados</h3>
+    <p>Comienza creando tu primer producto</p>
+    <button class="btn-crear-primary" (click)="crearProducto()">
+      <i class="fa-solid fa-plus"></i>
+      Crear Producto
+    </button>
+  </div>
+}

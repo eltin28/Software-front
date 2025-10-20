@@ -1,0 +1,59 @@
+.stock-detallado-container {
+  padding: 1.5rem;
+}
+
+.busqueda {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+input {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+button {
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #1d4ed8;
+}
+
+.error {
+  color: red;
+  margin-top: 0.5rem;
+}
+
+.cargando {
+  color: #555;
+}
+
+.tabla-stock {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.tabla-stock th, .tabla-stock td {
+  border: 1px solid #ddd;
+  padding: 0.75rem;
+  text-align: center;
+}
+
+.tabla-stock th {
+  background-color: #f3f4f6;
+}
+
+.vencido {
+  color: red;
+  font-weight: bold;
+}

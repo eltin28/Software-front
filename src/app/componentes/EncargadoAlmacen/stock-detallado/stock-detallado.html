@@ -1,0 +1,46 @@
+<div class="stock-detallado-container">
+  <h2>Detalle de Stock por Lote</h2>
+
+  <div class="busqueda">
+    <input
+      type="text"
+      placeholder="Ingrese ID de producto"
+      [(ngModel)]="idProducto" />
+    <button (click)="buscarStock()">Buscar</button>
+  </div>
+
+  @if (error()) {
+    <div class="error">{{ error() }}</div>
+  }
+
+  @if (cargando()) {
+    <div class="cargando">Cargando...</div>
+  }
+
+  @if (!cargando() && stockPorLote().length > 0) {
+    <table class="tabla-stock">
+      <thead>
+        <tr>
+          <th>Código de Lote</th>
+          <th>Cantidad Disponible</th>
+          <th>Fecha de Vencimiento</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (lote of stockPorLote(); track lote.codigoLote) {
+          <tr>
+            <td>{{ lote.codigoLote }}</td>
+            <td>{{ lote.cantidad }}</td>
+            <td [class.vencido]="estaVencido(lote.fechaVencimiento)">
+              {{ lote.fechaVencimiento | date: 'yyyy-MM-dd' }}
+            </td>
+            <td>{{ lote.estado }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  } @else if (!cargando() && stockPorLote().length === 0 && !error()) {
+    <p>No se encontraron lotes para este producto.</p>
+  }
+</div>

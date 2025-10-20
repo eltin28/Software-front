@@ -36,13 +36,13 @@ export class TokenService {
         destino = '/admin/dashboard';
         break;
       case 'GESTOR_PRODUCTOS':
-        destino = '/gestor/productos';
+        destino = '/gestor/home';
         break;
       case 'SUPERVISOR_PRODUCCION':
         destino = '/supervisor/lotes';
         break;
       case 'ENCARGADO_ALMACEN':
-        destino = '/almacen/inventario';
+        destino = '/almacen/home';
         break;
       case 'CLIENTE':
       default:
@@ -50,13 +50,13 @@ export class TokenService {
         break;
     }
     
-    this.router.navigate([destino]).then(() => window.location.reload());
+    this.router.navigateByUrl(destino, { replaceUrl: true });
   }
 
   public logout() {
     sessionStorage.clear();
     this.isLoggedSignal.set(false);
-    this.router.navigate(["/login"]);
+    this.router.navigateByUrl("/login");
   }
 
   private decodePayload(token: string): any {

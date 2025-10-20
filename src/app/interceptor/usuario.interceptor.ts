@@ -20,7 +20,7 @@ export const usuarioInterceptor: HttpInterceptorFn = (req, next) => {
 
   // Verificar si tiene token antes de hacer la petición
   if (!tokenService.isLogged()) {
-    router.navigate(['/login']);
+    router.navigateByUrl('/login');
     return throwError(() => new Error('No autenticado'));
   }
 
@@ -42,7 +42,8 @@ export const usuarioInterceptor: HttpInterceptorFn = (req, next) => {
       if (error.status === 401 || error.status === 403) {
         // Token inválido o expirado
         tokenService.logout(); // Limpia el token
-        router.navigate(['/login']);
+        // Usar navigateByUrl y evitar recargas
+        router.navigateByUrl('/login', { replaceUrl: true });        
         return throwError(() => new Error('Sesión expirada'));
       }
       

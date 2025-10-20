@@ -1,0 +1,145 @@
+<div class="home-container">
+  <!-- Header -->
+  <div class="header">
+    <h2 class="titulo">Panel del Encargado de Almacén</h2>
+    <button class="btn-recargar" (click)="recargarDatos()" [disabled]="cargando()">
+      <i class="fa-solid fa-rotate-right" [class.spinning]="cargando()"></i>
+      Actualizar
+    </button>
+  </div>
+
+  @if (error()) {
+    <div class="alert-error">
+      <i class="fa-solid fa-circle-exclamation"></i>
+      <span>{{ error() }}</span>
+      <button (click)="recargarDatos()">Reintentar</button>
+    </div>
+  }
+
+  @if (cargando()) {
+    <div class="loading-container">
+      <div class="spinner"></div>
+      <p>Cargando datos de inventario...</p>
+    </div>
+  } @else {
+    <!-- Indicadores -->
+    <div class="indicadores">
+      <div class="card indicador">
+        <div class="indicador-icon productos">
+          <i class="fa-solid fa-box"></i>
+        </div>
+        <div class="indicador-content">
+          <h3>{{ totalProductos() }}</h3>
+          <p>Productos en inventario</p>
+        </div>
+      </div>
+
+      <div class="card indicador">
+        <div class="indicador-icon stock">
+          <i class="fa-solid fa-cubes"></i>
+        </div>
+        <div class="indicador-content">
+          <h3>{{ totalStock() }}</h3>
+          <p>Stock total disponible</p>
+        </div>
+      </div>
+
+      <div class="card indicador">
+        <div class="indicador-icon lotes">
+          <i class="fa-solid fa-layer-group"></i>
+        </div>
+        <div class="indicador-content">
+          <h3>{{ totalLotes() }}</h3>
+          <p>Lotes registrados</p>
+        </div>
+      </div>
+
+      <div class="card indicador" [class.alerta]="proximosVencimientos() > 0">
+        <div class="indicador-icon vencimiento">
+          <i class="fa-solid fa-clock"></i>
+        </div>
+        <div class="indicador-content">
+          <h3>{{ proximosVencimientos() }}</h3>
+          <p>Vencen en 7 días</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Alertas de Stock Bajo -->
+    @if (productosBajoStock().length > 0) {
+      <div class="card alertas-stock">
+        <div class="card-header">
+          <h3>
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            Alertas de Stock Bajo
+          </h3>
+          <span class="badge">{{ productosBajoStock().length }}</span>
+        </div>
+
+        <div class="tabla-container">
+          <table class="tabla">
+            <thead>
+              <tr>
+                <th>Producto</th>
+                <th class="text-center">Stock Actual</th>
+                <th class="text-center">Umbral</th>
+                <th class="text-center">Estado</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (p of productosBajoStock(); track p.idProducto) {
+                <tr>
+                  <td>
+                    <strong>{{ p.nombreProducto }}</strong>
+                  </td>
+                  <td class="text-center">
+                    <span class="badge-stock" [class.critico]="p.stockTotal < p.umbral / 2">
+                      {{ p.stockTotal }}
+                    </span>
+                  </td>
+                  <td class="text-center">{{ p.umbral }}</td>
+                  <td class="text-center">
+                    @if (p.stockTotal === 0) {
+                      <span class="badge-status agotado">Agotado</span>
+                    } @else if (p.stockTotal < p.umbral / 2) {
+                      <span class="badge-status critico">Crítico</span>
+                    } @else {
+                      <span class="badge-status bajo">Bajo</span>
+                    }
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    } @else {
+      <div class="card sin-alertas">
+        <i class="fa-solid fa-circle-check"></i>
+        <h3>Sin alertas de stock</h3>
+        <p>Todos los productos tienen stock suficiente</p>
+      </div>
+    }
+
+    <!-- Acciones rápidas -->
+    <div class="acciones-rapidas">
+      <h3>Acciones Rápidas</h3>
+      <div class="acciones-grid">
+        <button class="accion-card" routerLink="/almacen/registrar-entrada">
+          <i class="fa-solid fa-truck-ramp-box"></i>
+          <span>Registrar Entrada</span>
+        </button>
+        
+        <button class="accion-card" routerLink="/almacen/inventario">
+          <i class="fa-solid fa-clipboard-list"></i>
+          <span>Ver Inventario</span>
+        </button>
+        
+        <button class="accion-card" routerLink="/almacen/alertas">
+          <i class="fa-solid fa-bell"></i>
+          <span>Ver Alertas</span>
+        </button>
+      </div>
+    </div>
+  }
+</div>

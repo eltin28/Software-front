@@ -4,11 +4,11 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
 
-import { GestorProductosService } from '../../servicios/gestor-productos-service';
-import { MensajeDTO } from '../../dto/autenticacion/mensaje-dto';
-import { CrearProductoDTO } from '../../dto/producto/crear-producto-dto';
-import { TipoProducto } from '../../model/enums/TipoProducto';
-import { ImagenDTO } from '../../dto/producto/imagen-dto';
+import { GestorProductosService } from '../../../servicios/gestor-productos-service';
+import { MensajeDTO } from '../../../dto/autenticacion/mensaje-dto';
+import { CrearProductoDTO } from '../../../dto/producto/crear-producto-dto';
+import { TipoProducto } from '../../../model/enums/TipoProducto';
+import { ImagenDTO } from '../../../dto/producto/imagen-dto';
 
 
 @Component({
@@ -76,7 +76,7 @@ export class CrudProducto implements OnInit {
 
   private manejarExito(mensaje: string): void {
     this.mostrarAlerta('Producto creado', mensaje, 'success').then(() => {
-      this.router.navigate(['/admin-productos']);
+      this.router.navigate(['/gestor/home']);
     });
   }
 

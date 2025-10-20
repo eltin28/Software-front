@@ -1,8 +1,8 @@
 import { Component, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { PublicoService } from '../../servicios/publicoService';
-import { ItemProductoDTO } from '../../dto/producto/item-producto-dto';
+import { PublicoService } from '../../../servicios/publicoService';
+import { ItemProductoDTO } from '../../../dto/producto/item-producto-dto';
 
 @Component({
   selector: 'app-ver-producto-gestor',
