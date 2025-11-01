@@ -1,0 +1,172 @@
+<div class="admin-dashboard">
+  <app-admin-subnav (tabChange)="onTabChange($event)"></app-admin-subnav>
+
+  <div class="dashboard-container">
+    <!-- SECCIÓN: PANEL DE ADMINISTRACIÓN -->
+    @if (tabActiva() === 'resumen') {
+      <section class="tab-content">
+        <header class="header">
+          <h2 class="titulo">Panel de Administración</h2>
+          <button class="btn-recargar" (click)="recargarDatos()" [disabled]="cargando()">
+            <i class="fa-solid fa-rotate-right" [class.spinning]="cargando()"></i>
+            Actualizar
+          </button>
+        </header>
+
+        @if (error()) {
+          <div class="alert-error">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            <span>{{ error() }}</span>
+            <button (click)="recargarDatos()">Reintentar</button>
+          </div>
+        }
+
+        @if (cargando()) {
+          <div class="loading-container">
+            <div class="spinner"></div>
+            <p>Cargando datos...</p>
+          </div>
+        } @else {
+          <!-- Indicadores -->
+          <section class="indicadores">
+            @for (item of [
+              { icon: 'fa-box', value: estadisticas().totalProductos, label: 'Productos totales', clase: 'productos' },
+              { icon: 'fa-users', value: estadisticas().totalTrabajadores, label: 'Trabajadores activos', clase: 'trabajadores' },
+              { icon: 'fa-boxes-stacked', value: estadisticas().totalLotes, label: 'Lotes en producción', clase: 'lotes' },
+              { icon: 'fa-cubes', value: estadisticas().totalStock | number:'1.0-0', label: 'Unidades en stock', clase: 'stock' },
+              { icon: 'fa-shopping-cart', value: estadisticas().pedidosPendientes, label: 'Pedidos pendientes', clase: 'pedidos' },
+              { icon: 'fa-warehouse', value: estadisticas().alertasStock, label: 'Alertas de stock', clase: 'almacen', alerta: estadisticas().alertasStock > 0 }
+            ]; track item.label) {
+              <div class="card indicador" [class.alerta]="item.alerta">
+                <div class="indicador-icon {{item.clase}}">
+                  <i class="fa-solid {{item.icon}}"></i>
+                </div>
+                <div class="indicador-content">
+                  <h3>{{ item.value }}</h3>
+                  <p>{{ item.label }}</p>
+                </div>
+              </div>
+            }
+          </section>
+
+          <!-- Accesos rápidos -->
+          <section class="card accesos-rapidos">
+            <h3 class="seccion-titulo">Accesos Rápidos</h3>
+            <div class="acciones-grid">
+              <button class="accion-card" (click)="navegarA('productos')">
+                <i class="fa-solid fa-box-open"></i>
+                <span>Gestionar Productos</span>
+              </button>
+              <button class="accion-card" (click)="navegarA('trabajadores')">
+                <i class="fa-solid fa-user-plus"></i>
+                <span>Crear Trabajador</span>
+              </button>
+              <button class="accion-card" (click)="navegarA('produccion')">
+                <i class="fa-solid fa-clipboard-check"></i>
+                <span>Ver Lotes</span>
+              </button>
+              <button class="accion-card" (click)="navegarA('almacen')">
+                <i class="fa-solid fa-chart-bar"></i>
+                <span>Reportes</span>
+              </button>
+            </div>
+          </section>
+        }
+      </section>
+    }
+
+    <!-- SECCIÓN: GESTIÓN DE TRABAJADORES -->
+    @if (tabActiva() === 'trabajadores') {
+      <section class="tab-content">
+        <header class="header">
+          <h2 class="titulo">Gestión de Trabajadores</h2>
+          <button class="btn-crear" (click)="abrirModalCrearTrabajador()">
+            <i class="fa-solid fa-plus"></i> Crear Trabajador
+          </button>
+        </header>
+
+        @if (errorTrabajadores()) {
+          <div class="alert-error">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            <span>{{ errorTrabajadores() }}</span>
+            <button (click)="cargarTrabajadores()">Reintentar</button>
+          </div>
+        }
+
+        @if (cargandoTrabajadores()) {
+          <div class="loading-container">
+            <div class="spinner"></div>
+            <p>Cargando trabajadores...</p>
+          </div>
+        } @else if (listaTrabajadores().length === 0) {
+          <div class="empty-state">
+            <i class="fa-solid fa-users-slash"></i>
+            <h3>No hay trabajadores registrados</h3>
+            <p>Comienza creando tu primer trabajador</p>
+            <button class="btn-crear" (click)="abrirModalCrearTrabajador()">
+              <i class="fa-solid fa-plus"></i> Crear Trabajador
+            </button>
+          </div>
+        } @else {
+          <div class="card tabla-card">
+            <table class="tabla">
+              <thead>
+                <tr>
+                  <th>Nombre</th>
+                  <th>Cédula</th>
+                  <th>Correo</th>
+                  <th>Teléfono</th>
+                  <th>Rol</th>
+                  <th class="text-center">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (trabajador of listaTrabajadores(); track trabajador.cedula) {
+                  <tr>
+                    <td><strong>{{ trabajador.nombre }}</strong></td>
+                    <td>{{ trabajador.cedula }}</td>
+                    <td>{{ trabajador.correoElectronico }}</td>
+                    <td>{{ trabajador.telefono }}</td>
+                    <td>
+                      <span class="badge-rol" [class]="obtenerClaseRol(trabajador.rol)">
+                        {{ obtenerNombreRol(trabajador.rol) }}
+                      </span>
+                    </td>
+                    <td class="text-center">
+                      <button class="btn-icon" (click)="verDetallesTrabajador(trabajador)" title="Ver detalles">
+                        <i class="fa-solid fa-eye"></i>
+                      </button>
+                      <button class="btn-icon" (click)="desactivarTrabajador(trabajador)" title="Desactivar">
+                        <i class="fa-solid fa-trash"></i>
+                      </button>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      </section>
+    }
+
+    <!-- SECCIONES: REDIRECCIONES A MÓDULOS -->
+    @for (mod of [
+      { id: 'productos', icon: 'fa-box-open', titulo: 'Vista de Productos', texto: 'Componente de gestión de productos del Gestor', accion: navegarAGestorProductos },
+      { id: 'produccion', icon: 'fa-industry', titulo: 'Vista de Producción', texto: 'Componente de supervisión de producción', accion: navegarASupervisorProduccion },
+      { id: 'almacen', icon: 'fa-warehouse', titulo: 'Vista de Almacén', texto: 'Componente de gestión de almacén', accion: navegarAAlmacen }
+    ]; track mod.id) {
+      @if (tabActiva() === mod.id) {
+        <section class="tab-content">
+          <div class="empty-state">
+            <i class="fa-solid {{ mod.icon }}"></i>
+            <h3>{{ mod.titulo }}</h3>
+            <p>{{ mod.texto }}</p>
+            <button class="btn-crear" (click)="mod.accion()">
+              <i class="fa-solid fa-arrow-right"></i> Ir a {{ mod.titulo }}
+            </button>
+          </div>
+        </section>
+      }
+    }
+  </div>
+</div>

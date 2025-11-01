@@ -1,0 +1,17 @@
+<nav class="subnav">
+  <div class="subnav-container">
+    @for (tab of tabs(); track tab.id) {
+      <button
+        type="button"
+        class="subnav-tab"
+        [class.active]="tabActiva() === tab.id"
+        [attr.aria-current]="tabActiva() === tab.id ? 'page' : null"
+        [attr.title]="tab.texto"
+        (click)="navegarA(tab.id)"
+      >
+        <i class="fa-solid" [class]="tab.icono"></i>
+        <span>{{ tab.texto }}</span>
+      </button>
+    }
+  </div>
+</nav>

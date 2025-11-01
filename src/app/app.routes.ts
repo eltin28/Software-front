@@ -27,6 +27,7 @@ import { VerStockProducto } from './componentes/EncargadoAlmacen/ver-stock-produ
 import { AlertasStockBajo } from './componentes/EncargadoAlmacen/alertas-stock-bajo/alertas-stock-bajo';
 import { EditarLoteComponent } from './componentes/SupervisorProduccion/editar-lote/editar-lote';
 import { VerDetalleLote } from './componentes/SupervisorProduccion/ver-detalle-lote/ver-detalle-lote';
+import { AdminHome } from './componentes/Administrador/admin-home/admin-home';
 
 export const routes: Routes = [
 
@@ -57,6 +58,9 @@ export const routes: Routes = [
     { path: 'supervisor/lotes/crear', component: CrearLote, canActivate: [RolesGuard], data: { expectedRole: ["SUPERVISOR_PRODUCCION", "ADMINISTRADOR"] } },
     { path: 'supervisor/lotes/ver-detalle/:id', component: VerDetalleLote, canActivate: [RolesGuard], data: { expectedRole: ["SUPERVISOR_PRODUCCION", "ADMINISTRADOR"] } },
     { path: 'supervisor/lotes/editar/:id', component: EditarLoteComponent, canActivate: [RolesGuard], data: { expectedRole: ["SUPERVISOR_PRODUCCION", "ADMINISTRADOR"] } },
+
+    //ADMINISTRADOR ROUTES
+    { path: 'admin/dashboard', component: AdminHome, canActivate: [RolesGuard], data: { expectedRole: ["ADMINISTRADOR"] } },
 
     //USUARIO ROUTES
     { path: 'carrito', component: Carrito, canActivate: [AuthGuard] },

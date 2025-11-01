@@ -102,4 +102,14 @@ export class Carrito implements OnInit {
     this.usuarioService.vaciarCarrito()
       .subscribe({ next: () => this.cargarCarritoCompleto() });
   }
+
+  /**
+   * Obtiene la cantidad total de productos en el carrito.
+   * Suma todas las cantidades de cada item.
+   */
+  obtenerCantidadTotal(): number {
+    return this.listaCarrito().reduce((suma, item) => 
+      suma + item.detalleCarritoDTO.cantidad, 0
+    );
+  }
 }

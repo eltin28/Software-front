@@ -9,6 +9,8 @@ import { InformacionProductoCarritoDTO } from '../dto/carrito/informacion-produc
 import { MostrarPedidoDTO } from '../dto/pedido/mostrar-pedido-dto';
 import { PreferenceDTO } from '../dto/pedido/preference-dto';
 import { environment } from '../../environments/environment';
+import { InformacionCuentaDTO } from '../dto/usuario/informacion-usuario-dto';
+import { EditarCuentaDTO } from '../dto/usuario/editar-usuario-dto';
 
 @Injectable({
   providedIn: 'root'
@@ -31,6 +33,30 @@ export class UsuarioService {
 
   private refrescarCantidadCarrito(): void {
     this.cargarCantidadCarrito();
+  }
+
+    // ==================== PERFIL ==================== //
+
+  /**
+   * Obtiene la información del perfil del usuario autenticado
+   */
+  obtenerPerfil(): Observable<MensajeDTO<InformacionCuentaDTO>> {
+    return this.http.get<MensajeDTO<InformacionCuentaDTO>>(`${this.baseUrl}/perfil`);
+  }
+
+  /**
+   * Edita el perfil del usuario autenticado
+   * Solo puede editar su propio perfil (el ID se obtiene del token)
+   */
+  editarPerfil(usuarioDTO: EditarCuentaDTO): Observable<MensajeDTO<string>> {
+    return this.http.put<MensajeDTO<string>>(`${this.baseUrl}/editar`, usuarioDTO);
+  }
+
+  /**
+   * Elimina (desactiva) la cuenta del usuario autenticado
+   */
+  eliminarCuenta(): Observable<MensajeDTO<string>> {
+    return this.http.delete<MensajeDTO<string>>(`${this.baseUrl}/eliminar-cuenta`);
   }
 
 //_______________________________ENDPOINTS CARRITO________________________________//
