@@ -28,6 +28,10 @@ import { AlertasStockBajo } from './componentes/EncargadoAlmacen/alertas-stock-b
 import { EditarLoteComponent } from './componentes/SupervisorProduccion/editar-lote/editar-lote';
 import { VerDetalleLote } from './componentes/SupervisorProduccion/ver-detalle-lote/ver-detalle-lote';
 import { AdminHome } from './componentes/Administrador/admin-home/admin-home';
+import { CrudTrabajador } from './componentes/Administrador/crud-trabajador/crud-trabajador';
+import { ListarTrabajadores } from './componentes/Administrador/listar-trabajadores/listar-trabajadores';
+import { MiPerfil } from './componentes/mi-perfil/mi-perfil';
+import { EditarPerfil } from './componentes/editar-perfil/editar-perfil';
 
 export const routes: Routes = [
 
@@ -61,10 +65,14 @@ export const routes: Routes = [
 
     //ADMINISTRADOR ROUTES
     { path: 'admin/dashboard', component: AdminHome, canActivate: [RolesGuard], data: { expectedRole: ["ADMINISTRADOR"] } },
+    { path: 'admin/dashboard/crear-trabajador', component: CrudTrabajador, canActivate: [RolesGuard], data: { expectedRole: ["ADMINISTRADOR"] } },
+    { path: 'admin/dashboard/listar-trabajadores', component: ListarTrabajadores, canActivate: [RolesGuard], data: { expectedRole: ["ADMINISTRADOR"] } },
 
     //USUARIO ROUTES
     { path: 'carrito', component: Carrito, canActivate: [AuthGuard] },
     { path: 'orden', component: DetallePedido, canActivate: [AuthGuard] },
+    { path: 'mi-perfil', component: MiPerfil, canActivate: [AuthGuard] },
+    { path: 'mi-perfil/editar-perfil', component: EditarPerfil, canActivate: [AuthGuard] },
 
     //STATE BUY ROUTES
     { path: 'pago-exitoso', component: PagoExitoso },

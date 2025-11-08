@@ -1,0 +1,320 @@
+<div class="crear-trabajador-container" role="main" aria-labelledby="page-title">
+  <div class="form-wrapper">
+    <!-- Header -->
+    <div class="form-header">
+      <h1 id="page-title" class="form-titulo">Crear Nuevo Trabajador</h1>
+      <p class="form-subtitulo">Completa el formulario para registrar un nuevo miembro del equipo</p>
+    </div>
+
+    <!-- Alerta de Error Global -->
+    @if (error()) {
+      <div class="alert alert-error" role="alert" aria-live="assertive" aria-atomic="true">
+        <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
+        <span>{{ error() }}</span>
+        <button (click)="error.set(null)" aria-label="Cerrar alerta de error">
+          <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+        </button>
+      </div>
+    }
+
+    <!-- Formulario -->
+    @if (crearForm(); as form) {
+      <form [formGroup]="form" (ngSubmit)="crearTrabajador()" novalidate class="form">
+        
+        <!-- SECCIÓN: DATOS PERSONALES -->
+        <fieldset class="form-fieldset">
+          <legend class="form-legend">Datos Personales</legend>
+
+          <!-- Cédula -->
+          <div class="form-group">
+            <label for="cedula" class="form-label">
+              Cédula
+              <span class="required" aria-label="requerido">*</span>
+            </label>
+            <input
+              id="cedula"
+              formControlName="cedula"
+              type="text"
+              class="form-input"
+              [class.form-input-error]="tieneError('cedula')"
+              placeholder="Ej: 1234567890"
+              inputmode="numeric"
+              [attr.aria-describedby]="tieneError('cedula') ? 'error-cedula' : null"
+              [attr.aria-invalid]="tieneError('cedula')"
+            />
+            @if (tieneError('cedula')) {
+              <div id="error-cedula" class="form-error-message" role="alert">
+                @for (error of obtenerErroresControl('cedula'); track $index) {
+                  <p>{{ error }}</p>
+                }
+              </div>
+            }
+          </div>
+
+          <!-- Nombre -->
+          <div class="form-group">
+            <label for="nombre" class="form-label">
+              Nombre Completo
+              <span class="required" aria-label="requerido">*</span>
+            </label>
+            <input
+              id="nombre"
+              formControlName="nombre"
+              type="text"
+              class="form-input"
+              [class.form-input-error]="tieneError('nombre')"
+              placeholder="Ej: Juan Pérez García"
+              [attr.aria-describedby]="tieneError('nombre') ? 'error-nombre' : null"
+              [attr.aria-invalid]="tieneError('nombre')"
+            />
+            @if (tieneError('nombre')) {
+              <div id="error-nombre" class="form-error-message" role="alert">
+                @for (error of obtenerErroresControl('nombre'); track $index) {
+                  <p>{{ error }}</p>
+                }
+              </div>
+            }
+          </div>
+
+          <!-- Teléfono -->
+          <div class="form-group">
+            <label for="telefono" class="form-label">
+              Teléfono
+              <span class="required" aria-label="requerido">*</span>
+            </label>
+            <input
+              id="telefono"
+              formControlName="telefono"
+              type="tel"
+              class="form-input"
+              [class.form-input-error]="tieneError('telefono')"
+              placeholder="Ej: 3001234567"
+              inputmode="tel"
+              [attr.aria-describedby]="tieneError('telefono') ? 'error-telefono' : null"
+              [attr.aria-invalid]="tieneError('telefono')"
+            />
+            @if (tieneError('telefono')) {
+              <div id="error-telefono" class="form-error-message" role="alert">
+                @for (error of obtenerErroresControl('telefono'); track $index) {
+                  <p>{{ error }}</p>
+                }
+              </div>
+            }
+          </div>
+
+          <!-- Ciudad -->
+          <div class="form-group">
+            <label for="ciudad" class="form-label">Ciudad de Residencia</label>
+            <input
+              id="ciudad"
+              formControlName="ciudadDeResidencia"
+              type="text"
+              class="form-input"
+              [class.form-input-error]="tieneError('ciudadDeResidencia')"
+              placeholder="Ej: Bogotá"
+              [attr.aria-describedby]="tieneError('ciudadDeResidencia') ? 'error-ciudad' : null"
+              [attr.aria-invalid]="tieneError('ciudadDeResidencia')"
+            />
+            @if (tieneError('ciudadDeResidencia')) {
+              <div id="error-ciudad" class="form-error-message" role="alert">
+                @for (error of obtenerErroresControl('ciudadDeResidencia'); track $index) {
+                  <p>{{ error }}</p>
+                }
+              </div>
+            }
+          </div>
+
+          <!-- Dirección -->
+          <div class="form-group">
+            <label for="direccion" class="form-label">Dirección</label>
+            <textarea
+              id="direccion"
+              formControlName="direccion"
+              class="form-textarea"
+              [class.form-input-error]="tieneError('direccion')"
+              placeholder="Ej: Calle 10 #20-30, Apartamento 301"
+              rows="3"
+              [attr.aria-describedby]="tieneError('direccion') ? 'error-direccion' : null"
+              [attr.aria-invalid]="tieneError('direccion')"
+            ></textarea>
+            @if (tieneError('direccion')) {
+              <div id="error-direccion" class="form-error-message" role="alert">
+                @for (error of obtenerErroresControl('direccion'); track $index) {
+                  <p>{{ error }}</p>
+                }
+              </div>
+            }
+          </div>
+        </fieldset>
+
+        <!-- SECCIÓN: DATOS DE CONTACTO -->
+        <fieldset class="form-fieldset">
+          <legend class="form-legend">Datos de Contacto</legend>
+
+          <!-- Email -->
+          <div class="form-group">
+            <label for="email" class="form-label">
+              Correo Electrónico
+              <span class="required" aria-label="requerido">*</span>
+            </label>
+            <input
+              id="email"
+              formControlName="correoElectronico"
+              type="email"
+              class="form-input"
+              [class.form-input-error]="tieneError('correoElectronico')"
+              placeholder="Ej: juan.perez@empresa.com"
+              inputmode="email"
+              autocomplete="email"
+              [attr.aria-describedby]="tieneError('correoElectronico') ? 'error-email' : null"
+              [attr.aria-invalid]="tieneError('correoElectronico')"
+            />
+            @if (tieneError('correoElectronico')) {
+              <div id="error-email" class="form-error-message" role="alert">
+                @for (error of obtenerErroresControl('correoElectronico'); track $index) {
+                  <p>{{ error }}</p>
+                }
+              </div>
+            }
+          </div>
+        </fieldset>
+
+        <!-- SECCIÓN: SEGURIDAD Y ACCESO -->
+        <fieldset class="form-fieldset">
+          <legend class="form-legend">Seguridad y Acceso</legend>
+
+          <!-- Contraseña -->
+          <div class="form-group">
+            <label for="password" class="form-label">
+              Contraseña
+              <span class="required" aria-label="requerido">*</span>
+            </label>
+            <div class="password-input-wrapper">
+              <input
+                id="password"
+                formControlName="contrasenia"
+                [type]="showPassword() ? 'text' : 'password'"
+                class="form-input"
+                [class.form-input-error]="tieneError('contrasenia')"
+                placeholder="Mínimo 7 caracteres"
+                [attr.aria-describedby]="tieneError('contrasenia') ? 'error-password' : 'password-help'"
+                [attr.aria-invalid]="tieneError('contrasenia')"
+              />
+              <button
+                type="button"
+                class="password-toggle"
+                (click)="togglePasswordVisibility()"
+                [attr.aria-label]="showPassword() ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+                [attr.aria-pressed]="showPassword()"
+              >
+                <i [class]="showPassword() ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'" aria-hidden="true"></i>
+              </button>
+            </div>
+            <div id="password-help" class="form-help-text">
+              La contraseña debe contener mayúscula, minúscula y números
+            </div>
+            @if (tieneError('contrasenia')) {
+              <div id="error-password" class="form-error-message" role="alert">
+                @for (error of obtenerErroresControl('contrasenia'); track $index) {
+                  <p>{{ error }}</p>
+                }
+              </div>
+            }
+          </div>
+
+          <!-- Confirmar Contraseña -->
+          <div class="form-group">
+            <label for="confirm-password" class="form-label">
+              Confirmar Contraseña
+              <span class="required" aria-label="requerido">*</span>
+            </label>
+            <div class="password-input-wrapper">
+              <input
+                id="confirm-password"
+                formControlName="confirmaContrasenia"
+                [type]="showConfirmPassword() ? 'text' : 'password'"
+                class="form-input"
+                [class.form-input-error]="tieneError('confirmaContrasenia')"
+                placeholder="Confirma tu contraseña"
+                [attr.aria-describedby]="tieneError('confirmaContrasenia') ? 'error-confirm-password' : null"
+                [attr.aria-invalid]="tieneError('confirmaContrasenia')"
+              />
+              <button
+                type="button"
+                class="password-toggle"
+                (click)="toggleConfirmPasswordVisibility()"
+                [attr.aria-label]="showConfirmPassword() ? 'Ocultar confirmación' : 'Mostrar confirmación'"
+                [attr.aria-pressed]="showConfirmPassword()"
+              >
+                <i [class]="showConfirmPassword() ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'" aria-hidden="true"></i>
+              </button>
+            </div>
+            @if (tieneError('confirmaContrasenia')) {
+              <div id="error-confirm-password" class="form-error-message" role="alert">
+                @for (error of obtenerErroresControl('confirmaContrasenia'); track $index) {
+                  <p>{{ error }}</p>
+                }
+              </div>
+            }
+          </div>
+
+          <!-- Rol -->
+          <div class="form-group">
+            <label for="rol" class="form-label">
+              Rol del Trabajador
+              <span class="required" aria-label="requerido">*</span>
+            </label>
+            <select
+              id="rol"
+              formControlName="rol"
+              class="form-select"
+              [class.form-input-error]="tieneError('rol')"
+              [attr.aria-describedby]="tieneError('rol') ? 'error-rol' : null"
+              [attr.aria-invalid]="tieneError('rol')"
+            >
+              <option value="" disabled selected>-- Selecciona un rol --</option>
+              @for (rol of rolesDisponibles(); track rol) {
+                <option [value]="rol">{{ rol }}</option>
+              }
+            </select>
+            @if (tieneError('rol')) {
+              <div id="error-rol" class="form-error-message" role="alert">
+                @for (error of obtenerErroresControl('rol'); track $index) {
+                  <p>{{ error }}</p>
+                }
+              </div>
+            }
+          </div>
+        </fieldset>
+
+        <!-- Botones de Acción -->
+        <div class="form-actions">
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="cargando() || formularioInvalido"
+            [attr.aria-busy]="cargando()"
+          >
+            @if (cargando()) {
+              <i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
+              Creando...
+            } @else {
+              <i class="fa-solid fa-user-plus" aria-hidden="true"></i>
+              Crear Trabajador
+            }
+          </button>
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="cancelar()"
+            [disabled]="cargando()"
+            aria-label="Cancelar y volver atrás"
+          >
+            <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+            Cancelar
+          </button>
+        </div>
+      </form>
+    }
+  </div>
+</div>

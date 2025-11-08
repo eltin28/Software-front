@@ -8,7 +8,7 @@ import { CrearCuentaDTO } from '../../dto/usuario/crear-usuario-dto';
 import { LoginDTO } from '../../dto/usuario/login-dto';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import Swal from 'sweetalert2';
-
+import { cedulaValidator } from '../../validators/custom-validators';
 
 @Component({
   selector: 'app-inicio',
@@ -43,7 +43,7 @@ export class RegistroLoginComponent implements OnInit {
           Validators.required,
           Validators.minLength(7),
           Validators.maxLength(11),
-          Validators.pattern(/^\d+$/)
+          cedulaValidator() 
         ]],
         nombre: ['', [
           Validators.required,

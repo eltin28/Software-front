@@ -84,10 +84,6 @@ export class NavbarComponent {
 
   navigateToProfile(): void {
     this.closeAllMenus();
-    if (this.isLoggedIn()) {
-      this.router.navigate(['/profile']);
-    } else {
-      this.router.navigate(['/login']);
-    }
+    this.router.navigate(['/mi-perfil']);
   }
 }

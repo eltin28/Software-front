@@ -1,0 +1,213 @@
+<div class="trabajadores-container" role="main" aria-labelledby="page-title">
+  <!-- Header con Título y Acciones -->
+  <div class="page-header">
+    <div class="header-content">
+      <h1 id="page-title" class="page-title">Gestión de Trabajadores</h1>
+      <p class="page-subtitle">
+        Administra los empleados del sistema
+        @if (totalTrabajadores() > 0) {
+          <span class="badge badge-info">{{ totalTrabajadores() }} total</span>
+        }
+      </p>
+    </div>
+    <div class="header-actions">
+      <button 
+        class="btn btn-secondary"
+        (click)="recargarLista()"
+        [disabled]="cargando()"
+        [attr.aria-busy]="cargando()"
+        aria-label="Recargar lista de trabajadores">
+        <i class="fa-solid fa-rotate-right" [class.spinning]="cargando()" aria-hidden="true"></i>
+        Recargar
+      </button>
+      <button 
+        class="btn btn-primary"
+        (click)="crearTrabajador()"
+        aria-label="Crear nuevo trabajador">
+        <i class="fa-solid fa-user-plus" aria-hidden="true"></i>
+        Nuevo Trabajador
+      </button>
+    </div>
+  </div>
+
+  <!-- Barra de Filtros y Búsqueda -->
+  <div class="filters-bar" role="search" aria-label="Filtros de búsqueda">
+    <div class="search-group">
+      <label for="search-input" class="sr-only">Buscar trabajador</label>
+      <div class="search-input-wrapper">
+        <i class="fa-solid fa-search search-icon" aria-hidden="true"></i>
+        <input
+          id="search-input"
+          type="search"
+          class="search-input"
+          placeholder="Buscar por nombre, email, cédula o teléfono..."
+          [value]="searchTerm()"
+          (input)="onSearchChange($event)"
+          aria-label="Campo de búsqueda de trabajadores"
+        />
+      </div>
+    </div>
+
+    <div class="filter-group">
+      <label for="rol-filter" class="filter-label">Filtrar por rol:</label>
+      <select
+        id="rol-filter"
+        class="filter-select"
+        [value]="rolFiltro()"
+        (change)="onRolFilterChange($event)"
+        aria-label="Filtrar trabajadores por rol"
+      >
+        @for (rol of rolesDisponibles(); track rol) {
+          <option [value]="rol === 'TODOS' ? '' : rol">{{ formatearRol(rol) }}</option>
+        }
+      </select>
+    </div>
+  </div>
+
+  <!-- Alerta de Error -->
+  @if (error()) {
+    <div class="alert alert-error" role="alert" aria-live="assertive">
+      <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
+      <span>{{ error() }}</span>
+      <button (click)="recargarLista()" aria-label="Reintentar carga">
+        Reintentar
+      </button>
+    </div>
+  }
+
+  <!-- Estado de Carga -->
+  @if (cargando()) {
+    <div class="loading-state" role="status" aria-live="polite">
+      <div class="spinner" aria-hidden="true"></div>
+      <p>Cargando trabajadores...</p>
+    </div>
+  }
+
+  <!-- Tabla de Trabajadores -->
+  @if (!cargando() && !error()) {
+    @if (hayTrabajadores) {
+      <div class="table-container">
+        <div class="table-info">
+          <p>
+            Mostrando <strong>{{ trabajadoresFiltradosCount() }}</strong> 
+            @if (hayFiltrosActivos) {
+              de <strong>{{ totalTrabajadores() }}</strong>
+            }
+            trabajador{{ trabajadoresFiltradosCount() !== 1 ? 'es' : '' }}
+          </p>
+        </div>
+
+        <div class="table-responsive">
+          <table class="data-table" role="table" aria-label="Lista de trabajadores">
+            <thead>
+              <tr>
+                <th scope="col" class="sortable" (click)="toggleOrden('cedula')" role="columnheader">
+                  <button class="sort-button" [attr.aria-sort]="ordenColumna() === 'cedula' ? (ordenDireccion() === 'asc' ? 'ascending' : 'descending') : 'none'">
+                    Cédula
+                    <i class="fa-solid" [class]="obtenerIconoOrden('cedula')" aria-hidden="true"></i>
+                  </button>
+                </th>
+                <th scope="col" class="sortable" (click)="toggleOrden('nombre')" role="columnheader">
+                  <button class="sort-button" [attr.aria-sort]="ordenColumna() === 'nombre' ? (ordenDireccion() === 'asc' ? 'ascending' : 'descending') : 'none'">
+                    Nombre
+                    <i class="fa-solid" [class]="obtenerIconoOrden('nombre')" aria-hidden="true"></i>
+                  </button>
+                </th>
+                <th scope="col" class="sortable" (click)="toggleOrden('correo')" role="columnheader">
+                  <button class="sort-button" [attr.aria-sort]="ordenColumna() === 'correo' ? (ordenDireccion() === 'asc' ? 'ascending' : 'descending') : 'none'">
+                    Correo Electrónico
+                    <i class="fa-solid" [class]="obtenerIconoOrden('correo')" aria-hidden="true"></i>
+                  </button>
+                </th>
+                <th scope="col" class="sortable" (click)="toggleOrden('telefono')" role="columnheader">
+                  <button class="sort-button" [attr.aria-sort]="ordenColumna() === 'telefono' ? (ordenDireccion() === 'asc' ? 'ascending' : 'descending') : 'none'">
+                    Teléfono
+                    <i class="fa-solid" [class]="obtenerIconoOrden('telefono')" aria-hidden="true"></i>
+                  </button>
+                </th>
+                <th scope="col" class="sortable" (click)="toggleOrden('rol')" role="columnheader">
+                  <button class="sort-button" [attr.aria-sort]="ordenColumna() === 'rol' ? (ordenDireccion() === 'asc' ? 'ascending' : 'descending') : 'none'">
+                    Rol
+                    <i class="fa-solid" [class]="obtenerIconoOrden('rol')" aria-hidden="true"></i>
+                  </button>
+                </th>
+                <th scope="col" class="actions-col" role="columnheader">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (trabajador of trabajadoresFiltrados(); track trabajador.cedula) {
+                <tr class="table-row">
+                  <td data-label="Cédula">{{ trabajador.cedula }}</td>
+                  <td data-label="Nombre" class="nombre-col">
+                    <strong>{{ trabajador.nombre }}</strong>
+                  </td>
+                  <td data-label="Correo" class="email-col">{{ trabajador.correoElectronico }}</td>
+                  <td data-label="Teléfono">{{ trabajador.telefono }}</td>
+                  <td data-label="Rol">
+                    <span class="badge" [class]="obtenerColorRol(trabajador.rol)">
+                      {{ formatearRol(trabajador.rol) }}
+                    </span>
+                  </td>
+                  <td data-label="Acciones" class="actions-cell">
+                    <div class="action-buttons">
+                      <button
+                        class="btn-icon btn-icon-info"
+                        (click)="verDetalle(trabajador.cedula)"
+                        [attr.aria-label]="'Ver detalle de ' + trabajador.nombre"
+                        title="Ver detalle">
+                        <i class="fa-solid fa-eye" aria-hidden="true"></i>
+                      </button>
+                      <button
+                        class="btn-icon btn-icon-warning"
+                        (click)="editarTrabajador(trabajador.cedula)"
+                        [attr.aria-label]="'Editar ' + trabajador.nombre"
+                        title="Editar">
+                        <i class="fa-solid fa-pen-to-square" aria-hidden="true"></i>
+                      </button>
+                      <button
+                        class="btn-icon btn-icon-danger"
+                        (click)="desactivarTrabajador(trabajador)"
+                        [attr.aria-label]="'Desactivar ' + trabajador.nombre"
+                        title="Desactivar">
+                        <i class="fa-solid fa-trash-can" aria-hidden="true"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    } @else {
+      <!-- Estado Vacío -->
+      <div class="empty-state" role="status">
+        <div class="empty-icon">
+          <i class="fa-solid fa-users-slash" aria-hidden="true"></i>
+        </div>
+        @if (hayFiltrosActivos) {
+          <h3>No se encontraron resultados</h3>
+          <p>No hay trabajadores que coincidan con los filtros aplicados</p>
+          <button class="btn btn-secondary" (click)="recargarLista()">
+            <i class="fa-solid fa-filter-circle-xmark" aria-hidden="true"></i>
+            Limpiar filtros
+          </button>
+        } @else {
+          <h3>No hay trabajadores registrados</h3>
+          <p>Comienza agregando tu primer trabajador al sistema</p>
+          <button class="btn btn-primary" (click)="crearTrabajador()">
+            <i class="fa-solid fa-user-plus" aria-hidden="true"></i>
+            Crear Trabajador
+          </button>
+        }
+      </div>
+    }
+  }
+</div>
+
+<!-- Clase para screen readers -->
+<span class="sr-only" aria-live="polite" aria-atomic="true">
+  @if (!cargando() && hayTrabajadores) {
+    Se encontraron {{ trabajadoresFiltradosCount() }} trabajadores
+  }
+</span>

@@ -1,0 +1,633 @@
+/* ============================================
+   RESET Y BASE
+   ============================================ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ============================================
+   CONTENEDOR PRINCIPAL
+   ============================================ */
+.crear-trabajador-container {
+  width: 100%;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f3f4f6 0%, #e0e7ff 100%);
+  padding: 3rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.form-wrapper {
+  width: 100%;
+  max-width: 600px;
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  padding: 3rem;
+  animation: slideUp 0.5s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================
+   HEADER DEL FORMULARIO
+   ============================================ */
+.form-header {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.form-titulo {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.02em;
+}
+
+.form-subtitulo {
+  font-size: 0.938rem;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+/* ============================================
+   ALERTAS
+   ============================================ */
+.alert {
+  padding: 1rem 1.25rem;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.alert-error {
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  border-left: 4px solid #ef4444;
+  color: #991b1b;
+}
+
+.alert i {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.alert span {
+  flex: 1;
+  font-weight: 500;
+  font-size: 0.938rem;
+}
+
+.alert button {
+  background: none;
+  border: none;
+  color: #991b1b;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.alert button:hover {
+  opacity: 0.7;
+}
+
+/* ============================================
+   FORMULARIO
+   ============================================ */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* ============================================
+   FIELDSETS Y SECCIONES
+   ============================================ */
+.form-fieldset {
+  border: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-legend {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+/* ============================================
+   GRUPOS DE FORMULARIO
+   ============================================ */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-label {
+  font-weight: 600;
+  font-size: 0.938rem;
+  color: #111827;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.required {
+  color: #ef4444;
+  font-weight: bold;
+}
+
+/* ============================================
+   INPUTS Y TEXTAREAS
+   ============================================ */
+.form-input,
+.form-textarea,
+.form-select {
+  padding: 0.75rem 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  font-size: 0.938rem;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  color: #111827;
+  background-color: #ffffff;
+  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  outline: none;
+}
+
+.form-input:hover,
+.form-textarea:hover,
+.form-select:hover {
+  border-color: #6366f1;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+.form-input:focus,
+.form-textarea:focus,
+.form-select:focus {
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+.form-input-error,
+.form-textarea.form-input-error,
+.form-select.form-input-error {
+  border-color: #ef4444;
+  background-color: #fef2f2;
+}
+
+.form-input-error:focus,
+.form-textarea.form-input-error:focus,
+.form-select.form-input-error:focus {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder {
+  color: #9ca3af;
+}
+
+/* ============================================
+   SELECT
+   ============================================ */
+.form-select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1.25rem;
+  padding-right: 2.5rem;
+}
+
+/* ============================================
+   PASSWORD INPUT CON TOGGLE
+   ============================================ */
+.password-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 1rem;
+  background: none;
+  border: none;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 1.1rem;
+}
+
+.password-toggle:hover {
+  color: #4f46e5;
+}
+
+.password-input-wrapper .form-input {
+  padding-right: 3rem;
+}
+
+/* ============================================
+   MENSAJES DE AYUDA Y ERROR
+   ============================================ */
+.form-help-text {
+  font-size: 0.813rem;
+  color: #9ca3af;
+  margin-top: 0.25rem;
+}
+
+.form-error-message {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.5rem 0.75rem;
+  background-color: #fef2f2;
+  border-left: 3px solid #ef4444;
+  border-radius: 8px;
+  animation: slideDown 0.2s ease-out;
+}
+
+.form-error-message p {
+  font-size: 0.813rem;
+  color: #991b1b;
+  font-weight: 500;
+  margin: 0;
+}
+
+/* ============================================
+   BOTONES DE ACCIÓN
+   ============================================ */
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.btn {
+  padding: 0.875rem 1.5rem;
+  border: none;
+  border-radius: 12px;
+  font-size: 0.938rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  outline: none;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
+  color: white;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  flex: 1;
+}
+
+.btn-primary:hover:not(:disabled) {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.btn-primary:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background-color: #e5e7eb;
+  color: #111827;
+  flex: 1;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background-color: #d1d5db;
+}
+
+.btn-secondary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Spinner en botón */
+.btn .fa-spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ============================================
+   ACCESIBILIDAD
+   ============================================ */
+.btn:focus-visible,
+.form-input:focus-visible,
+.form-select:focus-visible,
+.form-textarea:focus-visible,
+.password-toggle:focus-visible {
+  outline: 3px solid #4f46e5;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+@media (max-width: 640px) {
+  .crear-trabajador-container {
+    padding: 1.5rem 1rem;
+  }
+
+  .form-wrapper {
+    padding: 1.5rem;
+  }
+
+  .form-titulo {
+    font-size: 1.5rem;
+  }
+
+  .form-subtitulo {
+    font-size: 0.875rem;
+  }
+
+  .form-legend {
+    font-size: 1rem;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .btn {
+    width: 100%;
+  }
+
+  .form-input,
+  .form-textarea,
+  .form-select {
+    font-size: 16px; /* Previene zoom en iOS */
+  }
+}
+
+@media (max-width: 480px) {
+  .form-wrapper {
+    padding: 1.25rem;
+  }
+
+  .form-titulo {
+    font-size: 1.25rem;
+  }
+
+  .alert {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+/* ============================================
+   ESTADOS HOVER PARA TÁCTILES
+   ============================================ */
+@media (hover: none) {
+  .btn-primary:hover:not(:disabled) {
+    transform: none;
+  }
+
+  .password-toggle:hover {
+    color: #6b7280;
+  }
+}
+
+/* ============================================
+   MODO DE IMPRESIÓN
+   ============================================ */
+@media print {
+  .crear-trabajador-container {
+    background: white;
+    padding: 0;
+  }
+
+  .form-wrapper {
+    box-shadow: none;
+    padding: 1rem;
+  }
+
+  .btn {
+    display: none;
+  }
+
+  .password-toggle {
+    display: none;
+  }
+
+  .alert {
+    border: 1px solid #000;
+  }
+}
+
+/* ============================================
+   ESTADOS DE VALIDACIÓN VISUAL
+   ============================================ */
+.form-input:valid:not(:placeholder-shown),
+.form-textarea:valid:not(:placeholder-shown),
+.form-select:valid {
+  border-color: #10b981;
+}
+
+.form-input:invalid:not(:placeholder-shown):not(:focus),
+.form-textarea:invalid:not(:placeholder-shown):not(:focus) {
+  border-color: #ef4444;
+}
+
+/* ============================================
+   MEJORAS DE CONTRASTE (High Contrast Mode)
+   ============================================ */
+@media (prefers-contrast: high) {
+  .form-input,
+  .form-textarea,
+  .form-select {
+    border-width: 2px;
+  }
+
+  .btn {
+    border: 2px solid currentColor;
+  }
+
+  .alert-error {
+    border-width: 2px;
+  }
+}
+
+/* ============================================
+   TEMA OSCURO (Opcional - Dark Mode)
+   ============================================ */
+@media (prefers-color-scheme: dark) {
+  .crear-trabajador-container {
+    background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+  }
+
+  .form-wrapper {
+    background-color: #1f2937;
+    border: 1px solid #374151;
+  }
+
+  .form-titulo {
+    color: #f9fafb;
+  }
+
+  .form-subtitulo {
+    color: #9ca3af;
+  }
+
+  .form-legend {
+    color: #f9fafb;
+    border-bottom-color: #374151;
+  }
+
+  .form-label {
+    color: #f3f4f6;
+  }
+
+  .form-input,
+  .form-textarea,
+  .form-select {
+    background-color: #111827;
+    border-color: #374151;
+    color: #f9fafb;
+  }
+
+  .form-input:hover,
+  .form-textarea:hover,
+  .form-select:hover {
+    border-color: #6366f1;
+  }
+
+  .form-input::placeholder,
+  .form-textarea::placeholder {
+    color: #6b7280;
+  }
+
+  .btn-secondary {
+    background-color: #374151;
+    color: #f9fafb;
+  }
+
+  .btn-secondary:hover:not(:disabled) {
+    background-color: #4b5563;
+  }
+
+  .password-toggle {
+    color: #9ca3af;
+  }
+
+  .password-toggle:hover {
+    color: #6366f1;
+  }
+
+  .form-help-text {
+    color: #9ca3af;
+  }
+}
+
+/* ============================================
+   ANIMACIÓN DE CARGA DEL FORMULARIO
+   ============================================ */
+.form-group {
+  animation: fadeInUp 0.4s ease-out backwards;
+}
+
+.form-group:nth-child(1) { animation-delay: 0.05s; }
+.form-group:nth-child(2) { animation-delay: 0.1s; }
+.form-group:nth-child(3) { animation-delay: 0.15s; }
+.form-group:nth-child(4) { animation-delay: 0.2s; }
+.form-group:nth-child(5) { animation-delay: 0.25s; }
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

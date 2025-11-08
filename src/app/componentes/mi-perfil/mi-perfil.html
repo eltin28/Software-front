@@ -1,0 +1,222 @@
+<div class="perfil-container" role="main" aria-labelledby="page-title">
+  
+  <!-- Botón Regresar -->
+  <button 
+    class="btn-back"
+    (click)="regresar()"
+    aria-label="Regresar a la página anterior">
+    <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+    Regresar
+  </button>
+
+  <!-- Header de Página -->
+  <div class="page-header">
+    <h1 id="page-title" class="page-title">Mi Perfil</h1>
+    <p class="page-subtitle">Administra tu información personal y configuración de cuenta</p>
+  </div>
+
+  <!-- Alerta de Error -->
+  @if (error()) {
+    <div class="alert alert-error" role="alert" aria-live="assertive">
+      <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
+      <span>{{ error() }}</span>
+      <button (click)="recargarPerfil()" aria-label="Reintentar carga del perfil">
+        Reintentar
+      </button>
+    </div>
+  }
+
+  <!-- Estado de Carga -->
+  @if (cargando()) {
+    <div class="loading-state" role="status" aria-live="polite">
+      <div class="spinner" aria-hidden="true"></div>
+      <p>Cargando información del perfil...</p>
+    </div>
+  }
+
+  <!-- Contenido del Perfil -->
+  @if (!cargando() && perfil(); as perfilData) {
+    <div class="perfil-content">
+      
+      <!-- Card Principal del Perfil -->
+      <div class="profile-card" role="article" aria-labelledby="profile-name">
+        
+        <!-- Avatar con Iniciales -->
+        <div class="avatar-section">
+          <div class="avatar-circle" [attr.aria-label]="'Avatar de ' + perfilData.nombre">
+            <span class="avatar-initials">{{ iniciales() }}</span>
+          </div>
+          <div class="avatar-badge" [class]="obtenerColorRol(perfilData.rol)">
+            <i class="fa-solid" [class]="obtenerIconoRol(perfilData.rol)" aria-hidden="true"></i>
+            <span>{{ rolFormateado() }}</span>
+          </div>
+        </div>
+
+        <!-- Información del Usuario -->
+        <div class="profile-info">
+          <h2 id="profile-name" class="profile-name">{{ perfilData.nombre }}</h2>
+          <p class="profile-email">{{ perfilData.correoElectronico }}</p>
+          
+          <!-- Botón de Editar Perfil -->
+          <button 
+            class="btn btn-primary btn-edit"
+            (click)="editarPerfil()"
+            aria-label="Editar información del perfil">
+            <i class="fa-solid fa-pen-to-square" aria-hidden="true"></i>
+            Editar Perfil
+          </button>
+        </div>
+      </div>
+
+      <!-- Grid de Información Detallada -->
+      <div class="info-grid">
+        
+        <!-- Información Personal -->
+        <div class="info-card">
+          <div class="info-card-header">
+            <i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+            <h3>Información Personal</h3>
+          </div>
+          <div class="info-card-body">
+            
+            <!-- Cédula -->
+            <div class="info-item">
+              <label class="info-label">Cédula</label>
+              <div class="info-value-wrapper">
+                <span class="info-value">{{ perfilData.cedula }}</span>
+                <button 
+                  class="btn-copy"
+                  (click)="copiarAlPortapapeles(perfilData.cedula, 'Cédula')"
+                  [attr.aria-label]="'Copiar cédula ' + perfilData.cedula"
+                  title="Copiar al portapapeles">
+                  <i class="fa-solid fa-copy" aria-hidden="true"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Teléfono -->
+            <div class="info-item">
+              <label class="info-label">Teléfono</label>
+              <div class="info-value-wrapper">
+                <span class="info-value">{{ perfilData.telefono }}</span>
+                <button 
+                  class="btn-copy"
+                  (click)="copiarAlPortapapeles(perfilData.telefono, 'Teléfono')"
+                  [attr.aria-label]="'Copiar teléfono ' + perfilData.telefono"
+                  title="Copiar al portapapeles">
+                  <i class="fa-solid fa-copy" aria-hidden="true"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Información de Ubicación -->
+        <div class="info-card">
+          <div class="info-card-header">
+            <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
+            <h3>Ubicación</h3>
+          </div>
+          <div class="info-card-body">
+            
+            @if (perfilData.ciudadDeResidencia || perfilData.direccion) {
+              <!-- Ciudad -->
+              @if (perfilData.ciudadDeResidencia) {
+                <div class="info-item">
+                  <label class="info-label">Ciudad de Residencia</label>
+                  <span class="info-value">{{ perfilData.ciudadDeResidencia }}</span>
+                </div>
+              }
+
+              <!-- Dirección -->
+              @if (perfilData.direccion) {
+                <div class="info-item">
+                  <label class="info-label">Dirección</label>
+                  <span class="info-value">{{ perfilData.direccion }}</span>
+                </div>
+              }
+            } @else {
+              <!-- Estado vacío -->
+              <div class="empty-info">
+                <i class="fa-solid fa-map-location-dot" aria-hidden="true"></i>
+                <p>No has agregado información de ubicación</p>
+                <button 
+                  class="btn btn-secondary btn-sm"
+                  (click)="editarPerfil()">
+                  Agregar ahora
+                </button>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- Información de Cuenta -->
+        <div class="info-card">
+          <div class="info-card-header">
+            <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
+            <h3>Seguridad de Cuenta</h3>
+          </div>
+          <div class="info-card-body">
+            
+            <!-- Rol -->
+            <div class="info-item">
+              <label class="info-label">Rol del Usuario</label>
+              <span class="badge" [class]="obtenerColorRol(perfilData.rol)">
+                <i class="fa-solid" [class]="obtenerIconoRol(perfilData.rol)" aria-hidden="true"></i>
+                {{ rolFormateado() }}
+              </span>
+            </div>
+
+            <!-- Correo -->
+            <div class="info-item">
+              <label class="info-label">Correo Electrónico</label>
+              <div class="info-value-wrapper">
+                <span class="info-value">{{ perfilData.correoElectronico }}</span>
+                <button 
+                  class="btn-copy"
+                  (click)="copiarAlPortapapeles(perfilData.correoElectronico, 'Email')"
+                  [attr.aria-label]="'Copiar correo ' + perfilData.correoElectronico"
+                  title="Copiar al portapapeles">
+                  <i class="fa-solid fa-copy" aria-hidden="true"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Nota de Seguridad -->
+            <div class="security-note">
+              <i class="fa-solid fa-info-circle" aria-hidden="true"></i>
+              <p>Tu información está protegida con encriptación de extremo a extremo</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Zona de Peligro -->
+      <div class="danger-zone">
+        <div class="danger-zone-header">
+          <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
+          <div>
+            <h3>Zona de Peligro</h3>
+            <p>Las acciones aquí son irreversibles. Procede con precaución.</p>
+          </div>
+        </div>
+        <div class="danger-zone-body">
+          <div class="danger-action">
+            <div class="danger-action-info">
+              <h4>Eliminar Cuenta</h4>
+              <p>Una vez que elimines tu cuenta, no hay vuelta atrás. Por favor, ten certeza.</p>
+            </div>
+            <button 
+              class="btn btn-danger"
+              (click)="solicitarEliminarCuenta()"
+              aria-label="Eliminar cuenta permanentemente">
+              <i class="fa-solid fa-trash-can" aria-hidden="true"></i>
+              Eliminar mi cuenta
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  }
+</div>

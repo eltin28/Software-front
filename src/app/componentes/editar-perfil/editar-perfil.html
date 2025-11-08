@@ -1,0 +1,268 @@
+<div class="editar-perfil-container" role="main" aria-labelledby="page-title">
+  
+  <!-- Header con Navegación -->
+  <div class="page-header">
+    <button 
+      class="btn-back"
+      (click)="cancelar()"
+      [disabled]="guardando()"
+      aria-label="Regresar al perfil">
+      <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+      Volver al Perfil
+    </button>
+    
+    <div class="header-content">
+      <h1 id="page-title" class="page-title">Editar Perfil</h1>
+      <p class="page-subtitle">Actualiza tu información personal</p>
+    </div>
+
+    <!-- Indicador de Cambios Pendientes -->
+    @if (hayPendientes()) {
+      <div class="cambios-badge" role="status" aria-live="polite">
+        <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
+        Cambios sin guardar
+      </div>
+    }
+  </div>
+
+  <!-- Alerta de Error Global -->
+  @if (error()) {
+    <div class="alert alert-error" role="alert" aria-live="assertive">
+      <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
+      <span>{{ error() }}</span>
+      <button (click)="error.set(null)" aria-label="Cerrar alerta de error">
+        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+      </button>
+    </div>
+  }
+
+  <!-- Estado de Carga -->
+  @if (cargando()) {
+    <div class="loading-state" role="status" aria-live="polite">
+      <div class="spinner" aria-hidden="true"></div>
+      <p>Cargando información del perfil...</p>
+    </div>
+  }
+
+  <!-- Formulario de Edición -->
+  @if (!cargando() && editarForm(); as form) {
+    <div class="form-wrapper">
+      <form [formGroup]="form" (ngSubmit)="guardarCambios()" novalidate class="form">
+        
+        <!-- INFORMACIÓN PERSONAL -->
+        <div class="form-section">
+          <div class="section-header">
+            <i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+            <h2>Información Personal</h2>
+          </div>
+
+          <!-- Nombre -->
+          <div class="form-group">
+            <label for="nombre" class="form-label">
+              Nombre Completo
+              <span class="required" aria-label="requerido">*</span>
+            </label>
+            <input
+              id="nombre"
+              formControlName="nombre"
+              type="text"
+              class="form-input"
+              [class.form-input-error]="tieneError('nombre')"
+              placeholder="Ej: Juan Pérez García"
+              [attr.aria-describedby]="tieneError('nombre') ? 'error-nombre' : 'help-nombre'"
+              [attr.aria-invalid]="tieneError('nombre')"
+            />
+            <div id="help-nombre" class="form-help-text">
+              Mínimo 10 caracteres, máximo 50
+            </div>
+            @if (tieneError('nombre')) {
+              <div id="error-nombre" class="form-error-message" role="alert">
+                @for (error of obtenerErroresControl('nombre'); track $index) {
+                  <p>{{ error }}</p>
+                }
+              </div>
+            }
+          </div>
+
+          <!-- Teléfono -->
+          <div class="form-group">
+            <label for="telefono" class="form-label">
+              Teléfono
+              <span class="required" aria-label="requerido">*</span>
+            </label>
+            <input
+              id="telefono"
+              formControlName="telefono"
+              type="tel"
+              class="form-input"
+              [class.form-input-error]="tieneError('telefono')"
+              placeholder="Ej: 3001234567"
+              inputmode="tel"
+              maxlength="10"
+              [attr.aria-describedby]="tieneError('telefono') ? 'error-telefono' : 'help-telefono'"
+              [attr.aria-invalid]="tieneError('telefono')"
+            />
+            <div id="help-telefono" class="form-help-text">
+              Debe contener exactamente 10 dígitos
+            </div>
+            @if (tieneError('telefono')) {
+              <div id="error-telefono" class="form-error-message" role="alert">
+                @for (error of obtenerErroresControl('telefono'); track $index) {
+                  <p>{{ error }}</p>
+                }
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- UBICACIÓN -->
+        <div class="form-section">
+          <div class="section-header">
+            <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
+            <h2>Ubicación</h2>
+          </div>
+
+          <!-- Ciudad -->
+          <div class="form-group">
+            <label for="ciudad" class="form-label">Ciudad de Residencia</label>
+            <input
+              id="ciudad"
+              formControlName="ciudadDeResidencia"
+              type="text"
+              class="form-input"
+              [class.form-input-error]="tieneError('ciudadDeResidencia')"
+              placeholder="Ej: Bogotá"
+              [attr.aria-describedby]="tieneError('ciudadDeResidencia') ? 'error-ciudad' : 'help-ciudad'"
+              [attr.aria-invalid]="tieneError('ciudadDeResidencia')"
+            />
+            <div id="help-ciudad" class="form-help-text">
+              Opcional - Máximo 100 caracteres
+            </div>
+            @if (tieneError('ciudadDeResidencia')) {
+              <div id="error-ciudad" class="form-error-message" role="alert">
+                @for (error of obtenerErroresControl('ciudadDeResidencia'); track $index) {
+                  <p>{{ error }}</p>
+                }
+              </div>
+            }
+          </div>
+
+          <!-- Dirección -->
+          <div class="form-group">
+            <label for="direccion" class="form-label">Dirección</label>
+            <textarea
+              id="direccion"
+              formControlName="direccion"
+              class="form-textarea"
+              [class.form-input-error]="tieneError('direccion')"
+              placeholder="Ej: Calle 10 #20-30, Apartamento 301"
+              rows="3"
+              [attr.aria-describedby]="tieneError('direccion') ? 'error-direccion' : 'help-direccion'"
+              [attr.aria-invalid]="tieneError('direccion')"
+            ></textarea>
+            <div id="help-direccion" class="form-help-text">
+              Opcional - Máximo 150 caracteres
+            </div>
+            @if (tieneError('direccion')) {
+              <div id="error-direccion" class="form-error-message" role="alert">
+                @for (error of obtenerErroresControl('direccion'); track $index) {
+                  <p>{{ error }}</p>
+                }
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- SEGURIDAD -->
+        <div class="form-section">
+          <div class="section-header">
+            <i class="fa-solid fa-lock" aria-hidden="true"></i>
+            <h2>Seguridad</h2>
+          </div>
+
+          <div class="security-notice">
+            <i class="fa-solid fa-info-circle" aria-hidden="true"></i>
+            <div>
+              <p><strong>Cambiar contraseña (Opcional)</strong></p>
+              <p>Solo completa este campo si deseas cambiar tu contraseña actual</p>
+            </div>
+          </div>
+
+          <!-- Nueva Contraseña -->
+          <div class="form-group">
+            <label for="password" class="form-label">Nueva Contraseña</label>
+            <div class="password-input-wrapper">
+              <input
+                id="password"
+                formControlName="contrasenia"
+                [type]="showPassword() ? 'text' : 'password'"
+                class="form-input"
+                [class.form-input-error]="tieneError('contrasenia')"
+                placeholder="Dejar vacío para mantener la actual"
+                [attr.aria-describedby]="tieneError('contrasenia') ? 'error-password' : 'help-password'"
+                [attr.aria-invalid]="tieneError('contrasenia')"
+              />
+              <button
+                type="button"
+                class="password-toggle"
+                (click)="togglePasswordVisibility()"
+                [attr.aria-label]="showPassword() ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+                [attr.aria-pressed]="showPassword()"
+              >
+                <i [class]="showPassword() ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'" aria-hidden="true"></i>
+              </button>
+            </div>
+            <div id="help-password" class="form-help-text">
+              Entre 7 y 20 caracteres (opcional)
+            </div>
+            @if (tieneError('contrasenia')) {
+              <div id="error-password" class="form-error-message" role="alert">
+                @for (error of obtenerErroresControl('contrasenia'); track $index) {
+                  <p>{{ error }}</p>
+                }
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- Botones de Acción -->
+        <div class="form-actions">
+          <button
+            type="button"
+            class="btn btn-tertiary"
+            (click)="restaurarValores()"
+            [disabled]="guardando() || !hayPendientes()"
+            aria-label="Restaurar valores originales">
+            <i class="fa-solid fa-rotate-left" aria-hidden="true"></i>
+            Restaurar
+          </button>
+          <div class="action-group">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              (click)="cancelar()"
+              [disabled]="guardando()"
+              aria-label="Cancelar y volver al perfil">
+              <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              class="btn btn-primary"
+              [disabled]="guardando() || formularioInvalido"
+              [attr.aria-busy]="guardando()"
+            >
+              @if (guardando()) {
+                <i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
+                Guardando...
+              } @else {
+                <i class="fa-solid fa-check" aria-hidden="true"></i>
+                Guardar Cambios
+              }
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  }
+</div>

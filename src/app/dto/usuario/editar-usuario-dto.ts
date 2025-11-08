@@ -1,5 +1,7 @@
 export interface EditarCuentaDTO {
-    nombre: string,
-    telefono: string,
-    contrasenia: string
+  nombre?: string;
+  telefono?: string;
+  contrasenia?: string;
+  ciudadDeResidencia?: string;
+  direccion?: string;
 }

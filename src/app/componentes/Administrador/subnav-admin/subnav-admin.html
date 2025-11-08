@@ -2,6 +2,7 @@
   <div class="subnav-container">
     @for (tab of tabs(); track tab.id) {
       <button
+        #tabBtn
         type="button"
         class="subnav-tab"
         [class.active]="tabActiva() === tab.id"
@@ -13,5 +14,10 @@
         <span>{{ tab.texto }}</span>
       </button>
     }
+    <div
+      class="subnav-indicator"
+      [style.left.px]="posicionIndicador"
+      [style.width.px]="anchoIndicador"
+    ></div>
   </div>
 </nav>

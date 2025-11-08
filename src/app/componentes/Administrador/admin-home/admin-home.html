@@ -1,172 +1,238 @@
-<div class="admin-dashboard">
-  <app-admin-subnav (tabChange)="onTabChange($event)"></app-admin-subnav>
+<div class="home-container" role="main" aria-labelledby="panel-title">
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <div class="title-section">
+        <h1 id="panel-title" class="titulo">Panel del Administrador</h1>
+        <p class="subtitulo">Resumen general del sistema</p>
+      </div>
+      <button 
+        class="btn-recargar" 
+        (click)="recargarDatos()" 
+        [disabled]="cargando()"
+        [attr.aria-busy]="cargando()"
+        aria-label="Actualizar datos del dashboard">
+        <i class="fa-solid fa-rotate-right" [class.spinning]="cargando()" aria-hidden="true"></i>
+        <span>Actualizar</span>
+      </button>
+    </div>
+  </header>
 
-  <div class="dashboard-container">
-    <!-- SECCIÓN: PANEL DE ADMINISTRACIÓN -->
-    @if (tabActiva() === 'resumen') {
-      <section class="tab-content">
-        <header class="header">
-          <h2 class="titulo">Panel de Administración</h2>
-          <button class="btn-recargar" (click)="recargarDatos()" [disabled]="cargando()">
-            <i class="fa-solid fa-rotate-right" [class.spinning]="cargando()"></i>
-            Actualizar
-          </button>
-        </header>
+  <!-- Alerta de Error -->
+  @if (error()) {
+    <div class="alert-error" role="alert" aria-live="assertive">
+      <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
+      <div class="alert-content">
+        <strong>Error al cargar datos</strong>
+        <span>{{ error() }}</span>
+      </div>
+      <button class="btn-retry" (click)="recargarDatos()" aria-label="Reintentar carga de datos">
+        <i class="fa-solid fa-rotate-right"></i>
+        Reintentar
+      </button>
+    </div>
+  }
 
-        @if (error()) {
-          <div class="alert-error">
-            <i class="fa-solid fa-circle-exclamation"></i>
-            <span>{{ error() }}</span>
-            <button (click)="recargarDatos()">Reintentar</button>
-          </div>
-        }
-
-        @if (cargando()) {
-          <div class="loading-container">
-            <div class="spinner"></div>
-            <p>Cargando datos...</p>
-          </div>
-        } @else {
-          <!-- Indicadores -->
-          <section class="indicadores">
-            @for (item of [
-              { icon: 'fa-box', value: estadisticas().totalProductos, label: 'Productos totales', clase: 'productos' },
-              { icon: 'fa-users', value: estadisticas().totalTrabajadores, label: 'Trabajadores activos', clase: 'trabajadores' },
-              { icon: 'fa-boxes-stacked', value: estadisticas().totalLotes, label: 'Lotes en producción', clase: 'lotes' },
-              { icon: 'fa-cubes', value: estadisticas().totalStock | number:'1.0-0', label: 'Unidades en stock', clase: 'stock' },
-              { icon: 'fa-shopping-cart', value: estadisticas().pedidosPendientes, label: 'Pedidos pendientes', clase: 'pedidos' },
-              { icon: 'fa-warehouse', value: estadisticas().alertasStock, label: 'Alertas de stock', clase: 'almacen', alerta: estadisticas().alertasStock > 0 }
-            ]; track item.label) {
-              <div class="card indicador" [class.alerta]="item.alerta">
-                <div class="indicador-icon {{item.clase}}">
-                  <i class="fa-solid {{item.icon}}"></i>
-                </div>
-                <div class="indicador-content">
-                  <h3>{{ item.value }}</h3>
-                  <p>{{ item.label }}</p>
-                </div>
+  <!-- Loading State -->
+  @if (cargando()) {
+    <div class="loading-container" role="status" aria-live="polite">
+      <div class="spinner" aria-hidden="true"></div>
+      <p>Cargando datos generales...</p>
+    </div>
+  } @else {
+    <div class="dashboard-content">
+      
+      <!-- ========== SECCIÓN: PRODUCCIÓN ========== -->
+      <section class="dashboard-section" aria-label="Indicadores de producción">
+        <div class="section-header">
+          <h2 class="section-title">
+            <i class="fa-solid fa-industry" aria-hidden="true"></i>
+            Producción
+          </h2>
+        </div>
+        <div class="cards-grid grid-3">
+          
+          <!-- Lotes Totales -->
+          <article class="metric-card card-primary" aria-labelledby="lotes-totales">
+            <div class="card-header">
+              <div class="icon-wrapper icon-primary">
+                <i class="fa-solid fa-industry"></i>
               </div>
-            }
-          </section>
+              <span class="card-label">Lotes totales</span>
+            </div>
+            <div class="card-body">
+              <h3 id="lotes-totales" class="metric-value">{{ totalLotes() }}</h3>
+              <p class="metric-description">Total de lotes en el sistema</p>
+            </div>
+          </article>
 
-          <!-- Accesos rápidos -->
-          <section class="card accesos-rapidos">
-            <h3 class="seccion-titulo">Accesos Rápidos</h3>
-            <div class="acciones-grid">
-              <button class="accion-card" (click)="navegarA('productos')">
-                <i class="fa-solid fa-box-open"></i>
-                <span>Gestionar Productos</span>
-              </button>
-              <button class="accion-card" (click)="navegarA('trabajadores')">
-                <i class="fa-solid fa-user-plus"></i>
-                <span>Crear Trabajador</span>
-              </button>
-              <button class="accion-card" (click)="navegarA('produccion')">
-                <i class="fa-solid fa-clipboard-check"></i>
-                <span>Ver Lotes</span>
-              </button>
-              <button class="accion-card" (click)="navegarA('almacen')">
-                <i class="fa-solid fa-chart-bar"></i>
-                <span>Reportes</span>
+          <!-- En Producción -->
+          <article class="metric-card card-info" aria-labelledby="lotes-produccion">
+            <div class="card-header">
+              <div class="icon-wrapper icon-info">
+                <i class="fa-solid fa-gears"></i>
+              </div>
+              <span class="card-label">En producción</span>
+            </div>
+            <div class="card-body">
+              <h3 id="lotes-produccion" class="metric-value">{{ lotesEnProduccionCount() }}</h3>
+              <p class="metric-description">Lotes activos en producción</p>
+            </div>
+          </article>
+
+          <!-- Próximos a Vencer -->
+          <article 
+            class="metric-card" 
+            [class.card-warning]="lotesPorVencerCount() > 0"
+            [class.card-success]="lotesPorVencerCount() === 0"
+            [attr.aria-label]="lotesPorVencerCount() > 0 ? 'Alerta: ' + lotesPorVencerCount() + ' lotes próximos a vencer' : 'Sin lotes próximos a vencer'">
+            <div class="card-header">
+              <div class="icon-wrapper" 
+                   [class.icon-warning]="lotesPorVencerCount() > 0" 
+                   [class.icon-success]="lotesPorVencerCount() === 0">
+                <i class="fa-solid fa-calendar-day"></i>
+              </div>
+              <span class="card-label">Próximos a vencer</span>
+              @if (lotesPorVencerCount() > 0) {
+                <span class="badge badge-warning">
+                  <i class="fa-solid fa-exclamation-triangle"></i>
+                </span>
+              }
+            </div>
+            <div class="card-body">
+              <h3 class="metric-value">{{ lotesPorVencerCount() }}</h3>
+              <p class="metric-description">
+                @if (lotesPorVencerCount() > 0) {
+                  <span class="text-warning">Requieren atención</span>
+                } @else {
+                  <span>Todo está al día</span>
+                }
+              </p>
+            </div>
+          </article>
+          
+        </div>
+      </section>
+
+      <!-- ========== SECCIÓN: ALMACÉN E INVENTARIO ========== -->
+      <section class="dashboard-section" aria-label="Indicadores de almacén">
+        <div class="section-header">
+          <h2 class="section-title">
+            <i class="fa-solid fa-warehouse" aria-hidden="true"></i>
+            Almacén e Inventario
+          </h2>
+        </div>
+        <div class="cards-grid grid-4">
+          
+          <!-- Productos en Inventario -->
+          <article class="metric-card card-accent" aria-labelledby="productos-inventario">
+            <div class="card-header">
+              <div class="icon-wrapper icon-accent">
+                <i class="fa-solid fa-box"></i>
+              </div>
+              <span class="card-label">Productos</span>
+            </div>
+            <div class="card-body">
+              <h3 id="productos-inventario" class="metric-value">{{ productosInventario() }}</h3>
+              <p class="metric-description">SKUs en inventario</p>
+            </div>
+          </article>
+
+          <!-- Stock Total -->
+          <article class="metric-card card-success" aria-labelledby="stock-total">
+            <div class="card-header">
+              <div class="icon-wrapper icon-success">
+                <i class="fa-solid fa-cubes"></i>
+              </div>
+              <span class="card-label">Stock total</span>
+            </div>
+            <div class="card-body">
+              <h3 id="stock-total" class="metric-value">{{ stockTotal() }}</h3>
+              <p class="metric-description">Unidades disponibles</p>
+            </div>
+          </article>
+
+          <!-- Lotes Registrados -->
+          <article class="metric-card card-secondary" aria-labelledby="lotes-registrados">
+            <div class="card-header">
+              <div class="icon-wrapper icon-secondary">
+                <i class="fa-solid fa-layer-group"></i>
+              </div>
+              <span class="card-label">Lotes</span>
+            </div>
+            <div class="card-body">
+              <h3 id="lotes-registrados" class="metric-value">{{ lotesRegistrados() }}</h3>
+              <p class="metric-description">Total en almacén</p>
+            </div>
+          </article>
+
+          <!-- Vencen en 7 Días -->
+          <article 
+            class="metric-card" 
+            [class.card-danger]="vencenEn7Dias() > 0"
+            [class.card-success]="vencenEn7Dias() === 0"
+            [attr.aria-label]="vencenEn7Dias() > 0 ? 'Alerta crítica: ' + vencenEn7Dias() + ' productos vencen en 7 días' : 'Sin productos próximos a vencer'">
+            <div class="card-header">
+              <div class="icon-wrapper" 
+                   [class.icon-danger]="vencenEn7Dias() > 0" 
+                   [class.icon-success]="vencenEn7Dias() === 0">
+                <i class="fa-solid fa-clock"></i>
+              </div>
+              <span class="card-label">Vencimiento</span>
+              @if (vencenEn7Dias() > 0) {
+                <span class="badge badge-danger pulse">
+                  <i class="fa-solid fa-exclamation"></i>
+                </span>
+              }
+            </div>
+            <div class="card-body">
+              <h3 class="metric-value">{{ vencenEn7Dias() }}</h3>
+              <p class="metric-description">
+                @if (vencenEn7Dias() > 0) {
+                  <span class="text-danger">Vencen en 7 días</span>
+                } @else {
+                  <span>Sin vencimientos próximos</span>
+                }
+              </p>
+            </div>
+          </article>
+          
+        </div>
+      </section>
+
+      <!-- ========== SECCIÓN: CATÁLOGO ========== -->
+      <section class="dashboard-section" aria-label="Indicadores de catálogo">
+        <div class="section-header">
+          <h2 class="section-title">
+            <i class="fa-solid fa-book" aria-hidden="true"></i>
+            Catálogo de Productos
+          </h2>
+        </div>
+        <div class="cards-grid grid-1">
+          
+          <!-- Total Productos -->
+          <article class="metric-card card-highlight" aria-labelledby="total-productos">
+            <div class="card-header">
+              <div class="icon-wrapper icon-highlight">
+                <i class="fa-solid fa-tags"></i>
+              </div>
+              <span class="card-label">Productos registrados</span>
+            </div>
+            <div class="card-body">
+              <h3 id="total-productos" class="metric-value">{{ totalProductos() }}</h3>
+              <p class="metric-description">Total de productos en catálogo</p>
+            </div>
+            <div class="card-footer">
+              <button class="btn-link" aria-label="Ver catálogo completo">
+                Ver catálogo completo
+                <i class="fa-solid fa-arrow-right"></i>
               </button>
             </div>
-          </section>
-        }
+          </article>
+          
+        </div>
       </section>
-    }
-
-    <!-- SECCIÓN: GESTIÓN DE TRABAJADORES -->
-    @if (tabActiva() === 'trabajadores') {
-      <section class="tab-content">
-        <header class="header">
-          <h2 class="titulo">Gestión de Trabajadores</h2>
-          <button class="btn-crear" (click)="abrirModalCrearTrabajador()">
-            <i class="fa-solid fa-plus"></i> Crear Trabajador
-          </button>
-        </header>
-
-        @if (errorTrabajadores()) {
-          <div class="alert-error">
-            <i class="fa-solid fa-circle-exclamation"></i>
-            <span>{{ errorTrabajadores() }}</span>
-            <button (click)="cargarTrabajadores()">Reintentar</button>
-          </div>
-        }
-
-        @if (cargandoTrabajadores()) {
-          <div class="loading-container">
-            <div class="spinner"></div>
-            <p>Cargando trabajadores...</p>
-          </div>
-        } @else if (listaTrabajadores().length === 0) {
-          <div class="empty-state">
-            <i class="fa-solid fa-users-slash"></i>
-            <h3>No hay trabajadores registrados</h3>
-            <p>Comienza creando tu primer trabajador</p>
-            <button class="btn-crear" (click)="abrirModalCrearTrabajador()">
-              <i class="fa-solid fa-plus"></i> Crear Trabajador
-            </button>
-          </div>
-        } @else {
-          <div class="card tabla-card">
-            <table class="tabla">
-              <thead>
-                <tr>
-                  <th>Nombre</th>
-                  <th>Cédula</th>
-                  <th>Correo</th>
-                  <th>Teléfono</th>
-                  <th>Rol</th>
-                  <th class="text-center">Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                @for (trabajador of listaTrabajadores(); track trabajador.cedula) {
-                  <tr>
-                    <td><strong>{{ trabajador.nombre }}</strong></td>
-                    <td>{{ trabajador.cedula }}</td>
-                    <td>{{ trabajador.correoElectronico }}</td>
-                    <td>{{ trabajador.telefono }}</td>
-                    <td>
-                      <span class="badge-rol" [class]="obtenerClaseRol(trabajador.rol)">
-                        {{ obtenerNombreRol(trabajador.rol) }}
-                      </span>
-                    </td>
-                    <td class="text-center">
-                      <button class="btn-icon" (click)="verDetallesTrabajador(trabajador)" title="Ver detalles">
-                        <i class="fa-solid fa-eye"></i>
-                      </button>
-                      <button class="btn-icon" (click)="desactivarTrabajador(trabajador)" title="Desactivar">
-                        <i class="fa-solid fa-trash"></i>
-                      </button>
-                    </td>
-                  </tr>
-                }
-              </tbody>
-            </table>
-          </div>
-        }
-      </section>
-    }
-
-    <!-- SECCIONES: REDIRECCIONES A MÓDULOS -->
-    @for (mod of [
-      { id: 'productos', icon: 'fa-box-open', titulo: 'Vista de Productos', texto: 'Componente de gestión de productos del Gestor', accion: navegarAGestorProductos },
-      { id: 'produccion', icon: 'fa-industry', titulo: 'Vista de Producción', texto: 'Componente de supervisión de producción', accion: navegarASupervisorProduccion },
-      { id: 'almacen', icon: 'fa-warehouse', titulo: 'Vista de Almacén', texto: 'Componente de gestión de almacén', accion: navegarAAlmacen }
-    ]; track mod.id) {
-      @if (tabActiva() === mod.id) {
-        <section class="tab-content">
-          <div class="empty-state">
-            <i class="fa-solid {{ mod.icon }}"></i>
-            <h3>{{ mod.titulo }}</h3>
-            <p>{{ mod.texto }}</p>
-            <button class="btn-crear" (click)="mod.accion()">
-              <i class="fa-solid fa-arrow-right"></i> Ir a {{ mod.titulo }}
-            </button>
-          </div>
-        </section>
-      }
-    }
-  </div>
+      
+    </div>
+  }
 </div>

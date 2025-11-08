@@ -2,6 +2,10 @@
   <app-navbar></app-navbar>
   <app-accesibilidad></app-accesibilidad>
 </header>
+@if(esAdmin()){
+  <!-- Subnav visible solo si ADMINISTRADOR -->
+  <app-admin-subnav></app-admin-subnav>
+}
 <main class="page-main">
   <router-outlet></router-outlet>
 </main>

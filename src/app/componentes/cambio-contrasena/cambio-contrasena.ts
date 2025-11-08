@@ -33,15 +33,11 @@ export class CambioContrasena {
   }
 
   nextStep() {
-    console.log(' nextStep() llamado - Step actual:', this.step);
     this.step++;
-    console.log(' Nuevo step:', this.step);
-    this.cdRef.detectChanges(); // Forzar detección de cambios
-    console.log('ChangeDetection forzado');
+    this.cdRef.detectChanges();
   }
 
   previousStep() {
-    console.log(' previousStep() llamado - Step actual:', this.step);
     if (this.step > 1) this.step--;
   }
 
@@ -72,25 +68,18 @@ export class CambioContrasena {
   }
 
   public EmailContra() {
-    console.log('📧 EmailContra() iniciado');
-
     if (this.validatorFormEmail.invalid) {
-      console.log(' Formulario email inválido');
       return;
     }
 
     this.emailUsuario = this.validatorFormEmail.get('email')?.value;
-    console.log(' Email a procesar:', this.emailUsuario);
 
     const codigoContraseniaDTO: CodigoContraseniaDTO = {
       correoElectronico: this.emailUsuario
     };
 
-    console.log(' Enviando petición al servidor...');
-
     this.authService.enviarCodigoRecuperacion(codigoContraseniaDTO).subscribe({
       next: (data) => {
-        console.log(' RESPUESTA EXITOSA DEL SERVIDOR:', data);
 
         Swal.fire({
           title: 'Email enviado',
@@ -98,21 +87,12 @@ export class CambioContrasena {
           icon: 'success',
           confirmButtonText: 'Aceptar'
         }).then((result) => {
-          console.log(' Resultado de SweetAlert:', result);
           if (result.isConfirmed) {
-            console.log('➡ Usuario hizo clic en Aceptar - Avanzando al paso 2');
             this.nextStep();
-          } else {
-            console.log(' Usuario NO hizo clic en Aceptar');
           }
         });
       },
       error: (error) => {
-        console.log(' ERROR EN LA PETICIÓN:', error);
-        console.log(' Status:', error.status);
-        console.log(' Mensaje:', error.message);
-        console.log(' Respuesta:', error.error);
-
         Swal.fire({
           title: 'Error',
           text: error.error?.respuesta || 'Error al enviar el código',
@@ -123,18 +103,12 @@ export class CambioContrasena {
     });
   }
 
-  // Nuevo método para validar el código
   public validarCodigo() {
-    console.log(' validarCodigo() iniciado');
-
     if (this.validatorFormCodigo.invalid) {
-      console.log(' Formulario código inválido');
       return;
     }
 
     const codigoCompleto = this.codeArray.controls.map(control => control.value).join('');
-    console.log(' Código ingresado:', codigoCompleto);
-
     const validarCodigoDTO: ValidarCodigoDTO = {
       correoElectronico: this.emailUsuario,
       codigo: codigoCompleto
@@ -142,7 +116,6 @@ export class CambioContrasena {
 
     this.authService.validarCodigo(validarCodigoDTO).subscribe({
       next: (data) => {
-        console.log(' Código validado exitosamente');
         Swal.fire({
           title: 'Código válido',
           text: 'El código ha sido verificado correctamente',
@@ -155,7 +128,6 @@ export class CambioContrasena {
         });
       },
       error: (error) => {
-        console.log(' Error validando código:', error);
         Swal.fire({
           title: 'Error',
           text: 'El código ingresado no es válido o ha expirado',
@@ -167,10 +139,7 @@ export class CambioContrasena {
   }
 
   public CodigoContra() {
-    console.log(' CodigoContra() iniciado');
-
     if (this.validatorFormContrase.invalid) {
-      console.log(' Formulario contraseña inválido');
       return;
     }
 
@@ -180,11 +149,8 @@ export class CambioContrasena {
       passwordNueva: this.validatorFormContrase.get('password')?.value || '',
     };
 
-    console.log(' Cambiando contraseña con código:', cambiarPasswordDTO.codigoVerificacion);
-
     this.authService.cambiarPassword(cambiarPasswordDTO).subscribe({
       next: (data) => {
-        console.log(' Contraseña cambiada exitosamente');
         Swal.fire({
           title: 'Contraseña modificada',
           text: 'La contraseña ha sido modificada correctamente, ahora puede iniciar sesión',
@@ -197,7 +163,6 @@ export class CambioContrasena {
         });
       },
       error: (error) => {
-        console.log(' Error cambiando contraseña:', error);
         Swal.fire({
           title: 'Error',
           text: 'Error al cambiar la contraseña. Por favor, intenta nuevamente.',

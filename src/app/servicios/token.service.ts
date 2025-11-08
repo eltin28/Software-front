@@ -10,10 +10,12 @@ export class TokenService {
   private readonly router = inject(Router);
 
   public isLoggedSignal = signal<boolean>(this.isLogged());
+  public rolSignal = signal<string>(this.getRol());
 
   public setToken(token: string) {
     sessionStorage.setItem(this.TOKEN_KEY, token);
     this.isLoggedSignal.set(true);
+    this.rolSignal.set(this.getRol());
   }
 
   public getToken(): string | null {
@@ -56,6 +58,7 @@ export class TokenService {
   public logout() {
     sessionStorage.clear();
     this.isLoggedSignal.set(false);
+    this.rolSignal.set('');
     this.router.navigateByUrl("/login");
   }
 

@@ -10,10 +10,7 @@ app-root {
 
 .page-main {
   flex: 1 0 auto;
-  display: grid;
-  place-content: start center;
-  padding: 16px;
+  display: block; /* ← Cambiar de grid a block */
+  padding: 0; /* ← Eliminar padding aquí */
+  width: 100%; /* ← Asegurar 100% de ancho */
 }
-
-/* evita que cualquier componente ancho genere scroll X */
-.page-main > * { max-width: 1200px; width: 100%; }
